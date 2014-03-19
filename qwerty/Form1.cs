@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-
+using System.Media;
 
 namespace qwerty
 {
@@ -25,10 +25,13 @@ namespace qwerty
         List<Meteor> meteors = new List<Meteor>();
         int blueShipsCount;
         int redShipsCount;
+        System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+        
 
         
         public Form1()
         {
+            player.SoundLocation = "laser1.wav";
             
             Ship penumbra = new Ship(Constants.SCOUT, 1);
             allShips.Add(penumbra);
@@ -82,6 +85,7 @@ namespace qwerty
 
             Pen laserPen1 = new Pen(Color.Orange, 2);
 
+            player.Play();
             for (int i = 0; i < 5; i++)
             {
                 g.DrawLine(laserPen1, new Point(x1, y1), new Point(x2 + i, y2));
@@ -89,7 +93,7 @@ namespace qwerty
                 pictureMap.Image = combatBitmap;
                 pictureMap.Refresh();
 
-                Thread.Sleep(30);
+                Thread.Sleep(35);
             }
 
         }
