@@ -31,7 +31,7 @@ namespace qwerty
         
         public Form1()
         {
-            player.SoundLocation = "laser1.wav";
+            player.SoundLocation = @"../../Sounds/laser1.wav";
             
             Ship penumbra = new Ship(Constants.SCOUT, 1);
             allShips.Add(penumbra);
