@@ -45,14 +45,9 @@ namespace qwerty
             Ship neveria = new Ship(Constants.ASSAULTER, 2);
             allShips.Add(neveria);  
 
-            //ShipScout penumbra = new ShipScout(1);
-            //allShips.Add((Ship)penumbra);
-
-            //Meteor meteor = new Meteor(11, 100, 25, 1, 1);
-            //cMap.boxes[11].spaceObject = meteor;
-
             objectManager.meteorCreate(cMap);
 
+            // расставляем корабли по полю, синие - слева, красные - справа
             for (int count = 0; count < allShips.Count; count++ )
             {
                 allShips[count].placeShip(ref cMap);
@@ -62,9 +57,6 @@ namespace qwerty
             Draw();
 
             shipsCount();
-
-            //boxDescription.Text = "id = " + cMap.getBoxIdByCoords(0, 0);
-
     
         }
 
@@ -86,7 +78,6 @@ namespace qwerty
 
         public void drawLaser(int x1, int y1, int x2, int y2)
         {
-            //combatBitmap = new Bitmap(pictureMap.Width, pictureMap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(combatBitmap);
 
             Pen laserPen1 = new Pen(Color.Orange, 2);
@@ -106,7 +97,7 @@ namespace qwerty
         {
             combatBitmap = new Bitmap(pictureMap.Width, pictureMap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(combatBitmap);
-            g.FillRectangle(Brushes.Black, 0, 0, combatBitmap.Width, combatBitmap.Height);//рисуем фон окна
+            g.FillRectangle(Brushes.Black, 0, 0, combatBitmap.Width, combatBitmap.Height); //рисуем фон окна
 
             Pen generalPen;
             Pen redPen = new Pen(Color.Red, 3);
@@ -182,7 +173,6 @@ namespace qwerty
                     g.DrawPolygon(activeShipAriaPen, myPointArrayHex);
                     
                 }
-                
 
                 if (cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.objectType == Constants.SHIP)
                 {
@@ -213,7 +203,9 @@ namespace qwerty
                         g.FillEllipse(grayBrush, cMap.boxes[i].xpoint1 + 17, cMap.boxes[i].ypoint1 - 12, 25, 25);
                     }
                 }
+                
                 //g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
+                
                 //g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
                 //g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
                 if(cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.boxId != -1)
@@ -349,14 +341,12 @@ namespace qwerty
                         {
                             int flag = 0;
                             // перемещение на одну клетку вверх
-                            // старый алгоритм, основанный на вычислении айдишника клетки!!! 
                             int a = activeShip.boxId;
                             if (a + 1 == select && a % cMap.height != cMap.height - 1)
                             {
                                 flag = 1;
                             }
                             // перемещение на одну клетку вниз
-                            // старый алгоритм, основанный на вычислении айдишника клетки!!! 
                             else if (a - 1 == select && a % cMap.height != 0)
                             {
                                 flag = 1;
@@ -389,11 +379,10 @@ namespace qwerty
                             {
                                 flag = 1;
                             }
-                            if (flag == 1)
+                            if (flag == 1 && activeShip.actionsLeft > 0)
                             {
                                 double rotateAngle;
 
-                                //IntPtr ptr = typeof(System.Math).GetMethod("Draw").MethodHandle.GetFunctionPointer();
                                 rotateAngle = attackAngleSearch(cMap.boxes[select].x, cMap.boxes[select].y);
 
                                 doShipRotate(rotateAngle);
@@ -424,7 +413,7 @@ namespace qwerty
                                 deltax = (x2 - x1) / step;
                                 deltay = (y2 - y1) / step;
                                 
-                                for (int count1 = 0; count1 < range; count1 += dx)
+                                for (int count1 = 0; count1 < range + 35; count1 += dx)
                                 {
                                     for (int j = 0; j < 5; j++)
                                     {
@@ -434,7 +423,7 @@ namespace qwerty
                                     Thread.Sleep(5);
                                     Draw(); 
                                 } 
-
+                                // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
                                 for (int n = 0; n < 5; n++)
                                 {
                                     activeShip.xpoints[n] = xold[n];
