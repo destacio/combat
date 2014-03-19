@@ -32,6 +32,9 @@
             this.boxDescription = new System.Windows.Forms.Label();
             this.btnEndTurn = new System.Windows.Forms.Button();
             this.lblTurn = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtBlueShips = new System.Windows.Forms.Label();
+            this.txtRedShips = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,12 +76,42 @@
             this.lblTurn.TabIndex = 3;
             this.lblTurn.Text = "Ходит 1-й игрок";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 272);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(122, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Кораблей на поле боя:";
+            // 
+            // txtBlueShips
+            // 
+            this.txtBlueShips.AutoSize = true;
+            this.txtBlueShips.ForeColor = System.Drawing.Color.Blue;
+            this.txtBlueShips.Location = new System.Drawing.Point(32, 295);
+            this.txtBlueShips.Name = "txtBlueShips";
+            this.txtBlueShips.Size = new System.Drawing.Size(0, 13);
+            this.txtBlueShips.TabIndex = 6;
+            // 
+            // txtRedShips
+            // 
+            this.txtRedShips.AutoSize = true;
+            this.txtRedShips.ForeColor = System.Drawing.Color.Red;
+            this.txtRedShips.Location = new System.Drawing.Point(82, 295);
+            this.txtRedShips.Name = "txtRedShips";
+            this.txtRedShips.Size = new System.Drawing.Size(0, 13);
+            this.txtRedShips.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(624, 441);
+            this.Controls.Add(this.txtRedShips);
+            this.Controls.Add(this.txtBlueShips);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTurn);
             this.Controls.Add(this.btnEndTurn);
             this.Controls.Add(this.boxDescription);
@@ -99,6 +132,9 @@
         private System.Windows.Forms.Label boxDescription;
         private System.Windows.Forms.Button btnEndTurn;
         private System.Windows.Forms.Label lblTurn;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label txtBlueShips;
+        private System.Windows.Forms.Label txtRedShips;
     }
 }
 
