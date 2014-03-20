@@ -34,17 +34,17 @@ namespace qwerty
                     actionsLeft = maxActions;
                     staticDescription = "Лёгкий корабль\nкласса Scout";
 
-                    xpoints.Add(-15); // координаты точек относительно второй точки ячейки
-                    xpoints.Add(0);
-                    xpoints.Add(15);
-                    xpoints.Add(0);
+                    xpoints.Add(-15); // координаты точек относительно центра ячейки
+                    xpoints.Add(-15);
+                    xpoints.Add(17);
+                    xpoints.Add(-15);
                     xpoints.Add(-15);
                     // лишние точки
                     
                     ypoints.Add(-14);
-                    ypoints.Add(-7);
+                    ypoints.Add(-14);
                     ypoints.Add(0);
-                    ypoints.Add(7);
+                    ypoints.Add(14);
                     ypoints.Add(14);
                     // лишние точки
                     
@@ -65,7 +65,7 @@ namespace qwerty
                     staticDescription = "Средний боевой корабль\nкласса Assaulter";
 
                    
-                    xpoints.Add(-16); // координаты точек относительно второй точки ячейки
+                    xpoints.Add(-16); // координаты точек относительно центра ячейки
                     xpoints.Add(6);
                     xpoints.Add(18);
                     xpoints.Add(6);

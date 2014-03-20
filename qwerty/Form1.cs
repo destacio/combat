@@ -279,8 +279,8 @@ namespace qwerty
                     }
                 }
 
-                if (angle > 120) angle = 120;
-                else if (angle < -120) angle = -120;
+                if (angle > 150) angle = 150;
+                else if (angle < -150) angle = -150;
             }
             return angle;
         }
@@ -295,8 +295,10 @@ namespace qwerty
         }
         public void resetShipRotate(double angle)
         {
+            //Thread.Sleep(100);
             for (int count = 1; count < (int)Math.Abs(angle); count += 5)
             {
+                
                 activeShip.shipRotate(-5 * (int)(angle / Math.Abs(angle)));
                 Draw();
             }
@@ -314,10 +316,10 @@ namespace qwerty
                 {
                     select = i;
 
+
                     if (activeShip == null && cMap.boxes[select].spaceObject != null)
                     {
-                        if (cMap.boxes[select].spaceObject.objectType == Constants.SHIP
-                            || cMap.boxes[select].spaceObject.objectType == Constants.METEOR)
+                        if (cMap.boxes[select].spaceObject != null)
                         {
                             if (activePlayer == cMap.boxes[select].spaceObject.player)
                             {
@@ -325,7 +327,6 @@ namespace qwerty
                                 activeShip = (Ship)cMap.boxes[select].spaceObject;
 
                                 Draw();
-                                break;
                             }
                             else
                             {
@@ -341,7 +342,7 @@ namespace qwerty
                     {
 
                         // если выбранная клетка пуста - определяем возможность перемещения 
-                        if (cMap.boxes[select].spaceObject == null)
+                        if (activeShip.actionsLeft > 0 && cMap.boxes[select].spaceObject == null)
                         {
                             int flag = 0;
                             // перемещение на одну клетку вверх
@@ -383,7 +384,7 @@ namespace qwerty
                             {
                                 flag = 1;
                             }
-                            if (flag == 1 && activeShip.actionsLeft > 0)
+                            if (flag == 1)
                             {
                                 double rotateAngle;
 
@@ -409,7 +410,7 @@ namespace qwerty
                                 }
 
                                 range = (int)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-                                dx = range / 10;
+                                dx = range / 15;
                                 int deltax;
                                 int deltay;
                                 int step = 15;
@@ -417,7 +418,7 @@ namespace qwerty
                                 deltax = (x2 - x1) / step;
                                 deltay = (y2 - y1) / step;
                                 
-                                for (int count1 = 0; count1 < range + 35; count1 += dx)
+                                for (int count1 = 0; count1 < range - 10; count1 += dx)
                                 {
                                     for (int j = 0; j < 5; j++)
                                     {
@@ -523,7 +524,7 @@ namespace qwerty
 
                             }
                         }
-                    
+                    break;
                 }
             }
         }
