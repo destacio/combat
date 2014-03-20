@@ -16,7 +16,7 @@ namespace qwerty
     {
         public Bitmap combatBitmap;
 
-        combatMap cMap = new combatMap(12, 6);  // создаем поле боя с указанной размерностью
+        combatMap cMap = new combatMap(8, 6);  // создаем поле боя с указанной размерностью
         ObjectManager objectManager = new ObjectManager();
         int select = -1; // служебная переменная, пока сам не знаю на кой хер она мне, но пусть будет. да.
         int activePlayer = 1; // ход 1-ого или 2-ого игрока
@@ -167,7 +167,8 @@ namespace qwerty
                                 double x2 = cMap.boxes[allShips[count].boxId].x;
                                 double y2 = cMap.boxes[allShips[count].boxId].y;
                                 double range;
-                                range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.45);
+                                range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
+                                //range = Math.Max(Math.Abs(x2-x1), Math.Ceiling( Math.Abs(y2-y1)/2+1));
                                 if ((int)range <= activeShip.attackRange)
                                 {
                                     Point[] myPointArrayHex99 = {  //точки для отрисовки шестиугольника
@@ -228,8 +229,8 @@ namespace qwerty
 
                 //g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
 
-                //g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
-                //g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
                 /*if(cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.boxId != -1)
                     g.DrawString(cMap.boxes[i].spaceObject.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 - 25));
             }*/
@@ -492,7 +493,8 @@ namespace qwerty
 
                                 // определяем расстояние между объектами
 
-                                range = Math.Sqrt((x2-x1)*(x2-x1)+((y2-y1)*(y2-y1))*0.45);
+                                //range = Math.Sqrt((x2-x1)*(x2-x1)+((y2-y1)*(y2-y1)));
+                                range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
 
                                 if(activeShip.attackRange >= (int)range)
                                 {

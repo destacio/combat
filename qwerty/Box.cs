@@ -17,9 +17,9 @@ namespace qwerty
 
         public int xpoint1 = 15;
         public int xpoint2 = 20;
-        public int xpoint3 = 30;
-        public int xpoint4 = 35;
-        public int xpoint5 = 30;
+        public int xpoint3 = 55;
+        public int xpoint4 = 60;
+        public int xpoint5 = 55;
         public int xpoint6 = 20;
 
         public int ypoint1 = 25;
@@ -33,8 +33,8 @@ namespace qwerty
         {
             xpoint1 = 15 * scale;
             xpoint2 = xpoint6 = xpoint1 + 5 * scale;
-            xpoint3 = xpoint5 = xpoint1 + 15 * scale;
-            xpoint4 = xpoint1 + 20 * scale;
+            xpoint3 = xpoint5 = xpoint1 + 20 * scale;
+            xpoint4 = xpoint1 + 25 * scale;
 
             ypoint1 = 10 + (15 * scale);
             ypoint2 = ypoint3 = ypoint1 - 10 * scale;

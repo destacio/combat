@@ -33,9 +33,11 @@ namespace qwerty
             int i;
 
             Random rand = new Random();
+            int randomNum = rand.Next(1, 100) % 4;
+            
 
             // место появления и направление полёта
-            switch(rand.Next(1,4))
+            switch(randomNum)
             {
                 
                 case 1:  // left
@@ -62,9 +64,9 @@ namespace qwerty
                     }
                     break;
                 case 2: // top
-                    box4meteor = cMap.getBoxByCoords(rand.Next(0,cMap.width/2) * 2, 0).id;
+                    box4meteor = cMap.getBoxByCoords(rand.Next(0,cMap.width/2-1) * 2, 0).id;
                     for (i = 0; i < 10; i++ )
-                    {
+                            {
                         if (cMap.boxes[box4meteor].spaceObject != null)
                         {
                             box4meteor += cMap.height * 2;
@@ -107,14 +109,14 @@ namespace qwerty
                         yWay = Constants.MEDIUM_BOTTOM;
                     }
                     break;
-                case 4: // bottom
-                    box4meteor = cMap.getBoxByCoords(rand.Next(0, cMap.width / 2) * 2+1, cMap.height - 1).id;
+                case 0: // bottom
+                    box4meteor = cMap.getBoxByCoords(rand.Next(0, cMap.width / 2 - 1) * 2+1, cMap.height * 2 - 1).id;
                     for (i = 0; i < 10; i++ )
                     {
                         if (cMap.boxes[box4meteor].spaceObject != null)
                         {
                             box4meteor += cMap.height * 2;
-                            if (box4meteor > cMap.width + 1)
+                            if (box4meteor > cMap.boxes.Count-1)
                                 box4meteor = cMap.height - 1;
                         }
                         else break;

@@ -19,7 +19,7 @@ namespace qwerty
             width = w;
             height = h;
 
-            deltax = 15 * scale;
+            deltax = 20 * scale;
             deltay = 20 * scale;
 
             iniBasicPoints();
