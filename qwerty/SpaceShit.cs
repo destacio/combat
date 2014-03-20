@@ -16,6 +16,8 @@ namespace qwerty
         public int currentHealth;
         public abstract string description(); // описание объекта
 
+        public abstract void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap);
+
         public List<int> xpoints = new List<int>();  // координаты 5 точек, описывающих внешний вид объекта
         public List<int> ypoints = new List<int>();  // вообще, по сути надо каждый типа корабля сделать классом, тогда 
                                                      // можно будет внешний вид задавать прямо здесь, массивом Point[]

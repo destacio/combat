@@ -32,21 +32,21 @@ namespace qwerty
         public Form1()
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
-            
-            Ship penumbra = new Ship(Constants.SCOUT, 1);
+
+            Ship penumbra = shipCreate(Constants.SCOUT, 1);
             allShips.Add(penumbra);
-            Ship holycow = new Ship(Constants.SCOUT, 1);
+            Ship holycow = shipCreate(Constants.SCOUT, 1);
             allShips.Add(holycow);
-            Ship leroy = new Ship(Constants.ASSAULTER, 1);
+            Ship leroy = shipCreate(Constants.ASSAULTER, 1);
             allShips.Add(leroy);
 
 
-            Ship pandorum = new Ship(Constants.SCOUT, 2);
+            Ship pandorum = shipCreate(Constants.SCOUT, 2);
             allShips.Add(pandorum);
-            Ship exodar = new Ship(Constants.SCOUT, 2);
+            Ship exodar = shipCreate(Constants.SCOUT, 2);
             allShips.Add(exodar);
-            Ship neveria = new Ship(Constants.ASSAULTER, 2);
-            allShips.Add(neveria);  
+            Ship neveria = shipCreate(Constants.ASSAULTER, 2);
+            allShips.Add(neveria);    
 
             objectManager.meteorCreate(cMap);
 
@@ -62,6 +62,21 @@ namespace qwerty
             shipsCount();
     
         }
+
+        Ship shipCreate(int type, int p)
+        {
+            Ship newShip = null;
+            switch (type)
+            {
+                case Constants.SCOUT:
+                    newShip = new ShipScout(p);
+                    break;
+                case Constants.ASSAULTER:
+                    newShip = new ShipAssaulter(p);
+                    break;
+            }
+            return newShip;
+        } 
 
         public void shipsCount()
         {
@@ -134,11 +149,11 @@ namespace qwerty
 
                 if (activeShip != null)
                 {
-                    for(int count = 0; count < allShips.Count; count++)
+                    for (int count = 0; count < allShips.Count; count++)
                     {
                         if (allShips[count].player != activePlayer && allShips[count].boxId >= 0)
                         {
-                            if(allShips[count].player == 0)
+                            if (allShips[count].player == 0)
                             {
                                 // рисовать ли рамку вокруг нейтральных объектов
                                 // в зоне досягаемости? пока решили что нет,
@@ -153,7 +168,7 @@ namespace qwerty
                                 double y2 = cMap.boxes[allShips[count].boxId].y;
                                 double range;
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.45);
-                                if((int)range <= activeShip.attackRange)
+                                if ((int)range <= activeShip.attackRange)
                                 {
                                     Point[] myPointArrayHex99 = {  //точки для отрисовки шестиугольника
                                         new Point(cMap.boxes[allShips[count].boxId].xpoint1, cMap.boxes[allShips[count].boxId].ypoint1),
@@ -175,17 +190,19 @@ namespace qwerty
                 if (activeShip != null && activeShip.boxId == i)
                 {
                     g.DrawPolygon(activeShipAriaPen, myPointArrayHex);
-                    
+
                 }
 
-                if (cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.objectType == Constants.SHIP)
+                if (cMap.boxes[i].spaceObject != null)
                 {
                     if (cMap.boxes[i].spaceObject.player == 1)
                         brush = blueBrush;
                     else if (cMap.boxes[i].spaceObject.player == 2)
                         brush = redBrush;
                     else brush = grayBrush;
-                    
+
+                    cMap.boxes[i].spaceObject.drawSpaceShit(ref cMap, ref combatBitmap);
+                    /*
                     Point[] myPointArray = {
                      
                         new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[0], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[0]),
@@ -196,28 +213,30 @@ namespace qwerty
                 
                     }; 
                     g.FillPolygon(brush, myPointArray);
-                    
                     g.DrawString(cMap.boxes[i].spaceObject.actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.boxes[i].xpoint1 + 25, cMap.boxes[i].ypoint1 + 15));
-                    
+                    */
+
+
                 }
-                else if (cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.objectType == Constants.METEOR)
+                /*else if (cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.objectType == Constants.METEOR)
                 {
                     if (cMap.boxes[i].spaceObject.boxId != -1)
                     {
                         g.FillEllipse(grayBrush, cMap.boxes[i].xpoint1 + 17, cMap.boxes[i].ypoint1 - 12, 25, 25);
                     }
-                }
-                
+                } */
+
                 //g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
-                
+
                 //g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
                 //g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
-                if(cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.boxId != -1)
+                /*if(cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.boxId != -1)
                     g.DrawString(cMap.boxes[i].spaceObject.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 - 25));
+            }*/
             }
-            pictureMap.Image = combatBitmap;
-            pictureMap.Refresh();
-
+                pictureMap.Image = combatBitmap;
+                pictureMap.Refresh();
+            
         }
 
         public double attackAngleSearch(double targetx, double targety)
@@ -403,7 +422,7 @@ namespace qwerty
                                 List<int> yold = new List<int>();
 
                                 // запоминаем координаты
-                                for (int n = 0; n < 5; n++ )
+                                for (int n = 0; n < activeShip.xpoints.Count; n++ )
                                 {
                                     xold.Add(activeShip.xpoints[n]);
                                     yold.Add(activeShip.ypoints[n]);
@@ -420,7 +439,7 @@ namespace qwerty
                                 
                                 for (int count1 = 0; count1 < range - 10; count1 += dx)
                                 {
-                                    for (int j = 0; j < 5; j++)
+                                    for (int j = 0; j < activeShip.xpoints.Count; j++)
                                     {
                                         activeShip.xpoints[j] += deltax;
                                         activeShip.ypoints[j] += deltay;
@@ -429,13 +448,13 @@ namespace qwerty
                                     Draw(); 
                                 } 
                                 // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
-                                for (int n = 0; n < 5; n++)
+                                for (int n = 0; n < activeShip.xpoints.Count; n++)
                                 {
                                     activeShip.xpoints[n] = xold[n];
                                     activeShip.ypoints[n] = yold[n];
                                 }
 
-                                activeShip.moveShip(ref cMap, a, select);
+                                activeShip.moveShip(cMap, a, select);
 
                                 resetShipRotate(rotateAngle);
 

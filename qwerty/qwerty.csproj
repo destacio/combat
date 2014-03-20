@@ -58,6 +58,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ship.cs" />
+    <Compile Include="ShipAssaulter.cs" />
     <Compile Include="ShipScout.cs" />
     <Compile Include="SpaceShit.cs" />
     <EmbeddedResource Include="Form1.resx">

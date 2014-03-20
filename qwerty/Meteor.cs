@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace qwerty
 {
@@ -24,6 +25,15 @@ namespace qwerty
             ydirection = y;
             
         }
+
+        public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
+        {
+            Graphics g = Graphics.FromImage(bmap);
+            SolidBrush grayBrush = new SolidBrush(Color.Gray);
+            g.FillEllipse(grayBrush, cMap.boxes[boxId].xpoint1 + 17, cMap.boxes[boxId].ypoint1 - 12, 25, 25);
+            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
+        }
+
         public void move(combatMap cMap)
         {
                 int newx;
