@@ -33,19 +33,19 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Ship penumbra = shipCreate(Constants.SCOUT, 1);
+            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_LASER);
             allShips.Add(penumbra);
-            Ship holycow = shipCreate(Constants.SCOUT, 1);
+            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_LASER);
             allShips.Add(holycow);
-            Ship leroy = shipCreate(Constants.ASSAULTER, 1);
+            Ship leroy = shipCreate(Constants.ASSAULTER, 1, Constants.HEAVY_LASER);
             allShips.Add(leroy);
 
 
-            Ship pandorum = shipCreate(Constants.SCOUT, 2);
+            Ship pandorum = shipCreate(Constants.SCOUT, 2, Constants.LIGHT_LASER);
             allShips.Add(pandorum);
-            Ship exodar = shipCreate(Constants.SCOUT, 2);
+            Ship exodar = shipCreate(Constants.SCOUT, 2, Constants.LIGHT_LASER);
             allShips.Add(exodar);
-            Ship neveria = shipCreate(Constants.ASSAULTER, 2);
+            Ship neveria = shipCreate(Constants.ASSAULTER, 2, Constants.HEAVY_LASER);
             allShips.Add(neveria);    
 
             objectManager.meteorCreate(cMap);
@@ -63,16 +63,26 @@ namespace qwerty
     
         }
 
-        Ship shipCreate(int type, int p)
+        Ship shipCreate(int type, int p, int wpn)
         {
+            Weapon weapon = null;
+            switch(wpn)
+            {
+                case Constants.LIGHT_LASER:
+                    weapon = new wpnLightLaser();
+                    break;
+                case Constants.HEAVY_LASER:
+                    weapon = new WpnHeavyLaser();
+                    break;
+            }
             Ship newShip = null;
             switch (type)
             {
                 case Constants.SCOUT:
-                    newShip = new ShipScout(p);
+                    newShip = new ShipScout(p, weapon);
                     break;
                 case Constants.ASSAULTER:
-                    newShip = new ShipAssaulter(p);
+                    newShip = new ShipAssaulter(p, weapon);
                     break;
             }
             return newShip;
@@ -96,17 +106,32 @@ namespace qwerty
 
         public void drawLaser(int x1, int y1, int x2, int y2)
         {
+            // закоменченные строки делают отрисовку с восстановлением фона. Расписал по шагам:
+
             Graphics g = Graphics.FromImage(combatBitmap);
+            //Rectangle rect;  //  --- размер изображения
+            //Bitmap oldImage;  //  --- переменная, в которую его засунем
 
             Pen laserPen1 = new Pen(Color.Orange, 2);
 
             player.Play();
             for (int i = 0; i < 5; i++)
             {
+                // --- 1) находим размер изображения
+                //rect = new Rectangle(0, 0, combatBitmap.Width, combatBitmap.Height); 
+                // --- 2) клонируем наш битмап
+                //oldImage = combatBitmap.Clone(rect, combatBitmap.PixelFormat);
+             
                 g.DrawLine(laserPen1, new Point(x1, y1), new Point(x2 + i, y2));
+
+                
 
                 pictureMap.Image = combatBitmap;
                 pictureMap.Refresh();
+
+                // --- 3) отрисовываем тот битмам, который сохранили выше
+                //g.DrawImage(oldImage, 0, 0);
+                
 
                 Thread.Sleep(35);
             }
@@ -169,7 +194,7 @@ namespace qwerty
                                 double range;
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
                                 //range = Math.Max(Math.Abs(x2-x1), Math.Ceiling( Math.Abs(y2-y1)/2+1));
-                                if ((int)range <= activeShip.attackRange)
+                                if ((int)range <= activeShip.equippedWeapon.attackRange)
                                 {
                                     Point[] myPointArrayHex99 = {  //точки для отрисовки шестиугольника
                                         new Point(cMap.boxes[allShips[count].boxId].xpoint1, cMap.boxes[allShips[count].boxId].ypoint1),
@@ -493,16 +518,15 @@ namespace qwerty
 
                                 // определяем расстояние между объектами
 
-                                //range = Math.Sqrt((x2-x1)*(x2-x1)+((y2-y1)*(y2-y1)));
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
 
-                                if(activeShip.attackRange >= (int)range)
+                                if(activeShip.equippedWeapon.attackRange >= (int)range)
                                 {
                                     flag = 1; // устанавливаем флаг, если расстояние не превышает дальности атаки
                                 }
                                 if (flag == 1)
                                 {
-                                    if(activeShip.actionsLeft > 0)  // если у корабля остались очки действий
+                                    if(activeShip.actionsLeft >= activeShip.equippedWeapon.energyСonsumption)  // если у корабля остались очки действий
                                     {
                                         double angle, targetx, targety;
 
@@ -514,16 +538,18 @@ namespace qwerty
                                         // поворачиваем корабль на угол angle
                                         doShipRotate(angle);
                                         
-                                        // в этом моменте должна быть отрисовка атаки, пока просто небольшая пауза
+                                        // отрисовка атаки
                                         Thread.Sleep(150);
-
-                                        drawLaser(cMap.boxes[activeShip.boxId].xcenter + activeShip.xpoints[2], 
-                                            cMap.boxes[activeShip.boxId].ycenter + activeShip.ypoints[2], 
-                                            cMap.boxes[select].xcenter, cMap.boxes[select].ycenter);
 
                                         
 
-                                        if (activeShip.attack(cMap, select) == 1)
+                                        /* drawLaser(cMap.boxes[activeShip.boxId].xcenter + activeShip.xpoints[2], 
+                                            cMap.boxes[activeShip.boxId].ycenter + activeShip.ypoints[2], 
+                                            cMap.boxes[select].xcenter, cMap.boxes[select].ycenter); */
+
+                                        //activeShip.equippedWeapon.doAttack(cMap.boxes[select].xcenter, cMap.boxes[select].ycenter);
+
+                                        if (activeShip.attack(cMap, cMap.boxes[select].id, ref combatBitmap, player, ref pictureMap) == 1)
                                             shipsCount();
                                         Draw();
 

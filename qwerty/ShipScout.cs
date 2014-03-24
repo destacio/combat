@@ -13,7 +13,7 @@ namespace qwerty
         public override string description()
         {
             return "" + staticDescription + "\nhp - " + currentHealth + "/" + maxHealth + "\nactions - "
-                            + actionsLeft + "/" + maxActions + "\nAP - " + attackPower + "\nRange - " + attackRange;
+                            + actionsLeft + "/" + maxActions + "\nAP - " + equippedWeapon.attackPower + "\nRange - " + equippedWeapon.attackRange;
         }
 
 
@@ -41,15 +41,15 @@ namespace qwerty
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
         }
 
-        public ShipScout(int p)
+        public ShipScout(int p, Weapon weapon)
         {
             objectType = Constants.SHIP;
+
+            equippedWeapon = weapon;
 
             player = p;
             maxHealth = 50;
             currentHealth = maxHealth;
-            attackPower = 25;
-            attackRange = 3;
             maxActions = 3;
             actionsLeft = maxActions;
             staticDescription = "Лёгкий корабль\nкласса Scout";
@@ -70,6 +70,9 @@ namespace qwerty
             {
                 shipRotate(180);
             }
+
+            weaponPointX = xpoints[2];
+            weaponPointY = ypoints[2];
 
         }
     }

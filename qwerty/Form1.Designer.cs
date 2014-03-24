@@ -128,13 +128,13 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureMap;
         private System.Windows.Forms.Label boxDescription;
         private System.Windows.Forms.Button btnEndTurn;
         private System.Windows.Forms.Label lblTurn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label txtBlueShips;
         private System.Windows.Forms.Label txtRedShips;
+        public System.Windows.Forms.PictureBox pictureMap;
     }
 }
 

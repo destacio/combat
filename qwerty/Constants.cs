@@ -14,6 +14,9 @@ namespace qwerty
         // классы кораблей
         public const int SCOUT = 1;
         public const int ASSAULTER = 2;
+        // вооружение
+        public const int LIGHT_LASER = 1;
+        public const int HEAVY_LASER = 2;
         // направления
         public const int NORMAL = 0;
         public const int LEFT = -1;
