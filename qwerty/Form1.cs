@@ -33,9 +33,9 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_LASER);
+            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_ION);
             allShips.Add(penumbra);
-            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_LASER);
+            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_ION);
             allShips.Add(holycow);
             Ship leroy = shipCreate(Constants.ASSAULTER, 1, Constants.HEAVY_LASER);
             allShips.Add(leroy);
@@ -74,6 +74,9 @@ namespace qwerty
                 case Constants.HEAVY_LASER:
                     weapon = new WpnHeavyLaser();
                     break;
+                case Constants.LIGHT_ION:
+                    weapon = new WpnLightIon();
+                    break;
             }
             Ship newShip = null;
             switch (type)
@@ -104,39 +107,6 @@ namespace qwerty
             txtRedShips.Text = "" + redShipsCount;
         }
 
-        public void drawLaser(int x1, int y1, int x2, int y2)
-        {
-            // закоменченные строки делают отрисовку с восстановлением фона. Расписал по шагам:
-
-            Graphics g = Graphics.FromImage(combatBitmap);
-            //Rectangle rect;  //  --- размер изображения
-            //Bitmap oldImage;  //  --- переменная, в которую его засунем
-
-            Pen laserPen1 = new Pen(Color.Orange, 2);
-
-            player.Play();
-            for (int i = 0; i < 5; i++)
-            {
-                // --- 1) находим размер изображения
-                //rect = new Rectangle(0, 0, combatBitmap.Width, combatBitmap.Height); 
-                // --- 2) клонируем наш битмап
-                //oldImage = combatBitmap.Clone(rect, combatBitmap.PixelFormat);
-             
-                g.DrawLine(laserPen1, new Point(x1, y1), new Point(x2 + i, y2));
-
-                
-
-                pictureMap.Image = combatBitmap;
-                pictureMap.Refresh();
-
-                // --- 3) отрисовываем тот битмам, который сохранили выше
-                //g.DrawImage(oldImage, 0, 0);
-                
-
-                Thread.Sleep(35);
-            }
-
-        }
         public void Draw()
         {
             combatBitmap = new Bitmap(pictureMap.Width, pictureMap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -156,8 +126,6 @@ namespace qwerty
             SolidBrush activeShipBrush = new SolidBrush(Color.DarkGreen);
             SolidBrush mediumPurpleBrush = new SolidBrush(Color.MediumPurple);
             SolidBrush brush;
-
-
 
             for (int i = 0; i < cMap.boxes.Count; i++)
             {
@@ -193,7 +161,7 @@ namespace qwerty
                                 double y2 = cMap.boxes[allShips[count].boxId].y;
                                 double range;
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
-                                //range = Math.Max(Math.Abs(x2-x1), Math.Ceiling( Math.Abs(y2-y1)/2+1));
+
                                 if ((int)range <= activeShip.equippedWeapon.attackRange)
                                 {
                                     Point[] myPointArrayHex99 = {  //точки для отрисовки шестиугольника
@@ -228,37 +196,13 @@ namespace qwerty
                     else brush = grayBrush;
 
                     cMap.boxes[i].spaceObject.drawSpaceShit(ref cMap, ref combatBitmap);
-                    /*
-                    Point[] myPointArray = {
-                     
-                        new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[0], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[0]),
-                        new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[1], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[1]),
-                        new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[2], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[2]),
-                        new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[3], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[3]),
-                        new Point(cMap.boxes[i].xcenter + cMap.boxes[i].spaceObject.xpoints[4], cMap.boxes[i].ycenter + cMap.boxes[i].spaceObject.ypoints[4])
-                
-                    }; 
-                    g.FillPolygon(brush, myPointArray);
-                    g.DrawString(cMap.boxes[i].spaceObject.actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.boxes[i].xpoint1 + 25, cMap.boxes[i].ypoint1 + 15));
-                    */
-
 
                 }
-                /*else if (cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.objectType == Constants.METEOR)
-                {
-                    if (cMap.boxes[i].spaceObject.boxId != -1)
-                    {
-                        g.FillEllipse(grayBrush, cMap.boxes[i].xpoint1 + 17, cMap.boxes[i].ypoint1 - 12, 25, 25);
-                    }
-                } */
 
                 //g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
+                //g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
+                //g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
 
-                g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
-                g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
-                /*if(cMap.boxes[i].spaceObject != null && cMap.boxes[i].spaceObject.boxId != -1)
-                    g.DrawString(cMap.boxes[i].spaceObject.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 - 25));
-            }*/
             }
                 pictureMap.Image = combatBitmap;
                 pictureMap.Refresh();
@@ -340,7 +284,6 @@ namespace qwerty
         }
         public void resetShipRotate(double angle)
         {
-            //Thread.Sleep(100);
             for (int count = 1; count < (int)Math.Abs(angle); count += 5)
             {
                 
@@ -540,14 +483,6 @@ namespace qwerty
                                         
                                         // отрисовка атаки
                                         Thread.Sleep(150);
-
-                                        
-
-                                        /* drawLaser(cMap.boxes[activeShip.boxId].xcenter + activeShip.xpoints[2], 
-                                            cMap.boxes[activeShip.boxId].ycenter + activeShip.ypoints[2], 
-                                            cMap.boxes[select].xcenter, cMap.boxes[select].ycenter); */
-
-                                        //activeShip.equippedWeapon.doAttack(cMap.boxes[select].xcenter, cMap.boxes[select].ycenter);
 
                                         if (activeShip.attack(cMap, cMap.boxes[select].id, ref combatBitmap, player, ref pictureMap) == 1)
                                             shipsCount();

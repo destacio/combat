@@ -17,6 +17,7 @@ namespace qwerty
         // вооружение
         public const int LIGHT_LASER = 1;
         public const int HEAVY_LASER = 2;
+        public const int LIGHT_ION = 3;
         // направления
         public const int NORMAL = 0;
         public const int LEFT = -1;

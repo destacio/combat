@@ -63,6 +63,7 @@
     <Compile Include="SpaceShit.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="WpnHeavyLaser.cs" />
+    <Compile Include="WpnLightIon.cs" />
     <Compile Include="wpnLightLaser.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
