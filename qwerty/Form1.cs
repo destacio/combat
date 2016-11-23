@@ -91,7 +91,7 @@ namespace qwerty
             return newShip;
         } 
 
-        public void shipsCount()
+        public bool shipsCount()
         {
             blueShipsCount = 0;
             redShipsCount = 0;
@@ -103,8 +103,16 @@ namespace qwerty
                 else if (allShips[count].player == 2)
                     redShipsCount++;
             }
+            if (blueShipsCount == 0 || redShipsCount == 0)
+            {
+                txtBlueShips.Text = "";
+                txtRedShips.Text = "";
+                label1.Text = "GAME OVER!";
+                return false;
+            }
             txtBlueShips.Text = "" + blueShipsCount;
             txtRedShips.Text = "" + redShipsCount;
+            return true;
         }
 
         public void Draw()
@@ -513,6 +521,11 @@ namespace qwerty
 
         private void btnEndTurn_Click(object sender, EventArgs e)
         {
+            if (!shipsCount())
+            {
+                return;
+            }
+
             if (activePlayer == 1) activePlayer = 2;
             else activePlayer = 1;
 
