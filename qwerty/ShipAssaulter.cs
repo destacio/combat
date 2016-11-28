@@ -41,11 +41,9 @@ namespace qwerty
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
         }
 
-        public ShipAssaulter(int p, Weapon weapon)
+        public ShipAssaulter(int p, Constants.WeaponType weaponType):base(weaponType)
         {
             objectType = Constants.SHIP;
-
-            equippedWeapon = weapon;
 
             player = p;
             maxHealth = 100;

@@ -13,6 +13,25 @@ namespace qwerty
         public Weapon equippedWeapon;
         public int weaponPointX;
         public int weaponPointY;
+
+        public Ship(Constants.WeaponType wpnType)
+        {
+            switch (wpnType)
+            {
+                case Constants.WeaponType.HeavyLaser:
+                    equippedWeapon = new WpnHeavyLaser();
+                    break;
+                case Constants.WeaponType.LightIon:
+                    equippedWeapon = new WpnLightIon();
+                    break;
+                case Constants.WeaponType.LightLaser:
+                    equippedWeapon = new wpnLightLaser();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(wpnType), wpnType, null);
+            }
+        }
+
         public override string description()
         {
             return "";
@@ -109,6 +128,7 @@ namespace qwerty
             weaponPointX = (int)(Math.Round((double)weaponPointX * Math.Cos(angle) - (double)weaponPointY * Math.Sin(angle), 0));
             weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));
         }
+
         public void refill()
         {
             actionsLeft = maxActions;

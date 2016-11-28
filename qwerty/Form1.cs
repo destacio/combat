@@ -33,19 +33,19 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_ION);
+            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.WeaponType.LightIon);
             allShips.Add(penumbra);
-            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.LIGHT_ION);
+            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.WeaponType.LightIon);
             allShips.Add(holycow);
-            Ship leroy = shipCreate(Constants.ASSAULTER, 1, Constants.HEAVY_LASER);
+            Ship leroy = shipCreate(Constants.ASSAULTER, 1, Constants.WeaponType.HeavyLaser);
             allShips.Add(leroy);
 
 
-            Ship pandorum = shipCreate(Constants.SCOUT, 2, Constants.LIGHT_LASER);
+            Ship pandorum = shipCreate(Constants.SCOUT, 2, Constants.WeaponType.LightLaser);
             allShips.Add(pandorum);
-            Ship exodar = shipCreate(Constants.SCOUT, 2, Constants.LIGHT_LASER);
+            Ship exodar = shipCreate(Constants.SCOUT, 2, Constants.WeaponType.LightLaser);
             allShips.Add(exodar);
-            Ship neveria = shipCreate(Constants.ASSAULTER, 2, Constants.HEAVY_LASER);
+            Ship neveria = shipCreate(Constants.ASSAULTER, 2, Constants.WeaponType.HeavyLaser);
             allShips.Add(neveria);    
 
             objectManager.meteorCreate(cMap);
@@ -63,29 +63,16 @@ namespace qwerty
     
         }
 
-        Ship shipCreate(int type, int p, int wpn)
+        Ship shipCreate(int type, int p, Constants.WeaponType wpn)
         {
-            Weapon weapon = null;
-            switch(wpn)
-            {
-                case Constants.LIGHT_LASER:
-                    weapon = new wpnLightLaser();
-                    break;
-                case Constants.HEAVY_LASER:
-                    weapon = new WpnHeavyLaser();
-                    break;
-                case Constants.LIGHT_ION:
-                    weapon = new WpnLightIon();
-                    break;
-            }
             Ship newShip = null;
             switch (type)
             {
                 case Constants.SCOUT:
-                    newShip = new ShipScout(p, weapon);
+                    newShip = new ShipScout(p, wpn);
                     break;
                 case Constants.ASSAULTER:
-                    newShip = new ShipAssaulter(p, weapon);
+                    newShip = new ShipAssaulter(p, wpn);
                     break;
             }
             return newShip;
