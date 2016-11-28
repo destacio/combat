@@ -9,10 +9,14 @@ namespace qwerty
 {
     class ShipAssaulter : Ship
     {
-        public string staticDescription;
-        public override string Description => "" + staticDescription + "\nhp - " + currentHealth + "/" + maxHealth + "\nactions - "
-                                              + actionsLeft + "/" + maxActions + "\nAP - " + equippedWeapon.attackPower + "\nRange - " +
-                                              equippedWeapon.attackRange;
+        private static readonly string StaticDescription = $"Лёгкий корабль{Environment.NewLine}класса Scout";
+
+        public override string Description =>
+            $"{StaticDescription}{Environment.NewLine}" +
+            $"hp - {currentHealth}/{maxHealth}{Environment.NewLine}" +
+            $"actions - {actionsLeft}/{maxActions}{Environment.NewLine}" +
+            $"AP - {equippedWeapon.attackPower}{Environment.NewLine}" +
+            $"Range - {equippedWeapon.attackRange}";
 
         public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
         {
@@ -48,7 +52,6 @@ namespace qwerty
             currentHealth = maxHealth;
             maxActions = 2;
             actionsLeft = maxActions;
-            staticDescription = "Лёгкий корабль\nкласса Scout";
 
             xpoints.Add(-16); // координаты точек относительно центра ячейки
             xpoints.Add(6);
