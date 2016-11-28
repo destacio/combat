@@ -271,20 +271,24 @@ namespace qwerty
 
         public void doShipRotate(double angle)
         {
-            for (int count = 0; count < (int)Math.Abs(angle); count += 5)
+            /*for (int count = 0; count < (int)Math.Abs(angle); count += 5)
             {
                 activeShip.shipRotate(5 * (int)(angle / Math.Abs(angle)));
                 Draw();
-            }
+            }*/
+            activeShip.shipRotate(angle);
+            Draw();
         }
         public void resetShipRotate(double angle)
         {
-            for (int count = 1; count < (int)Math.Abs(angle); count += 5)
+            /*for (int count = 1; count < (int)Math.Abs(angle); count += 5)
             {
                 
                 activeShip.shipRotate(-5 * (int)(angle / Math.Abs(angle)));
                 Draw();
-            }
+            }*/
+            activeShip.shipRotate(-angle);
+            Draw();
         }
         private void pictureMap_MouseClick(object sender, MouseEventArgs e)
         {
@@ -306,7 +310,7 @@ namespace qwerty
                         {
                             if (activePlayer == cMap.boxes[select].spaceObject.player)
                             {
-                                boxDescription.Text = cMap.boxes[select].spaceObject.description();
+                                boxDescription.Text = cMap.boxes[select].spaceObject.Description;
                                 activeShip = (Ship)cMap.boxes[select].spaceObject;
 
                                 Draw();
@@ -314,7 +318,7 @@ namespace qwerty
                             else
                             {
                                 Draw();
-                                boxDescription.Text = cMap.boxes[i].spaceObject.description();
+                                boxDescription.Text = cMap.boxes[i].spaceObject.Description;
                             }
                         }
                     }
@@ -422,7 +426,7 @@ namespace qwerty
 
                                 resetShipRotate(rotateAngle);
 
-                                boxDescription.Text = activeShip.description();
+                                boxDescription.Text = activeShip.Description;
 
                                 if (activeShip.actionsLeft == 0) activeShip = null;
                                 Draw();
@@ -434,7 +438,7 @@ namespace qwerty
                         {
                             if (cMap.boxes[select].spaceObject.player == activePlayer)
                             {
-                                boxDescription.Text = cMap.boxes[select].spaceObject.description();
+                                boxDescription.Text = cMap.boxes[select].spaceObject.Description;
                                 activeShip = (Ship)cMap.boxes[select].spaceObject;
 
                                 Draw();
