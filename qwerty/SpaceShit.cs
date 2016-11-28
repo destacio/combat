@@ -14,7 +14,8 @@ namespace qwerty
         public int boxId; // ячейка, в которой находится
         public int maxHealth; // hit points
         public int currentHealth;
-        public abstract string description(); // описание объекта
+
+        public abstract string Description { get; }
 
         public abstract void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap);
 

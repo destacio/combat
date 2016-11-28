@@ -10,12 +10,18 @@ namespace qwerty
     class ShipScout : Ship
     {
         public string staticDescription;
-        public override string description()
-        {
-            return "" + staticDescription + "\nhp - " + currentHealth + "/" + maxHealth + "\nactions - "
-                            + actionsLeft + "/" + maxActions + "\nAP - " + equippedWeapon.attackPower + "\nRange - " + equippedWeapon.attackRange;
-        }
 
+        public override string Description => "" +
+                                              staticDescription  + "\nhp - " +
+                                              currentHealth  + "/" +
+                                              maxHealth  + "\nactions - "
+                                              +
+                                              actionsLeft  + "/" +
+                                              maxActions  + "\nAP - " +
+                                              equippedWeapon  .
+                                                  attackPower  + "\nRange - " +
+                                              equippedWeapon  .
+                                                  attackRange;
 
 
         public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)

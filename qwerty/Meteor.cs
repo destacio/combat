@@ -76,33 +76,36 @@ namespace qwerty
                     
                 }
         }
-        public override string description()
+        public override string Description
         {
-            string x = "";
-            string y = "";
-
-            switch(xdirection)
+            get
             {
-                case -1:
-                    x = "left ";
-                    break;
-                case 1:
-                    x = "right ";
-                    break;
-            }
-            switch(ydirection)
-            {
-                case -1:
-                    y = "top ";
-                    break;
-                case 1:
-                    y = "bottom ";
-                    break;
-            }
+                string x = "";
+                string y = "";
 
-            return staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg 
-                + "\nhp - " + currentHealth 
-                + "\nНаправление: \n" + x + y;
+                switch (xdirection)
+                {
+                    case -1:
+                        x = "left ";
+                        break;
+                    case 1:
+                        x = "right ";
+                        break;
+                }
+                switch (ydirection)
+                {
+                    case -1:
+                        y = "top ";
+                        break;
+                    case 1:
+                        y = "bottom ";
+                        break;
+                }
+
+                return staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg
+                       + "\nhp - " + currentHealth
+                       + "\nНаправление: \n" + x + y;
+            }
         }
     }
 }

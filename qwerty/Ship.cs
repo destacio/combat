@@ -32,10 +32,7 @@ namespace qwerty
             }
         }
 
-        public override string description()
-        {
-            return "";
-        }
+        public override string Description => "";
 
         public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
         {
