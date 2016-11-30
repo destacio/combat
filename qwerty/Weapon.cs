@@ -7,6 +7,11 @@ using System.Windows.Forms;
 
 namespace qwerty
 {
+    public enum WeaponType
+    {
+        LightLaser, HeavyLaser, LightIon
+    }
+
     abstract class Weapon
     {
         abstract public string description();

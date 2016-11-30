@@ -8,6 +8,11 @@ using System.Windows.Forms;
 
 namespace qwerty
 {
+    public enum ShipType
+    {
+        Scout, Assaulter
+    }
+
     class Ship : SpaceShit
     {
         public Weapon equippedWeapon;

@@ -7,6 +7,11 @@ using System.Drawing;
 
 namespace qwerty
 {
+    public enum ObjectType
+    {
+        Ship, Meteor
+    }
+
     abstract class SpaceShit
     {
         public ObjectType objectType; // подробности смотри в константах
