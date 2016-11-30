@@ -33,19 +33,19 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Ship penumbra = shipCreate(Constants.SCOUT, 1, Constants.WeaponType.LightIon);
+            Ship penumbra = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
             allShips.Add(penumbra);
-            Ship holycow = shipCreate(Constants.SCOUT, 1, Constants.WeaponType.LightIon);
+            Ship holycow = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
             allShips.Add(holycow);
-            Ship leroy = shipCreate(Constants.ASSAULTER, 1, Constants.WeaponType.HeavyLaser);
+            Ship leroy = shipCreate(ShipType.Assaulter, 1, WeaponType.HeavyLaser);
             allShips.Add(leroy);
 
 
-            Ship pandorum = shipCreate(Constants.SCOUT, 2, Constants.WeaponType.LightLaser);
+            Ship pandorum = shipCreate(ShipType.Scout, 2, WeaponType.LightLaser);
             allShips.Add(pandorum);
-            Ship exodar = shipCreate(Constants.SCOUT, 2, Constants.WeaponType.LightLaser);
+            Ship exodar = shipCreate(ShipType.Scout, 2, WeaponType.LightLaser);
             allShips.Add(exodar);
-            Ship neveria = shipCreate(Constants.ASSAULTER, 2, Constants.WeaponType.HeavyLaser);
+            Ship neveria = shipCreate(ShipType.Assaulter, 2, WeaponType.HeavyLaser);
             allShips.Add(neveria);    
 
             objectManager.meteorCreate(cMap);
@@ -63,15 +63,15 @@ namespace qwerty
     
         }
 
-        Ship shipCreate(int type, int p, Constants.WeaponType wpn)
+        Ship shipCreate(ShipType type, int p, WeaponType wpn)
         {
             Ship newShip = null;
             switch (type)
             {
-                case Constants.SCOUT:
+                case ShipType.Scout:
                     newShip = new ShipScout(p, wpn);
                     break;
-                case Constants.ASSAULTER:
+                case ShipType.Assaulter:
                     newShip = new ShipAssaulter(p, wpn);
                     break;
             }

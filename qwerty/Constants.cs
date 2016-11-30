@@ -6,19 +6,23 @@ using System.Threading.Tasks;
 
 namespace qwerty
 {
+    public enum ObjectType
+    {
+        Ship, Meteor
+    }
+
+    public enum ShipType
+    {
+        Scout, Assaulter
+    }
+
+    public enum WeaponType
+    {
+        LightLaser, HeavyLaser, LightIon
+    }
+
     static class Constants
     {
-        // типы объектов
-        public const int SHIP = 1;
-        public const int METEOR = 2;
-        // классы кораблей
-        public const int SCOUT = 1;
-        public const int ASSAULTER = 2;
-
-        public enum WeaponType
-        {
-            LightLaser, HeavyLaser, LightIon
-        }
         // направления
         public const int NORMAL = 0;
         public const int LEFT = -1;

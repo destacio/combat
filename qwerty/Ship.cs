@@ -14,17 +14,17 @@ namespace qwerty
         public int weaponPointX;
         public int weaponPointY;
 
-        public Ship(Constants.WeaponType wpnType)
+        public Ship(WeaponType wpnType)
         {
             switch (wpnType)
             {
-                case Constants.WeaponType.HeavyLaser:
+                case WeaponType.HeavyLaser:
                     equippedWeapon = new WpnHeavyLaser();
                     break;
-                case Constants.WeaponType.LightIon:
+                case WeaponType.LightIon:
                     equippedWeapon = new WpnLightIon();
                     break;
-                case Constants.WeaponType.LightLaser:
+                case WeaponType.LightLaser:
                     equippedWeapon = new wpnLightLaser();
                     break;
                 default:

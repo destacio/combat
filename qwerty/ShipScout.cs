@@ -21,7 +21,7 @@ namespace qwerty
         public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
         {
             Graphics g = Graphics.FromImage(bmap);
-
+            
             SolidBrush generalBrush;
 
             if (player == 1)
@@ -41,9 +41,9 @@ namespace qwerty
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
         }
 
-        public ShipScout(int p, Constants.WeaponType weaponType) : base(weaponType)
+        public ShipScout(int p, WeaponType weaponType) : base(weaponType)
         {
-            objectType = Constants.SHIP;
+            objectType = ObjectType.Ship;
 
             player = p;
             maxHealth = 50;

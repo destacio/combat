@@ -9,7 +9,7 @@ namespace qwerty
 {
     abstract class SpaceShit
     {
-        public int objectType; // подробности смотри в константах
+        public ObjectType objectType; // подробности смотри в константах
         public int player; // 0,1,2 ..0 - нейтральные объекты 
         public int boxId; // ячейка, в которой находится
         public int maxHealth; // hit points

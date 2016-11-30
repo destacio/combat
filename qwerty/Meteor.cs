@@ -16,7 +16,7 @@ namespace qwerty
         public Meteor(int box, int health, int dmg, int x, int y)
         {
             boxId = box;
-            objectType = Constants.METEOR;
+            objectType = ObjectType.Meteor;
             player = 0;
             maxHealth = health;
             currentHealth = maxHealth;
