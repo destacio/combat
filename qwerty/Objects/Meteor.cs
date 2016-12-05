@@ -5,7 +5,7 @@ namespace qwerty.Objects
     class Meteor : SpaceObject
     {
         public int explodeDmg;
-        public string staticDescription = "Движущийся метеор";
+        public string staticDescription = "Moving meteor";
         public int xdirection;
         public int ydirection;
         public Meteor(int box, int health, int dmg, int x, int y)

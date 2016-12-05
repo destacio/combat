@@ -5,16 +5,18 @@ namespace qwerty.Objects.Weapons
 {
     class LightIon : Weapon
     {
+        public override Color AttackColorPrimary => Color.CadetBlue;
+        public override Color AttackColorSecondary => Color.CornflowerBlue;
+
         public LightIon()
         {
             attackPower = 18;
             attackRange = 4;
             energyСonsumption = 1;
         }
-        public override string description()
-        {
-            return "";
-        }
+
+        public override string Description => "";
+    
         public override void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
             System.Threading.Thread.Sleep(150);

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace qwerty.Objects.Weapons
 {
@@ -9,8 +10,12 @@ namespace qwerty.Objects.Weapons
 
     abstract class Weapon
     {
-        abstract public string description();
-        abstract public void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap);
+        public abstract string Description { get; }
+        public abstract void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap);
+
+        public abstract Color AttackColorPrimary { get; }
+        public abstract Color AttackColorSecondary { get; }
+
         public int attackRange;
         public int attackPower;
         public int energyСonsumption;
