@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace qwerty
+namespace qwerty.Objects.Weapons
 {
-    class WpnLightIon : Weapon
+    class LightIon : Weapon
     {
-        public WpnLightIon()
+        public LightIon()
         {
             attackPower = 18;
             attackRange = 4;

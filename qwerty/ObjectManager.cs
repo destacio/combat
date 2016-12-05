@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using qwerty.Objects;
+using qwerty.Objects.Weapons;
 
 namespace qwerty
 {

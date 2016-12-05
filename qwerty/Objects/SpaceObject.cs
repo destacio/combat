@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Collections.Generic;
 
-namespace qwerty
+namespace qwerty.Objects
 {
     public enum ObjectType
     {
         Ship, Meteor
     }
 
-    abstract class SpaceShit
+    abstract class SpaceObject
     {
         public ObjectType objectType; // подробности смотри в константах
         public int player; // 0,1,2 ..0 - нейтральные объекты 

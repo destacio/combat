@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
+using qwerty.Objects.Weapons;
 
-namespace qwerty
+namespace qwerty.Objects
 {
     public enum ShipType
     {
         Scout, Assaulter
     }
 
-    class Ship : SpaceShit
+    class Ship : SpaceObject
     {
         public Weapon equippedWeapon;
         public int weaponPointX;
@@ -24,13 +20,13 @@ namespace qwerty
             switch (wpnType)
             {
                 case WeaponType.HeavyLaser:
-                    equippedWeapon = new WpnHeavyLaser();
+                    equippedWeapon = new HeavyLaser();
                     break;
                 case WeaponType.LightIon:
-                    equippedWeapon = new WpnLightIon();
+                    equippedWeapon = new LightIon();
                     break;
                 case WeaponType.LightLaser:
-                    equippedWeapon = new wpnLightLaser();
+                    equippedWeapon = new LightLaser();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(wpnType), wpnType, null);

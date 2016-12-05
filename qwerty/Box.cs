@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using qwerty.Objects;
 
 namespace qwerty
 {
     class Box
     {
-        public SpaceShit spaceObject = null;
+        public SpaceObject spaceObject = null;
         public int id;
         public int x;
         public int y;

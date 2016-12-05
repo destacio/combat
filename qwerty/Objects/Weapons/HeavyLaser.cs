@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace qwerty
+namespace qwerty.Objects.Weapons
 {
-    class WpnHeavyLaser : Weapon
+    class HeavyLaser : Weapon
     {
-        public WpnHeavyLaser()
+        public HeavyLaser()
         {
             attackPower = 50;
             attackRange = 5;
