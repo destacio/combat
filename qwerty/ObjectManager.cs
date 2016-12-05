@@ -13,11 +13,14 @@ namespace qwerty
         public List<Ship> Ships = new List<Ship>();
         private const int MeteorAppearanceChance = 20;
 
-        public combatMap combatMap;
+        public combatMap CombatMap;
+
+        public int FirstPlayerShipCount => Ships.Count(sh => sh.player == 1);
+        public int SecondPlayerShipCount => Ships.Count(sh => sh.player == 2);
 
         public ObjectManager(int mapWidth, int mapHeight)
         {
-            combatMap = new combatMap(mapWidth, mapHeight);
+            CombatMap = new combatMap(mapWidth, mapHeight);
 
             Ship penumbra = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
             Ships.Add(penumbra);
@@ -46,11 +49,11 @@ namespace qwerty
 
         public void moveMeteors()
         {
-            for(int i = 0; i < Meteors.Count; i++)
+            foreach (var meteor in Meteors)
             {
-                if (Meteors[i].boxId >= 0)
+                if (meteor.boxId >= 0)
                 {
-                    Meteors[i].move(combatMap);
+                    meteor.move(CombatMap);
                 }
             }
 
@@ -79,13 +82,13 @@ namespace qwerty
             {
                 
                 case 1:  // left
-                    box4meteor = rand.Next(0, combatMap.height);
+                    box4meteor = rand.Next(0, CombatMap.height);
                     for (i = 0; i < 10; i++ )
                     {
-                        if (combatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.boxes[box4meteor].spaceObject != null)
                         {
                             box4meteor += 1;
-                            if (box4meteor >= combatMap.height - 1)
+                            if (box4meteor >= CombatMap.height - 1)
                                 box4meteor = 0;
                         }
                         else break;
@@ -102,13 +105,13 @@ namespace qwerty
                     }
                     break;
                 case 2: // top
-                    box4meteor = combatMap.getBoxByCoords(rand.Next(0,combatMap.width/2-1) * 2, 0).id;
+                    box4meteor = CombatMap.getBoxByCoords(rand.Next(0,CombatMap.width/2-1) * 2, 0).id;
                     for (i = 0; i < 10; i++ )
                             {
-                        if (combatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.boxes[box4meteor].spaceObject != null)
                         {
-                            box4meteor += combatMap.height * 2;
-                            if (box4meteor > combatMap.width + 1)
+                            box4meteor += CombatMap.height * 2;
+                            if (box4meteor > CombatMap.width + 1)
                                 box4meteor = 0;
                         }
                         else break;
@@ -125,14 +128,14 @@ namespace qwerty
                     yWay = Constants.MEDIUM_BOTTOM;
                     break;
                 case 3: // right
-                    box4meteor = rand.Next(combatMap.boxes.Count-1 - combatMap.height, combatMap.boxes.Count-1);
+                    box4meteor = rand.Next(CombatMap.boxes.Count-1 - CombatMap.height, CombatMap.boxes.Count-1);
                     for (i = 0; i < 10; i++)
                     {
-                        if (combatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.boxes[box4meteor].spaceObject != null)
                         {
                             box4meteor += 1;
-                            if (box4meteor > combatMap.boxes.Count)
-                                box4meteor = combatMap.boxes.Count - combatMap.height;
+                            if (box4meteor > CombatMap.boxes.Count)
+                                box4meteor = CombatMap.boxes.Count - CombatMap.height;
                         }
                         else break;
                     }
@@ -148,14 +151,14 @@ namespace qwerty
                     }
                     break;
                 case 0: // bottom
-                    box4meteor = combatMap.getBoxByCoords(rand.Next(0, combatMap.width / 2 - 1) * 2+1, combatMap.height * 2 - 1).id;
+                    box4meteor = CombatMap.getBoxByCoords(rand.Next(0, CombatMap.width / 2 - 1) * 2+1, CombatMap.height * 2 - 1).id;
                     for (i = 0; i < 10; i++ )
                     {
-                        if (combatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.boxes[box4meteor].spaceObject != null)
                         {
-                            box4meteor += combatMap.height * 2;
-                            if (box4meteor > combatMap.boxes.Count-1)
-                                box4meteor = combatMap.height - 1;
+                            box4meteor += CombatMap.height * 2;
+                            if (box4meteor > CombatMap.boxes.Count-1)
+                                box4meteor = CombatMap.height - 1;
                         }
                         else break;
                     }
@@ -179,7 +182,7 @@ namespace qwerty
 
                 newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
                 Meteors.Add(newMeteor);
-                combatMap.boxes[box4meteor].spaceObject = newMeteor;
+                CombatMap.boxes[box4meteor].spaceObject = newMeteor;
             }
             
         }
@@ -215,11 +218,11 @@ namespace qwerty
                 while (true)
                 {
                     Random rand = new Random();
-                    int randomBox = rand.Next(0, combatMap.height * 2);
+                    int randomBox = rand.Next(0, CombatMap.height * 2);
 
-                    if (combatMap.boxes[randomBox].spaceObject == null)
+                    if (CombatMap.boxes[randomBox].spaceObject == null)
                     {
-                        combatMap.boxes[randomBox].spaceObject = ship;
+                        CombatMap.boxes[randomBox].spaceObject = ship;
                         ship.boxId = randomBox;
                         break;
                     }
@@ -230,11 +233,11 @@ namespace qwerty
                 while (true)
                 {
                     Random rand = new Random();
-                    int randomBox = rand.Next(combatMap.boxes.Count - combatMap.height * 2, combatMap.boxes.Count);
+                    int randomBox = rand.Next(CombatMap.boxes.Count - CombatMap.height * 2, CombatMap.boxes.Count);
 
-                    if (combatMap.boxes[randomBox].spaceObject == null)
+                    if (CombatMap.boxes[randomBox].spaceObject == null)
                     {
-                        combatMap.boxes[randomBox].spaceObject = ship;
+                        CombatMap.boxes[randomBox].spaceObject = ship;
                         ship.boxId = randomBox;
                         break;
                     }
@@ -254,7 +257,7 @@ namespace qwerty
 
         public void drawSpaceShit(int i, ref Bitmap combatBitmap)
         {
-            combatMap.boxes[i].spaceObject.drawSpaceShit(ref combatMap, ref combatBitmap);
+            CombatMap.boxes[i].spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
         }
     }
 }

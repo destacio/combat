@@ -18,7 +18,7 @@ namespace qwerty
 
         //combatMap cMap = new combatMap(8, 6);  // создаем поле боя с указанной размерностью
 
-        private combatMap cMap => objectManager.combatMap;
+        private combatMap cMap => objectManager.CombatMap;
         private List<Ship> allShips => objectManager.Ships;
 
         ObjectManager objectManager = new ObjectManager(8, 6);
@@ -26,8 +26,6 @@ namespace qwerty
         int activePlayer = 1; // ход 1-ого или 2-ого игрока
         Ship activeShip = null; // выделенное судно
         //List<Ship> allShips = new List<Ship>();
-        int blueShipsCount;
-        int redShipsCount;
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
         
 
@@ -39,22 +37,15 @@ namespace qwerty
             InitializeComponent();
             Draw();
 
-            shipsCount();
+            UpdateShipCount();
     
         }
 
-        public bool shipsCount()
+        public bool UpdateShipCount()
         {
-            blueShipsCount = 0;
-            redShipsCount = 0;
-            for (int count = 0; count < allShips.Count; count++)
-            {
+            int blueShipsCount = objectManager.FirstPlayerShipCount;
+            int redShipsCount = objectManager.SecondPlayerShipCount;
 
-                if (allShips[count].player == 1)
-                    blueShipsCount++;
-                else if (allShips[count].player == 2)
-                    redShipsCount++;
-            }
             if (blueShipsCount == 0 || redShipsCount == 0)
             {
                 txtBlueShips.Text = "";
@@ -450,7 +441,7 @@ namespace qwerty
                                         Thread.Sleep(150);
 
                                         if (activeShip.attack(cMap, cMap.boxes[select].id, ref combatBitmap, player, ref pictureMap) == 1)
-                                            shipsCount();
+                                            UpdateShipCount();
                                         Draw();
 
                                         // возвращаем корабль в исходное положение
@@ -478,7 +469,7 @@ namespace qwerty
 
         private void btnEndTurn_Click(object sender, EventArgs e)
         {
-            if (!shipsCount())
+            if (!UpdateShipCount())
             {
                 return;
             }
