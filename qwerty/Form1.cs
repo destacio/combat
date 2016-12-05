@@ -16,13 +16,16 @@ namespace qwerty
     {
         public Bitmap combatBitmap;
 
-        combatMap cMap = new combatMap(8, 6);  // создаем поле боя с указанной размерностью
-        ObjectManager objectManager = new ObjectManager();
+        //combatMap cMap = new combatMap(8, 6);  // создаем поле боя с указанной размерностью
+
+        private combatMap cMap => objectManager.combatMap;
+        private List<Ship> allShips => objectManager.Ships;
+
+        ObjectManager objectManager = new ObjectManager(8, 6);
         int select = -1; // служебная переменная, пока сам не знаю на кой хер она мне, но пусть будет. да.
         int activePlayer = 1; // ход 1-ого или 2-ого игрока
         Ship activeShip = null; // выделенное судно
-        List<Ship> allShips = new List<Ship>();
-        List<Meteor> meteors = new List<Meteor>();
+        //List<Ship> allShips = new List<Ship>();
         int blueShipsCount;
         int redShipsCount;
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
@@ -33,50 +36,12 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Ship penumbra = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
-            allShips.Add(penumbra);
-            Ship holycow = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
-            allShips.Add(holycow);
-            Ship leroy = shipCreate(ShipType.Assaulter, 1, WeaponType.HeavyLaser);
-            allShips.Add(leroy);
-
-
-            Ship pandorum = shipCreate(ShipType.Scout, 2, WeaponType.LightLaser);
-            allShips.Add(pandorum);
-            Ship exodar = shipCreate(ShipType.Scout, 2, WeaponType.LightLaser);
-            allShips.Add(exodar);
-            Ship neveria = shipCreate(ShipType.Assaulter, 2, WeaponType.HeavyLaser);
-            allShips.Add(neveria);    
-
-            objectManager.meteorCreate(cMap);
-
-            // расставляем корабли по полю, синие - слева, красные - справа
-            for (int count = 0; count < allShips.Count; count++ )
-            {
-                allShips[count].placeShip(ref cMap);
-            }
-
             InitializeComponent();
             Draw();
 
             shipsCount();
     
         }
-
-        Ship shipCreate(ShipType type, int p, WeaponType wpn)
-        {
-            Ship newShip = null;
-            switch (type)
-            {
-                case ShipType.Scout:
-                    newShip = new ShipScout(p, wpn);
-                    break;
-                case ShipType.Assaulter:
-                    newShip = new ShipAssaulter(p, wpn);
-                    break;
-            }
-            return newShip;
-        } 
 
         public bool shipsCount()
         {
@@ -190,7 +155,8 @@ namespace qwerty
                         brush = redBrush;
                     else brush = grayBrush;
 
-                    cMap.boxes[i].spaceObject.drawSpaceShit(ref cMap, ref combatBitmap);
+                    // this call is as dumb as it could ever be
+                    objectManager.drawSpaceShit(i, ref combatBitmap);
 
                 }
 
@@ -524,17 +490,7 @@ namespace qwerty
 
             activeShip = null;
 
-            for (int count = 0; count < allShips.Count; count++)
-            {
-                allShips[count].refill();
-            }
-
-            objectManager.moveMeteors(cMap);
-            
-            if(objectManager.whether2createMeteor() == 1)
-            {
-                objectManager.meteorCreate(cMap);
-            }
+            objectManager.EndTurn();
 
             Draw();
         }

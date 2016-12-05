@@ -82,39 +82,7 @@ namespace qwerty
             }
             return 0;
         }
-        public void placeShip(ref combatMap cMap)
-        {
-            if (player == 1)
-            {
-                while (true)
-                {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(0, cMap.height * 2);
-
-                    if (cMap.boxes[randomBox].spaceObject == null)
-                    {
-                        cMap.boxes[randomBox].spaceObject = this;
-                        boxId = randomBox;
-                        break;
-                    }
-                }
-            }
-            else if (player == 2)
-            {
-                while (true)
-                {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(cMap.boxes.Count - cMap.height * 2, cMap.boxes.Count);
-
-                    if (cMap.boxes[randomBox].spaceObject == null)
-                    {
-                        cMap.boxes[randomBox].spaceObject = this;
-                        boxId = randomBox;
-                        break;
-                    }
-                }
-            }
-        }
+        
 
         public void shipRotate(double angle)
         {
@@ -131,7 +99,7 @@ namespace qwerty
             weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));
         }
 
-        public void refill()
+        public void RefillEnergy()
         {
             actionsLeft = maxActions;
         }
