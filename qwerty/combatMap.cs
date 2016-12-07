@@ -41,22 +41,23 @@ namespace qwerty
        
         public void iniBasicPoints()
         {
-            int xcoord = -1;
+            int xcoord = 0;
             int ycoord = 0;
             int count = 0;
+
+            scale = 45;
+
             for(int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
                 {
-                    if (j % height == 0) xcoord += 1;
-
                     if(i % 2 == 1)
                     {
                         // нечетная
                         if (j % height == 0) ycoord = 1;
-                        Box box = new Box(scale);
-                        box.xmove(deltax * i - 10 * scale);
-                        box.ymove(deltay * j + 10 * scale);
+                        Box box = new Box(scale, deltax * i - 10 * scale, deltay * j + 10 * scale);
+                        //box.xmove(deltax * i - 10 * scale);
+                        //box.ymove(deltay * j + 10 * scale);
                         
                         box.x = xcoord;
                         box.y = ycoord;
@@ -70,9 +71,9 @@ namespace qwerty
                     {
                         // четная
                         if (j % height == 0) ycoord = 0;
-                        Box box = new Box(scale);
-                        box.xmove(deltax * i - 10 * scale);
-                        box.ymove(deltay * j + 0);
+                        Box box = new Box(scale, deltax * i - 10 * scale, deltay * j + 0);
+                        //box.xmove(deltax * i - 10 * scale);
+                        //box.ymove(deltay * j + 0);
 
                         box.x = xcoord;
                         box.y = ycoord;
@@ -83,6 +84,7 @@ namespace qwerty
                     }
                     ycoord += 2;
                 }
+                xcoord++;
             }
         }
     }
