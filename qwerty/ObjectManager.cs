@@ -59,7 +59,8 @@ namespace qwerty
                 }
             }
 
-            if (DoCreateMeteor)
+            Random rand = new Random();
+            if (rand.Next(0, 100) <= MeteorAppearanceChance)
             {
                 meteorCreate();
             }
@@ -187,15 +188,6 @@ namespace qwerty
                 CombatMap.boxes[box4meteor].spaceObject = newMeteor;
             }
             
-        }
-
-        private bool DoCreateMeteor
-        {
-            get
-            {
-                Random rand = new Random();
-                return rand.Next(0, 100) <= MeteorAppearanceChance;
-            }
         }
 
         Ship shipCreate(ShipType type, int p, WeaponType wpn)
