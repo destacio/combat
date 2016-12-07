@@ -35,6 +35,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtBlueShips = new System.Windows.Forms.Label();
             this.txtRedShips = new System.Windows.Forms.Label();
+            this.buttonDebug = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,6 +45,7 @@
             this.pictureMap.Location = new System.Drawing.Point(153, 0);
             this.pictureMap.Name = "pictureMap";
             this.pictureMap.Size = new System.Drawing.Size(1225, 792);
+            this.pictureMap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureMap.TabIndex = 0;
             this.pictureMap.TabStop = false;
             this.pictureMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureMap_MouseClick);
@@ -103,12 +105,23 @@
             this.txtRedShips.Size = new System.Drawing.Size(0, 13);
             this.txtRedShips.TabIndex = 7;
             // 
+            // buttonDebug
+            // 
+            this.buttonDebug.Location = new System.Drawing.Point(8, 16);
+            this.buttonDebug.Name = "buttonDebug";
+            this.buttonDebug.Size = new System.Drawing.Size(75, 23);
+            this.buttonDebug.TabIndex = 8;
+            this.buttonDebug.Text = "DEBUG";
+            this.buttonDebug.UseVisualStyleBackColor = true;
+            this.buttonDebug.Click += new System.EventHandler(this.buttonDebug_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(624, 441);
+            this.ClientSize = new System.Drawing.Size(624, 442);
+            this.Controls.Add(this.buttonDebug);
             this.Controls.Add(this.txtRedShips);
             this.Controls.Add(this.txtBlueShips);
             this.Controls.Add(this.label1);
@@ -135,6 +148,7 @@
         private System.Windows.Forms.Label txtBlueShips;
         private System.Windows.Forms.Label txtRedShips;
         public System.Windows.Forms.PictureBox pictureMap;
+        private System.Windows.Forms.Button buttonDebug;
     }
 }
 

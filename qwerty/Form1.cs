@@ -39,7 +39,9 @@ namespace qwerty
             Draw();
 
             UpdateShipCount();
-    
+#if !DEBUG
+            buttonDebug.Visible = false;
+#endif
         }
 
         public bool UpdateShipCount()
@@ -152,9 +154,9 @@ namespace qwerty
 
                 }
 
-                //g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
-                //g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
-                //g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
 
             }
                 pictureMap.Image = combatBitmap;
@@ -487,5 +489,9 @@ namespace qwerty
             Draw();
         }
 
+        private void buttonDebug_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Hello from debug!");
+        }
     }
 }
