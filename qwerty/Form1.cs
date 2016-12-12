@@ -326,7 +326,7 @@ namespace qwerty
                                     activeShip.ypoints[n] = yold[n];
                                 }
 
-                                activeShip.moveShip(cMap, a, select);
+                                activeShip.moveShip(cMap, activeShip.boxId, select);
 
                                 resetShipRotate(rotateAngle);
 
