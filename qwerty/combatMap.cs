@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using qwerty.Objects;
 
 namespace qwerty
@@ -10,13 +11,29 @@ namespace qwerty
         public int FieldWidth;
         public int FieldHeight;
         private const float CellSideLength = 40;
-        public List<Cell> Cells = new List<Cell>(); 
+        public readonly List<Cell> Cells = new List<Cell>(); 
         public CombatMap(int w, int h) 
         {
             FieldWidth = w;
             FieldHeight = h;
 
             InitializeMap();
+        }
+
+        public int FieldWidthPixels
+        {
+            get
+            {
+                return (int)(Cells.Last().CellPoints.Max(cell => cell.X) + 10);
+            }
+        }
+
+        public int FieldHeightPixels
+        {
+            get
+            {
+                return (int)(Cells.Last().CellPoints.Max(cell => cell.Y) + 10);
+            }
         }
 
         public Cell GetCellByCoordinates(int x, int y)
@@ -38,7 +55,7 @@ namespace qwerty
                 randomBoxId = rand.Next(0, FieldHeight*2);
                 if (ship.player == 2)
                 {
-                    randomBoxId = Cells.Count - randomBoxId;
+                    randomBoxId = Cells.Count - randomBoxId - 1;
                 }
             } while (Cells[randomBoxId].spaceObject != null);
 
