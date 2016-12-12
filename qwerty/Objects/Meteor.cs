@@ -21,7 +21,7 @@ namespace qwerty.Objects
             
         }
 
-        public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
+        public override void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap)
         {
             Graphics g = Graphics.FromImage(bmap);
             SolidBrush grayBrush = new SolidBrush(Color.Gray);
@@ -29,7 +29,7 @@ namespace qwerty.Objects
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
         }
 
-        public void move(combatMap cMap)
+        public void move(CombatMap cMap)
         {
                 int newx;
                 int newy;

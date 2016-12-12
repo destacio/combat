@@ -15,14 +15,14 @@ namespace qwerty
         public List<Ship> Ships = new List<Ship>();
         private const int MeteorAppearanceChance = 20;
 
-        public combatMap CombatMap;
+        public CombatMap CombatMap;
 
         public int FirstPlayerShipCount => Ships.Count(sh => sh.player == 1);
         public int SecondPlayerShipCount => Ships.Count(sh => sh.player == 2);
 
         public ObjectManager(int mapWidth, int mapHeight)
         {
-            CombatMap = new combatMap(mapWidth, mapHeight);
+            CombatMap = new CombatMap(mapWidth, mapHeight);
 
             Ship penumbra = shipCreate(ShipType.Scout, 1, WeaponType.LightIon);
             Ships.Add(penumbra);

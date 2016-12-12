@@ -35,12 +35,12 @@ namespace qwerty.Objects
 
         public override string Description => "";
 
-        public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
+        public override void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap)
         {
             
         }
 
-        public void moveShip(combatMap cMap, int pointAId, int pointBId)
+        public void moveShip(CombatMap cMap, int pointAId, int pointBId)
         {
 
             if (actionsLeft > 0)
@@ -53,7 +53,7 @@ namespace qwerty.Objects
 
             }
         }
-        public int attack(combatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
+        public int attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
             int dmg;
 
