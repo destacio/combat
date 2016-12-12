@@ -1,80 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using qwerty.Objects;
 
 namespace qwerty
 {
     class CombatMap
     {
-        public int width;
-        public int height;
-        public int scale = 3;
-        public List<Cell> boxes = new List<Cell>(); 
+        public int FieldWidth;
+        public int FieldHeight;
+        private const float CellSideLength = 40;
+        public List<Cell> Cells = new List<Cell>(); 
         public CombatMap(int w, int h) 
         {
-            width = w;
-            height = h;
+            FieldWidth = w;
+            FieldHeight = h;
 
             InitializeMap();
         }
 
-        public Cell getBoxByCoords(int x, int y)
+        public Cell GetCellByCoordinates(int x, int y)
         {
-            Cell targetBox = null;
-            for (int i = 0; i < boxes.Count; i++ )
+            if (x < 0 || y < 0 || x*FieldHeight + y > FieldWidth*FieldHeight)
             {
-                if (boxes[i].x == x && boxes[i].y == y)
+                return null;
+            }
+
+            return Cells[x*FieldHeight + y];
+        }
+
+        public void PlaceShip(Ship ship)
+        {
+            if (ship.player == 1)
+            {
+                while (true)
                 {
-                    targetBox = boxes[i];
-                    break;
+                    Random rand = new Random();
+                    int randomBox = rand.Next(0, FieldHeight * 2);
+
+                    if (Cells[randomBox].spaceObject == null)
+                    {
+                        Cells[randomBox].spaceObject = ship;
+                        ship.boxId = randomBox;
+                        break;
+                    }
                 }
             }
-            return targetBox;
-        }
-       
-        public void InitializeMap()
-        {
-            int xcoord = 0;
-            int ycoord = 0;
-            int count = 0;
-
-            scale = 40;
-
-            for(int i = 0; i < width; i++)
+            else if (ship.player == 2)
             {
-                for (int j = 0; j < height; j++)
+                while (true)
                 {
-                    if(i % 2 == 1)
+                    Random rand = new Random();
+                    int randomBox = rand.Next(Cells.Count - FieldHeight * 2, Cells.Count);
+
+                    if (Cells[randomBox].spaceObject == null)
                     {
-                        // нечетная
-                        if (j % height == 0) ycoord = 1;
-                        Cell box = new Cell(scale, i, j, new Size(scale + 10,(int)(Math.Sin(Math.PI/3) * scale + 10)));
-                        
-                        //box.x = xcoord;
-                        //box.y = ycoord;
-                        box.id = count++;
-
-                        boxes.Add(box);
-
+                        Cells[randomBox].spaceObject = ship;
+                        ship.boxId = randomBox;
+                        break;
                     }
-                    else
-                    {
-                        // четная
-                        if (j % height == 0) ycoord = 0;
-                        Cell box = new Cell(scale, i, j, new Size(scale + 10, (int)(Math.Sin(Math.PI / 3) * scale + 10)));
-
-                        //box.x = xcoord;
-                        //box.y = ycoord;
-                        box.id = count++;
-
-                        boxes.Add(box);
-                    }
-                    ycoord += 2;
                 }
-                xcoord++;
+            }
+        }
+
+        private void InitializeMap()
+        {
+            for(int i = 0; i < FieldWidth; i++)
+            {
+                for (int j = 0; j < FieldHeight; j++)
+                {
+                    Cells.Add(new Cell(CellSideLength, i, j, i*FieldHeight + j,
+                        new Size((int)(CellSideLength + 10), (int) (Math.Sin(Math.PI/3)*CellSideLength + 10))));
+                }
             }
         }
     }

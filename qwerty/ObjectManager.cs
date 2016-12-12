@@ -43,7 +43,7 @@ namespace qwerty
 
             foreach (var ship in Ships)
             {
-                placeShip(ship);
+                CombatMap.PlaceShip(ship);
             }
 
             meteorCreate();
@@ -85,13 +85,13 @@ namespace qwerty
             {
                 
                 case 1:  // left
-                    box4meteor = rand.Next(0, CombatMap.height);
+                    box4meteor = rand.Next(0, CombatMap.FieldHeight);
                     for (i = 0; i < 10; i++ )
                     {
-                        if (CombatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.Cells[box4meteor].spaceObject != null)
                         {
                             box4meteor += 1;
-                            if (box4meteor >= CombatMap.height - 1)
+                            if (box4meteor >= CombatMap.FieldHeight - 1)
                                 box4meteor = 0;
                         }
                         else break;
@@ -108,13 +108,13 @@ namespace qwerty
                     }
                     break;
                 case 2: // top
-                    box4meteor = CombatMap.getBoxByCoords(rand.Next(0,CombatMap.width/2-1) * 2, 0).id;
+                    box4meteor = CombatMap.GetCellByCoordinates(rand.Next(0,CombatMap.FieldWidth/2-1) * 2, 0).id;
                     for (i = 0; i < 10; i++ )
                             {
-                        if (CombatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.Cells[box4meteor].spaceObject != null)
                         {
-                            box4meteor += CombatMap.height * 2;
-                            if (box4meteor > CombatMap.width + 1)
+                            box4meteor += CombatMap.FieldHeight * 2;
+                            if (box4meteor > CombatMap.FieldWidth + 1)
                                 box4meteor = 0;
                         }
                         else break;
@@ -131,14 +131,14 @@ namespace qwerty
                     yWay = Constants.MEDIUM_BOTTOM;
                     break;
                 case 3: // right
-                    box4meteor = rand.Next(CombatMap.boxes.Count-1 - CombatMap.height, CombatMap.boxes.Count-1);
+                    box4meteor = rand.Next(CombatMap.Cells.Count-1 - CombatMap.FieldHeight, CombatMap.Cells.Count-1);
                     for (i = 0; i < 10; i++)
                     {
-                        if (CombatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.Cells[box4meteor].spaceObject != null)
                         {
                             box4meteor += 1;
-                            if (box4meteor > CombatMap.boxes.Count)
-                                box4meteor = CombatMap.boxes.Count - CombatMap.height;
+                            if (box4meteor > CombatMap.Cells.Count)
+                                box4meteor = CombatMap.Cells.Count - CombatMap.FieldHeight;
                         }
                         else break;
                     }
@@ -154,14 +154,14 @@ namespace qwerty
                     }
                     break;
                 case 0: // bottom
-                    box4meteor = CombatMap.getBoxByCoords(rand.Next(0, CombatMap.width / 2 - 1) * 2+1, CombatMap.height * 2 - 1).id;
+                    box4meteor = CombatMap.GetCellByCoordinates(rand.Next(0, CombatMap.FieldWidth / 2 - 1) * 2+1, CombatMap.FieldHeight * 2 - 1).id;
                     for (i = 0; i < 10; i++ )
                     {
-                        if (CombatMap.boxes[box4meteor].spaceObject != null)
+                        if (CombatMap.Cells[box4meteor].spaceObject != null)
                         {
-                            box4meteor += CombatMap.height * 2;
-                            if (box4meteor > CombatMap.boxes.Count-1)
-                                box4meteor = CombatMap.height - 1;
+                            box4meteor += CombatMap.FieldHeight * 2;
+                            if (box4meteor > CombatMap.Cells.Count-1)
+                                box4meteor = CombatMap.FieldHeight - 1;
                         }
                         else break;
                     }
@@ -185,7 +185,7 @@ namespace qwerty
 
                 newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
                 Meteors.Add(newMeteor);
-                CombatMap.boxes[box4meteor].spaceObject = newMeteor;
+                CombatMap.Cells[box4meteor].spaceObject = newMeteor;
             }
             
         }
@@ -205,39 +205,7 @@ namespace qwerty
             return newShip;
         }
 
-        public void placeShip(Ship ship)
-        {
-            if (ship.player == 1)
-            {
-                while (true)
-                {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(0, CombatMap.height * 2);
 
-                    if (CombatMap.boxes[randomBox].spaceObject == null)
-                    {
-                        CombatMap.boxes[randomBox].spaceObject = ship;
-                        ship.boxId = randomBox;
-                        break;
-                    }
-                }
-            }
-            else if (ship.player == 2)
-            {
-                while (true)
-                {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(CombatMap.boxes.Count - CombatMap.height * 2, CombatMap.boxes.Count);
-
-                    if (CombatMap.boxes[randomBox].spaceObject == null)
-                    {
-                        CombatMap.boxes[randomBox].spaceObject = ship;
-                        ship.boxId = randomBox;
-                        break;
-                    }
-                }
-            }
-        }
 
         public void EndTurn()
         {
@@ -251,7 +219,7 @@ namespace qwerty
 
         public void drawSpaceShit(int i, ref Bitmap combatBitmap)
         {
-            CombatMap.boxes[i].spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
+            CombatMap.Cells[i].spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
         }
     }
 }
