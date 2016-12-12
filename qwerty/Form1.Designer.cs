@@ -120,7 +120,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(641, 459);
+            this.ClientSize = new System.Drawing.Size(905, 468);
             this.Controls.Add(this.buttonDebug);
             this.Controls.Add(this.txtRedShips);
             this.Controls.Add(this.txtBlueShips);
