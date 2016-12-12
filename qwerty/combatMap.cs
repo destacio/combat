@@ -31,36 +31,19 @@ namespace qwerty
 
         public void PlaceShip(Ship ship)
         {
-            if (ship.player == 1)
+            var rand = new Random();
+            int randomBoxId;
+            do
             {
-                while (true)
+                randomBoxId = rand.Next(0, FieldHeight*2);
+                if (ship.player == 2)
                 {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(0, FieldHeight * 2);
-
-                    if (Cells[randomBox].spaceObject == null)
-                    {
-                        Cells[randomBox].spaceObject = ship;
-                        ship.boxId = randomBox;
-                        break;
-                    }
+                    randomBoxId = Cells.Count - randomBoxId;
                 }
-            }
-            else if (ship.player == 2)
-            {
-                while (true)
-                {
-                    Random rand = new Random();
-                    int randomBox = rand.Next(Cells.Count - FieldHeight * 2, Cells.Count);
+            } while (Cells[randomBoxId].spaceObject != null);
 
-                    if (Cells[randomBox].spaceObject == null)
-                    {
-                        Cells[randomBox].spaceObject = ship;
-                        ship.boxId = randomBox;
-                        break;
-                    }
-                }
-            }
+            Cells[randomBoxId].spaceObject = ship;
+            ship.boxId = randomBoxId;
         }
 
         private void InitializeMap()
