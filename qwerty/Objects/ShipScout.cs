@@ -15,7 +15,7 @@ namespace qwerty.Objects
             $"AP - {equippedWeapon.attackPower}{Environment.NewLine}" +
             $"Range - {equippedWeapon.attackRange}";
 
-        public override void drawSpaceShit(ref combatMap cMap, ref System.Drawing.Bitmap bmap)
+        public override void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap)
         {
             Graphics g = Graphics.FromImage(bmap);
             
@@ -57,6 +57,13 @@ namespace qwerty.Objects
             ypoints.Add(-14);
             ypoints.Add(14);
             ypoints.Add(0);
+
+            PolygonPoints = new[]
+            {
+                new PointF(-15, -14),
+                new PointF(-15, 14),
+                new PointF(17, 0)
+            };
      
             // лишние точки
 
