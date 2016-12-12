@@ -19,7 +19,7 @@ namespace qwerty
 
         //combatMap cMap = new combatMap(8, 6);  // создаем поле боя с указанной размерностью
 
-        private combatMap cMap => objectManager.CombatMap;
+        private CombatMap cMap => objectManager.CombatMap;
         private List<Ship> allShips => objectManager.Ships;
 
         ObjectManager objectManager = new ObjectManager(8, 6);
@@ -84,14 +84,6 @@ namespace qwerty
             for (int i = 0; i < cMap.boxes.Count; i++)
             {
                 generalPen = PurplePen;
-                Point[] myPointArrayHex = {  //точки для отрисовки шестиугольника
-                        new Point(cMap.boxes[i].xpoint1, cMap.boxes[i].ypoint1),
-                        new Point(cMap.boxes[i].xpoint2, cMap.boxes[i].ypoint2),
-                        new Point(cMap.boxes[i].xpoint3, cMap.boxes[i].ypoint3),
-                        new Point(cMap.boxes[i].xpoint4, cMap.boxes[i].ypoint4),
-                        new Point(cMap.boxes[i].xpoint5, cMap.boxes[i].ypoint5),
-                        new Point(cMap.boxes[i].xpoint6, cMap.boxes[i].ypoint6)
-                };
                 // Если выделили судно с очками передвижения, подсвечиваем его и соседние клетки
 
                 if (activeShip != null)
@@ -118,26 +110,18 @@ namespace qwerty
 
                                 if ((int)range <= activeShip.equippedWeapon.attackRange)
                                 {
-                                    Point[] myPointArrayHex99 = {  //точки для отрисовки шестиугольника
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint1, cMap.boxes[allShips[count].boxId].ypoint1),
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint2, cMap.boxes[allShips[count].boxId].ypoint2),
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint3, cMap.boxes[allShips[count].boxId].ypoint3),
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint4, cMap.boxes[allShips[count].boxId].ypoint4),
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint5, cMap.boxes[allShips[count].boxId].ypoint5),
-                                        new Point(cMap.boxes[allShips[count].boxId].xpoint6, cMap.boxes[allShips[count].boxId].ypoint6)
-                                     };
-                                    g.DrawPolygon(redPen, myPointArrayHex99);
+                                    g.DrawPolygon(redPen, cMap.boxes[allShips[count].boxId].CellPoints);
                                 }
                             }
                         }
                     }
                 }
 
-                g.DrawPolygon(PurplePen, myPointArrayHex);
+                g.DrawPolygon(PurplePen, cMap.boxes[i].CellPoints);
 
                 if (activeShip != null && activeShip.boxId == i)
                 {
-                    g.DrawPolygon(activeShipAriaPen, myPointArrayHex);
+                    g.DrawPolygon(activeShipAriaPen, cMap.boxes[i].CellPoints);
 
                 }
 
@@ -291,47 +275,7 @@ namespace qwerty
                         // если выбранная клетка пуста - определяем возможность перемещения 
                         if (activeShip.actionsLeft > 0 && cMap.boxes[select].spaceObject == null)
                         {
-                            int flag = 0;
-                            // перемещение на одну клетку вверх
-                            int a = activeShip.boxId;
-                            if (a + 1 == select && a % cMap.height != cMap.height - 1)
-                            {
-                                flag = 1;
-                            }
-                            // перемещение на одну клетку вниз
-                            else if (a - 1 == select && a % cMap.height != 0)
-                            {
-                                flag = 1;
-                            }
-                            // перемещение на клетку справа вверху
-                            else if (cMap.boxes[a].y != 0 && cMap.boxes[a].x != cMap.width
-                                && cMap.boxes[a].x + 1 == cMap.boxes[select].x
-                                && cMap.boxes[a].y - 1 == cMap.boxes[select].y)
-                            {
-                                flag = 1;
-                            }
-                            // перемещение на клетку справа внизу
-                            else if (cMap.boxes[a].y + 1 != cMap.height * 2 && cMap.boxes[a].x != cMap.width
-                                && cMap.boxes[a].x + 1 == cMap.boxes[select].x
-                                && cMap.boxes[a].y + 1 == cMap.boxes[select].y)
-                            {
-                                flag = 1;
-                            }
-                            // перемещение на клетку слева вверху
-                            else if (cMap.boxes[a].y != 0 && cMap.boxes[a].x != 0
-                                && cMap.boxes[a].x - 1 == cMap.boxes[select].x
-                                && cMap.boxes[a].y - 1 == cMap.boxes[select].y)
-                            {
-                                flag = 1;
-                            }
-                            // перемещение на клетку слева внизу
-                            else if (cMap.boxes[a].y + 1 != cMap.height * 2 && cMap.boxes[a].x != 0
-                                && cMap.boxes[a].x - 1 == cMap.boxes[select].x
-                                && cMap.boxes[a].y + 1 == cMap.boxes[select].y)
-                            {
-                                flag = 1;
-                            }
-                            if (flag == 1)
+                            if (cMap.boxes[activeShip.boxId].IsNeighborCell(cMap.boxes[select].x, cMap.boxes[select].y))
                             {
                                 double rotateAngle;
 

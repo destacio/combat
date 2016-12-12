@@ -9,7 +9,7 @@ using qwerty.Objects;
 
 namespace qwerty
 {
-    class Box
+    class Cell
     {
         public SpaceObject spaceObject = null;
         public int id;
@@ -61,8 +61,11 @@ namespace qwerty
             ypoint4 = ypoint1;
         }
         */
-        public Box(float sideLength, int cellX, int cellY, Size fieldOffset = default(Size))
+        public Cell(float sideLength, int cellX, int cellY, Size fieldOffset = default(Size))
         {
+            x = cellX;
+            y = cellY;
+
             float xCoord = (float)Math.Truncate(sideLength*Math.Cos(Math.PI/3));
             float yCoord = (float)Math.Truncate(sideLength*Math.Sin(Math.PI/3));
             CellPoints = new[]
@@ -80,14 +83,29 @@ namespace qwerty
             {
                 CellPoints[i] = PointF.Add(CellPoints[i], fieldOffset + cellOffset);
             }
-        }
 
-        public void centerDetermine()
-        {
             xcenter = (xpoint2 + xpoint3) / 2;
             ycenter = (ypoint2 + ypoint6) / 2;
         }
 
-        
+        public bool IsNeighborCell(int newCellX, int newCellY)
+        {
+            int deltaX = newCellX - x;
+            int deltaY = newCellY - y;
+
+            switch (deltaX)
+            {
+                case 0:
+                    return deltaY == -1 || deltaY == 1;
+                case 1:
+                case -1:
+                    return deltaY == 0 ||
+                           (x%2 == 0
+                               ? deltaY == -1
+                               : deltaY == 1);
+                default:
+                    return false;
+            }
+        }
     }
 }
