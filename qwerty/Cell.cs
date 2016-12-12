@@ -18,20 +18,6 @@ namespace qwerty
         public int xcenter;
         public int ycenter;
 
-        //public int xpoint1 = 15;
-        //public int xpoint2 = 20;
-        //public int xpoint3 = 55;
-        //public int xpoint4 = 60;
-        //public int xpoint5 = 55;
-        //public int xpoint6 = 20;
-
-        //public int ypoint1 = 25;
-        //public int ypoint2 = 15;
-        //public int ypoint3 = 15;
-        //public int ypoint4 = 25;
-        //public int ypoint5 = 35;
-        //public int ypoint6 = 35;
-
         public int xpoint1 => (int)CellPoints[3].X;
         public int xpoint2 => (int)CellPoints[4].X;
         public int xpoint3 => (int)CellPoints[5].X;
@@ -48,23 +34,11 @@ namespace qwerty
 
         public PointF[] CellPoints;
 
-       /* public Box(int scale)
-        {
-            xpoint1 = 15 * scale;
-            xpoint2 = xpoint6 = xpoint1 + 5 * scale;
-            xpoint3 = xpoint5 = xpoint1 + 20 * scale;
-            xpoint4 = xpoint1 + 25 * scale;
-
-            ypoint1 = 10 + (15 * scale);
-            ypoint2 = ypoint3 = ypoint1 - 10 * scale;
-            ypoint5 = ypoint6 = ypoint1 + 10 * scale;
-            ypoint4 = ypoint1;
-        }
-        */
-        public Cell(float sideLength, int cellX, int cellY, Size fieldOffset = default(Size))
+        public Cell(float sideLength, int cellX, int cellY, int cellId, Size fieldOffset = default(Size))
         {
             x = cellX;
             y = cellY;
+            id = cellId;
 
             float xCoord = (float)Math.Truncate(sideLength*Math.Cos(Math.PI/3));
             float yCoord = (float)Math.Truncate(sideLength*Math.Sin(Math.PI/3));
