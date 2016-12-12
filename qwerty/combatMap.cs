@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace qwerty
             deltax = 20 * scale;
             deltay = 20 * scale;
 
-            iniBasicPoints();
+            InitializeMap();
         }
 
         public Box getBoxByCoords(int x, int y)
@@ -39,13 +40,13 @@ namespace qwerty
             return targetBox;
         }
        
-        public void iniBasicPoints()
+        public void InitializeMap()
         {
             int xcoord = 0;
             int ycoord = 0;
             int count = 0;
 
-            scale = 45;
+            scale = 40;
 
             for(int i = 0; i < width; i++)
             {
@@ -55,9 +56,7 @@ namespace qwerty
                     {
                         // нечетная
                         if (j % height == 0) ycoord = 1;
-                        Box box = new Box(scale, deltax * i - 10 * scale, deltay * j + 10 * scale);
-                        //box.xmove(deltax * i - 10 * scale);
-                        //box.ymove(deltay * j + 10 * scale);
+                        Box box = new Box(scale, i, j, new Size(scale + 10,(int)(Math.Sin(Math.PI/3) * scale + 10)));
                         
                         box.x = xcoord;
                         box.y = ycoord;
@@ -71,9 +70,7 @@ namespace qwerty
                     {
                         // четная
                         if (j % height == 0) ycoord = 0;
-                        Box box = new Box(scale, deltax * i - 10 * scale, deltay * j + 0);
-                        //box.xmove(deltax * i - 10 * scale);
-                        //box.ymove(deltay * j + 0);
+                        Box box = new Box(scale, i, j, new Size(scale + 10, (int)(Math.Sin(Math.PI / 3) * scale + 10)));
 
                         box.x = xcoord;
                         box.y = ycoord;
