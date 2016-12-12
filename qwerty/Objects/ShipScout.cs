@@ -12,8 +12,8 @@ namespace qwerty.Objects
             $"{StaticDescription}{Environment.NewLine}" +
             $"hp - {currentHealth}/{maxHealth}{Environment.NewLine}" +
             $"actions - {actionsLeft}/{maxActions}{Environment.NewLine}" +
-            $"AP - {equippedWeapon.attackPower}{Environment.NewLine}" +
-            $"Range - {equippedWeapon.attackRange}";
+            $"AP - {EquippedWeapon.attackPower}{Environment.NewLine}" +
+            $"Range - {EquippedWeapon.attackRange}";
 
         public override void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap)
         {
@@ -29,13 +29,13 @@ namespace qwerty.Objects
                 generalBrush = new SolidBrush(Color.Gray);
 
             Point[] myPointArray = {
-                    new Point(cMap.boxes[boxId].xcenter + xpoints[0], cMap.boxes[boxId].ycenter + ypoints[0]),
-                    new Point(cMap.boxes[boxId].xcenter + xpoints[1], cMap.boxes[boxId].ycenter + ypoints[1]),
-                    new Point(cMap.boxes[boxId].xcenter + xpoints[2], cMap.boxes[boxId].ycenter + ypoints[2]),
+                    new Point(cMap.Cells[boxId].xcenter + xpoints[0], cMap.Cells[boxId].ycenter + ypoints[0]),
+                    new Point(cMap.Cells[boxId].xcenter + xpoints[1], cMap.Cells[boxId].ycenter + ypoints[1]),
+                    new Point(cMap.Cells[boxId].xcenter + xpoints[2], cMap.Cells[boxId].ycenter + ypoints[2]),
                     };
             g.FillPolygon(generalBrush, myPointArray);
-            g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.boxes[boxId].xpoint1 + 25, cMap.boxes[boxId].ypoint1 + 15));
-            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.boxes[boxId].xpoint1 + 20, cMap.boxes[boxId].ypoint1 - 25));
+            g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.Cells[boxId].xpoint1 + 25, cMap.Cells[boxId].ypoint1 + 15));
+            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.Cells[boxId].xpoint1 + 20, cMap.Cells[boxId].ypoint1 - 25));
         }
 
         public ShipScout(int p, WeaponType weaponType) : base(weaponType)
@@ -69,7 +69,7 @@ namespace qwerty.Objects
 
             if (player == 2)
             {
-                shipRotate(180);
+                Rotate(180);
             }
 
             weaponPointX = xpoints[2];

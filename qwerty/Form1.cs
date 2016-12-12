@@ -81,7 +81,7 @@ namespace qwerty
             SolidBrush mediumPurpleBrush = new SolidBrush(Color.MediumPurple);
             SolidBrush brush;
 
-            for (int i = 0; i < cMap.boxes.Count; i++)
+            for (int i = 0; i < cMap.Cells.Count; i++)
             {
                 generalPen = PurplePen;
                 // Если выделили судно с очками передвижения, подсвечиваем его и соседние клетки
@@ -101,35 +101,35 @@ namespace qwerty
                             }
                             else
                             {
-                                double x1 = cMap.boxes[activeShip.boxId].x;
-                                double y1 = cMap.boxes[activeShip.boxId].y;
-                                double x2 = cMap.boxes[allShips[count].boxId].x;
-                                double y2 = cMap.boxes[allShips[count].boxId].y;
+                                double x1 = cMap.Cells[activeShip.boxId].x;
+                                double y1 = cMap.Cells[activeShip.boxId].y;
+                                double x2 = cMap.Cells[allShips[count].boxId].x;
+                                double y2 = cMap.Cells[allShips[count].boxId].y;
                                 double range;
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
 
-                                if ((int)range <= activeShip.equippedWeapon.attackRange)
+                                if ((int)range <= activeShip.EquippedWeapon.attackRange)
                                 {
-                                    g.DrawPolygon(redPen, cMap.boxes[allShips[count].boxId].CellPoints);
+                                    g.DrawPolygon(redPen, cMap.Cells[allShips[count].boxId].CellPoints);
                                 }
                             }
                         }
                     }
                 }
 
-                g.DrawPolygon(PurplePen, cMap.boxes[i].CellPoints);
+                g.DrawPolygon(PurplePen, cMap.Cells[i].CellPoints);
 
                 if (activeShip != null && activeShip.boxId == i)
                 {
-                    g.DrawPolygon(activeShipAriaPen, cMap.boxes[i].CellPoints);
+                    g.DrawPolygon(activeShipAriaPen, cMap.Cells[i].CellPoints);
 
                 }
 
-                if (cMap.boxes[i].spaceObject != null)
+                if (cMap.Cells[i].spaceObject != null)
                 {
-                    if (cMap.boxes[i].spaceObject.player == 1)
+                    if (cMap.Cells[i].spaceObject.player == 1)
                         brush = blueBrush;
-                    else if (cMap.boxes[i].spaceObject.player == 2)
+                    else if (cMap.Cells[i].spaceObject.player == 2)
                         brush = redBrush;
                     else brush = grayBrush;
 
@@ -138,9 +138,9 @@ namespace qwerty
 
                 }
 #if DEBUG
-                g.DrawString(cMap.boxes[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.boxes[i].xpoint1 + 20, cMap.boxes[i].ypoint1 + 10));
-                g.DrawString(cMap.boxes[i].x.ToString(), new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.boxes[i].xpoint1 + 10, cMap.boxes[i].ypoint1 + 10));
-                g.DrawString(cMap.boxes[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.boxes[i].xpoint1 + 40, cMap.boxes[i].ypoint1 + 10));
+                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.Cells[i].xpoint1 + 20, cMap.Cells[i].ypoint1 + 10));
+                g.DrawString(cMap.Cells[i].x.ToString(), new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.Cells[i].xpoint1 + 10, cMap.Cells[i].ypoint1 + 10));
+                g.DrawString(cMap.Cells[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.Cells[i].xpoint1 + 40, cMap.Cells[i].ypoint1 + 10));
 #endif
             }
                 pictureMap.Image = combatBitmap;
@@ -155,8 +155,8 @@ namespace qwerty
 
             if (activeShip != null)
             {
-                shipx = cMap.boxes[activeShip.boxId].x;  // координаты выделенного корабля
-                shipy = cMap.boxes[activeShip.boxId].y;
+                shipx = cMap.Cells[activeShip.boxId].x;  // координаты выделенного корабля
+                shipy = cMap.Cells[activeShip.boxId].y;
 
                 if (shipx == targetx) // избегаем деления на ноль
                 {
@@ -220,7 +220,7 @@ namespace qwerty
                 activeShip.shipRotate(5 * (int)(angle / Math.Abs(angle)));
                 Draw();
             }*/
-            activeShip.shipRotate(angle);
+            activeShip.Rotate(angle);
             Draw();
         }
         public void resetShipRotate(double angle)
@@ -231,38 +231,38 @@ namespace qwerty
                 activeShip.shipRotate(-5 * (int)(angle / Math.Abs(angle)));
                 Draw();
             }*/
-            activeShip.shipRotate(-angle);
+            activeShip.Rotate(-angle);
             Draw();
         }
         private void pictureMap_MouseClick(object sender, MouseEventArgs e)
         {
 
-            for (int i = 0; i < cMap.boxes.Count; i++)
+            for (int i = 0; i < cMap.Cells.Count; i++)
             {
 
-                if ((e.X > cMap.boxes[i].xpoint2) &&
-                    (e.X < cMap.boxes[i].xpoint3) &&
-                    (e.Y > cMap.boxes[i].ypoint2) &&
-                    (e.Y < cMap.boxes[i].ypoint6))
+                if ((e.X > cMap.Cells[i].xpoint2) &&
+                    (e.X < cMap.Cells[i].xpoint3) &&
+                    (e.Y > cMap.Cells[i].ypoint2) &&
+                    (e.Y < cMap.Cells[i].ypoint6))
                 {
                     select = i;
 
 
-                    if (activeShip == null && cMap.boxes[select].spaceObject != null)
+                    if (activeShip == null && cMap.Cells[select].spaceObject != null)
                     {
-                        if (cMap.boxes[select].spaceObject != null)
+                        if (cMap.Cells[select].spaceObject != null)
                         {
-                            if (activePlayer == cMap.boxes[select].spaceObject.player)
+                            if (activePlayer == cMap.Cells[select].spaceObject.player)
                             {
-                                boxDescription.Text = cMap.boxes[select].spaceObject.Description;
-                                activeShip = (Ship)cMap.boxes[select].spaceObject;
+                                boxDescription.Text = cMap.Cells[select].spaceObject.Description;
+                                activeShip = (Ship)cMap.Cells[select].spaceObject;
 
                                 Draw();
                             }
                             else
                             {
                                 Draw();
-                                boxDescription.Text = cMap.boxes[i].spaceObject.Description;
+                                boxDescription.Text = cMap.Cells[i].spaceObject.Description;
                             }
                         }
                     }
@@ -273,22 +273,22 @@ namespace qwerty
                     {
 
                         // если выбранная клетка пуста - определяем возможность перемещения 
-                        if (activeShip.actionsLeft > 0 && cMap.boxes[select].spaceObject == null)
+                        if (activeShip.actionsLeft > 0 && cMap.Cells[select].spaceObject == null)
                         {
-                            if (cMap.boxes[activeShip.boxId].IsNeighborCell(cMap.boxes[select].x, cMap.boxes[select].y))
+                            if (cMap.Cells[activeShip.boxId].IsNeighborCell(cMap.Cells[select].x, cMap.Cells[select].y))
                             {
                                 double rotateAngle;
 
-                                rotateAngle = attackAngleSearch(cMap.boxes[select].x, cMap.boxes[select].y);
+                                rotateAngle = attackAngleSearch(cMap.Cells[select].x, cMap.Cells[select].y);
 
                                 doShipRotate(rotateAngle);
 
                                 int range, dx, x1, x2, y1, y2;
 
-                                x1 = cMap.boxes[activeShip.boxId].xcenter;
-                                y1 = cMap.boxes[activeShip.boxId].ycenter;
-                                x2 = cMap.boxes[select].xcenter;
-                                y2 = cMap.boxes[select].ycenter;
+                                x1 = cMap.Cells[activeShip.boxId].xcenter;
+                                y1 = cMap.Cells[activeShip.boxId].ycenter;
+                                x2 = cMap.Cells[select].xcenter;
+                                y2 = cMap.Cells[select].ycenter;
 
                                 List<int> xold = new List<int>();
                                 List<int> yold = new List<int>();
@@ -326,7 +326,7 @@ namespace qwerty
                                     activeShip.ypoints[n] = yold[n];
                                 }
 
-                                activeShip.moveShip(cMap, activeShip.boxId, select);
+                                activeShip.Move(cMap, activeShip.boxId, select);
 
                                 resetShipRotate(rotateAngle);
 
@@ -338,12 +338,12 @@ namespace qwerty
                                 break;
                             }
                         }
-                        else if (cMap.boxes[select].spaceObject != null)
+                        else if (cMap.Cells[select].spaceObject != null)
                         {
-                            if (cMap.boxes[select].spaceObject.player == activePlayer)
+                            if (cMap.Cells[select].spaceObject.player == activePlayer)
                             {
-                                boxDescription.Text = cMap.boxes[select].spaceObject.Description;
-                                activeShip = (Ship)cMap.boxes[select].spaceObject;
+                                boxDescription.Text = cMap.Cells[select].spaceObject.Description;
+                                activeShip = (Ship)cMap.Cells[select].spaceObject;
 
                                 Draw();
                                 break;
@@ -351,33 +351,33 @@ namespace qwerty
 
                             // просчет возможности атаки 
 
-                            else if (cMap.boxes[select].spaceObject.player != activePlayer)
+                            else if (cMap.Cells[select].spaceObject.player != activePlayer)
                             {
                                 int flag = 0;
                                 int a = activeShip.boxId;
 
-                                double x1 = cMap.boxes[a].x;
-                                double y1 = cMap.boxes[a].y;
-                                double x2 = cMap.boxes[select].x;
-                                double y2 = cMap.boxes[select].y;
+                                double x1 = cMap.Cells[a].x;
+                                double y1 = cMap.Cells[a].y;
+                                double x2 = cMap.Cells[select].x;
+                                double y2 = cMap.Cells[select].y;
                                 double range;
 
                                 // определяем расстояние между объектами
 
                                 range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
 
-                                if(activeShip.equippedWeapon.attackRange >= (int)range)
+                                if(activeShip.EquippedWeapon.attackRange >= (int)range)
                                 {
                                     flag = 1; // устанавливаем флаг, если расстояние не превышает дальности атаки
                                 }
                                 if (flag == 1)
                                 {
-                                    if(activeShip.actionsLeft >= activeShip.equippedWeapon.energyСonsumption)  // если у корабля остались очки действий
+                                    if(activeShip.actionsLeft >= activeShip.EquippedWeapon.energyСonsumption)  // если у корабля остались очки действий
                                     {
                                         double angle, targetx, targety;
 
-                                        targetx = cMap.boxes[select].x;
-                                        targety = cMap.boxes[select].y;
+                                        targetx = cMap.Cells[select].x;
+                                        targety = cMap.Cells[select].y;
 
                                         angle = attackAngleSearch(targetx, targety);
 
@@ -387,7 +387,7 @@ namespace qwerty
                                         // отрисовка атаки
                                         Thread.Sleep(150);
 
-                                        if (activeShip.attack(cMap, cMap.boxes[select].id, ref combatBitmap, player, ref pictureMap) == 1)
+                                        if (activeShip.Attack(cMap, cMap.Cells[select].id, ref combatBitmap, player, ref pictureMap))
                                             UpdateShipCount();
                                         Draw();
 

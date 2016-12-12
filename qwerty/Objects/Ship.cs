@@ -11,7 +11,7 @@ namespace qwerty.Objects
 
     class Ship : SpaceObject
     {
-        public Weapon equippedWeapon;
+        public readonly Weapon EquippedWeapon;
         public int weaponPointX;
         public int weaponPointY;
 
@@ -20,13 +20,13 @@ namespace qwerty.Objects
             switch (wpnType)
             {
                 case WeaponType.HeavyLaser:
-                    equippedWeapon = new HeavyLaser();
+                    EquippedWeapon = new HeavyLaser();
                     break;
                 case WeaponType.LightIon:
-                    equippedWeapon = new LightIon();
+                    EquippedWeapon = new LightIon();
                     break;
                 case WeaponType.LightLaser:
-                    equippedWeapon = new LightLaser();
+                    EquippedWeapon = new LightLaser();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(wpnType), wpnType, null);
@@ -40,47 +40,46 @@ namespace qwerty.Objects
             
         }
 
-        public void moveShip(CombatMap cMap, int pointAId, int pointBId)
+        public void Move(CombatMap cMap, int pointAId, int pointBId)
         {
 
             if (actionsLeft > 0)
             {
 
                 boxId = pointBId;
-                cMap.boxes[pointAId].spaceObject = null;
-                cMap.boxes[pointBId].spaceObject = this;
+                cMap.Cells[pointAId].spaceObject = null;
+                cMap.Cells[pointBId].spaceObject = this;
                 actionsLeft -= 1;
 
             }
         }
-        public int attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
+        public bool Attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
-            int dmg;
-
-            if (actionsLeft >= equippedWeapon.energyСonsumption)
+            if (actionsLeft < EquippedWeapon.energyСonsumption)
             {
-                equippedWeapon.drawAttack(cMap.boxes[boxId].xcenter + weaponPointX, cMap.boxes[boxId].ycenter + weaponPointY,
-                    cMap.boxes[pointB].xcenter, cMap.boxes[pointB].ycenter,
-                    ref bmap, player, ref pictureMap
-                );
-
-                Random rand = new Random();
-                dmg = rand.Next(-equippedWeapon.attackPower / 10, equippedWeapon.attackPower / 10) + equippedWeapon.attackPower;
-                cMap.boxes[pointB].spaceObject.currentHealth -= dmg;
-                actionsLeft -= 1;
-                if (cMap.boxes[pointB].spaceObject.currentHealth <= 0)
-                {
-                    cMap.boxes[pointB].spaceObject.player = -1;
-                    cMap.boxes[pointB].spaceObject.boxId = -1;
-                    cMap.boxes[pointB].spaceObject = null;
-                    return 1;
-                }
+                return false;
             }
-            return 0;
+
+            EquippedWeapon.drawAttack(cMap.Cells[boxId].xcenter + weaponPointX, cMap.Cells[boxId].ycenter + weaponPointY,
+                cMap.Cells[pointB].xcenter, cMap.Cells[pointB].ycenter,
+                ref bmap, player, ref pictureMap);
+
+            Random rand = new Random();
+            int damage = rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
+            cMap.Cells[pointB].spaceObject.currentHealth -= damage;
+            actionsLeft -= 1;
+            if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
+            {
+                cMap.Cells[pointB].spaceObject.player = -1;
+                cMap.Cells[pointB].spaceObject.boxId = -1;
+                cMap.Cells[pointB].spaceObject = null;
+                return true;
+            }
+            return false;
         }
         
 
-        public void shipRotate(double angle)
+        public void Rotate(double angle)
         {
             int xold, yold;
             angle = angle * Math.PI / 180;
