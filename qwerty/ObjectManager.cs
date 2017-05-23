@@ -107,7 +107,7 @@ namespace qwerty
                     }
                     break;
                 case 2: // top
-                    box4meteor = CombatMap.GetCellByCoordinates(rand.Next(0,CombatMap.FieldWidth/2-1) * 2, 0).id;
+                    box4meteor = CombatMap.GetCellByCellCoordinates(rand.Next(0,CombatMap.FieldWidth/2-1) * 2, 0).id;
                     for (i = 0; i < 10; i++ )
                             {
                         if (CombatMap.Cells[box4meteor].spaceObject != null)
@@ -153,7 +153,7 @@ namespace qwerty
                     }
                     break;
                 case 0: // bottom
-                    box4meteor = CombatMap.GetCellByCoordinates(rand.Next(0, CombatMap.FieldWidth / 2 - 1) * 2+1, CombatMap.FieldHeight * 2 - 1).id;
+                    box4meteor = CombatMap.GetCellByCellCoordinates(rand.Next(0, CombatMap.FieldWidth / 2 - 1) * 2+1, CombatMap.FieldHeight * 2 - 1).id;
                     for (i = 0; i < 10; i++ )
                     {
                         if (CombatMap.Cells[box4meteor].spaceObject != null)
