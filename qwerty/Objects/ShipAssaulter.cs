@@ -40,11 +40,8 @@ namespace qwerty.Objects
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.Cells[boxId].xpoint1 + 20, cMap.Cells[boxId].ypoint1 - 25));
         }
 
-        public ShipAssaulter(int p, WeaponType weaponType):base(weaponType)
+        public ShipAssaulter(int playerId, WeaponType weaponType) : base(playerId, weaponType)
         {
-            objectType = ObjectType.Ship;
-
-            player = p;
             maxHealth = 100;
             currentHealth = maxHealth;
             maxActions = 2;
@@ -73,10 +70,6 @@ namespace qwerty.Objects
                 new PointF(-16, 15),  
             };
 
-            if (player == 2)
-            {
-                Rotate(180);
-            }
             weaponPointX = xpoints[2];
             weaponPointY = ypoints[2];
         }

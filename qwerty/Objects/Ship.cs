@@ -15,8 +15,16 @@ namespace qwerty.Objects
         public int weaponPointX;
         public int weaponPointY;
 
-        public Ship(WeaponType wpnType)
+        public Ship(int playerId, WeaponType wpnType)
         {
+            objectType = ObjectType.Ship;
+
+            player = playerId;
+            if (player == 2)
+            {
+                Rotate(180);
+            }
+
             switch (wpnType)
             {
                 case WeaponType.HeavyLaser:
