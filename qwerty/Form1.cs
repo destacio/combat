@@ -21,7 +21,6 @@ namespace qwerty
         private List<Ship> allShips => _objectManager.Ships;
 
         private readonly ObjectManager _objectManager = new ObjectManager(8, 6);
-        private int _selectedCellId = -1;
         private int _activePlayer = 1; // ход 1-ого или 2-ого игрока
         private Ship _activeShip = null; // выделенное судно
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
@@ -38,7 +37,7 @@ namespace qwerty
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            Draw();
+            UpdateUi();
 
             UpdateShipCount();
 #if !DEBUG
@@ -63,7 +62,7 @@ namespace qwerty
             return true;
         }
 
-        public void Draw()
+        public void UpdateUi()
         {
             combatBitmap = new Bitmap(pictureMap.Width, pictureMap.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(combatBitmap);
@@ -140,9 +139,8 @@ namespace qwerty
 
                 }
 #if DEBUG
-                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.Cells[i].xpoint1 + 20, cMap.Cells[i].ypoint1 + 10));
-                g.DrawString(cMap.Cells[i].x.ToString(), new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.Cells[i].xpoint1 + 10, cMap.Cells[i].ypoint1 + 10));
-                g.DrawString(cMap.Cells[i].y.ToString(), new Font("Arial", 8.0F), Brushes.Green, new PointF(cMap.Cells[i].xpoint1 + 40, cMap.Cells[i].ypoint1 + 10));
+                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.Cells[i].xpoint1 + 10, cMap.Cells[i].ypoint1 + 10));
+                g.DrawString($"({cMap.Cells[i].x}, {cMap.Cells[i].y})", new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.Cells[i].xpoint1 + 30, cMap.Cells[i].ypoint1 + 10));
 #endif
             }
                 pictureMap.Image = combatBitmap;
@@ -215,7 +213,7 @@ namespace qwerty
             return angle;
         }
 
-        public void doShipRotate(double angle)
+        public void RotateShip(double angle)
         {
             /*for (int count = 0; count < (int)Math.Abs(angle); count += 5)
             {
@@ -223,195 +221,146 @@ namespace qwerty
                 Draw();
             }*/
             _activeShip.Rotate(angle);
-            Draw();
+            UpdateUi();
         }
-        public void resetShipRotate(double angle)
-        {
-            /*for (int count = 1; count < (int)Math.Abs(angle); count += 5)
-            {
-                
-                activeShip.shipRotate(-5 * (int)(angle / Math.Abs(angle)));
-                Draw();
-            }*/
-            _activeShip.Rotate(-angle);
-            Draw();
-        }
+
         private void pictureMap_MouseClick(object sender, MouseEventArgs e)
         {
-
-            for (int i = 0; i < cMap.Cells.Count; i++)
+            var selectedCell = cMap.GetCellByPixelCoordinates(e.X, e.Y);
+            if (selectedCell == null)
             {
+                return;
+            }
 
-                if ((e.X > cMap.Cells[i].xpoint2) &&
-                    (e.X < cMap.Cells[i].xpoint3) &&
-                    (e.Y > cMap.Cells[i].ypoint2) &&
-                    (e.Y < cMap.Cells[i].ypoint6))
+            if (_activeShip == null)
+            {
+                // Nothing active and nothing to be activated
+                if (selectedCell.spaceObject == null) return;
+
+                if (_activePlayer == selectedCell.spaceObject.player)
                 {
-                    _selectedCellId = i;
-
-
-                    if (_activeShip == null && cMap.Cells[_selectedCellId].spaceObject != null)
+                    _activeShip = (Ship)selectedCell.spaceObject;
+                }
+                boxDescription.Text = selectedCell.spaceObject.Description;
+                UpdateUi();
+            }
+            else
+            {
+                // если выбранная клетка пуста - определяем возможность перемещения 
+                if (selectedCell.spaceObject == null)
+                {
+                    if (_activeShip.actionsLeft <= 0) return;
+                    if (cMap.Cells[_activeShip.boxId].IsNeighborCell(selectedCell.x, selectedCell.y))
                     {
-                        if (cMap.Cells[_selectedCellId].spaceObject != null)
-                        {
-                            if (_activePlayer == cMap.Cells[_selectedCellId].spaceObject.player)
-                            {
-                                boxDescription.Text = cMap.Cells[_selectedCellId].spaceObject.Description;
-                                _activeShip = (Ship)cMap.Cells[_selectedCellId].spaceObject;
+                        var rotateAngle = attackAngleSearch(selectedCell.x, selectedCell.y);
 
-                                Draw();
-                            }
-                            else
-                            {
-                                Draw();
-                                boxDescription.Text = cMap.Cells[i].spaceObject.Description;
-                            }
+                        RotateShip(rotateAngle);
+
+                        var x1 = cMap.Cells[_activeShip.boxId].xcenter;
+                        var y1 = cMap.Cells[_activeShip.boxId].ycenter;
+                        var x2 = selectedCell.xcenter;
+                        var y2 = selectedCell.ycenter;
+
+                        List<int> xold = new List<int>();
+                        List<int> yold = new List<int>();
+
+                        // запоминаем координаты
+                        for (int n = 0; n < _activeShip.xpoints.Count; n++ )
+                        {
+                            xold.Add(_activeShip.xpoints[n]);
+                            yold.Add(_activeShip.ypoints[n]);
                         }
+
+                        var range = (int)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+                        var dx = range / 15;
+                        int step = 15;
+
+                        var deltax = (x2 - x1) / step;
+                        var deltay = (y2 - y1) / step;
+                                
+                        for (int count1 = 0; count1 < range - 10; count1 += dx)
+                        {
+                            for (int j = 0; j < _activeShip.xpoints.Count; j++)
+                            {
+                                _activeShip.xpoints[j] += deltax;
+                                _activeShip.ypoints[j] += deltay;
+                            }
+                            Thread.Sleep(5);
+                            UpdateUi(); 
+                        } 
+                        // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
+                        for (int n = 0; n < _activeShip.xpoints.Count; n++)
+                        {
+                            _activeShip.xpoints[n] = xold[n];
+                            _activeShip.ypoints[n] = yold[n];
+                        }
+
+                        _activeShip.Move(cMap, _activeShip.boxId, selectedCell.id);
+
+                        RotateShip(-rotateAngle);
+
+                        boxDescription.Text = _activeShip.Description;
+
+                        if (_activeShip.actionsLeft == 0) _activeShip = null;
+                        UpdateUi();
+                    }
+                }
+                else
+                {
+                    if (selectedCell.spaceObject.player == _activePlayer)
+                    {
+                        boxDescription.Text = selectedCell.spaceObject.Description;
+                        _activeShip = (Ship)selectedCell.spaceObject;
+
+                        UpdateUi();
                     }
 
+                    // просчет возможности атаки 
 
-                // Если до этого ткнули по дружественному судну
-                    else if (_activeShip != null)
+                    else
                     {
+                        int a = _activeShip.boxId;
 
-                        // если выбранная клетка пуста - определяем возможность перемещения 
-                        if (_activeShip.actionsLeft > 0 && cMap.Cells[_selectedCellId].spaceObject == null)
+                        double x1 = cMap.Cells[a].x;
+                        double y1 = cMap.Cells[a].y;
+                        double x2 = selectedCell.x;
+                        double y2 = selectedCell.y;
+
+                        // определяем расстояние между объектами
+
+                        var range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
+
+                        if (_activeShip.EquippedWeapon.attackRange < (int) range || _activeShip.actionsLeft < _activeShip.EquippedWeapon.energyСonsumption)
                         {
-                            if (cMap.Cells[_activeShip.boxId].IsNeighborCell(cMap.Cells[_selectedCellId].x, cMap.Cells[_selectedCellId].y))
-                            {
-                                double rotateAngle;
-
-                                rotateAngle = attackAngleSearch(cMap.Cells[_selectedCellId].x, cMap.Cells[_selectedCellId].y);
-
-                                doShipRotate(rotateAngle);
-
-                                int range, dx, x1, x2, y1, y2;
-
-                                x1 = cMap.Cells[_activeShip.boxId].xcenter;
-                                y1 = cMap.Cells[_activeShip.boxId].ycenter;
-                                x2 = cMap.Cells[_selectedCellId].xcenter;
-                                y2 = cMap.Cells[_selectedCellId].ycenter;
-
-                                List<int> xold = new List<int>();
-                                List<int> yold = new List<int>();
-
-                                // запоминаем координаты
-                                for (int n = 0; n < _activeShip.xpoints.Count; n++ )
-                                {
-                                    xold.Add(_activeShip.xpoints[n]);
-                                    yold.Add(_activeShip.ypoints[n]);
-                                }
-
-                                range = (int)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-                                dx = range / 15;
-                                int deltax;
-                                int deltay;
-                                int step = 15;
-
-                                deltax = (x2 - x1) / step;
-                                deltay = (y2 - y1) / step;
-                                
-                                for (int count1 = 0; count1 < range - 10; count1 += dx)
-                                {
-                                    for (int j = 0; j < _activeShip.xpoints.Count; j++)
-                                    {
-                                        _activeShip.xpoints[j] += deltax;
-                                        _activeShip.ypoints[j] += deltay;
-                                    }
-                                    Thread.Sleep(5);
-                                    Draw(); 
-                                } 
-                                // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
-                                for (int n = 0; n < _activeShip.xpoints.Count; n++)
-                                {
-                                    _activeShip.xpoints[n] = xold[n];
-                                    _activeShip.ypoints[n] = yold[n];
-                                }
-
-                                _activeShip.Move(cMap, _activeShip.boxId, _selectedCellId);
-
-                                resetShipRotate(rotateAngle);
-
-                                boxDescription.Text = _activeShip.Description;
-
-                                if (_activeShip.actionsLeft == 0) _activeShip = null;
-                                Draw();
-
-                                break;
-                            }
+                            // another object is out of range or requires more energy than is left
+                            return;
                         }
-                        else if (cMap.Cells[_selectedCellId].spaceObject != null)
-                        {
-                            if (cMap.Cells[_selectedCellId].spaceObject.player == _activePlayer)
-                            {
-                                boxDescription.Text = cMap.Cells[_selectedCellId].spaceObject.Description;
-                                _activeShip = (Ship)cMap.Cells[_selectedCellId].spaceObject;
 
-                                Draw();
-                                break;
-                            }
+                        double targetx = selectedCell.x;
+                        double targety = selectedCell.y;
 
-                            // просчет возможности атаки 
+                        var angle = attackAngleSearch(targetx, targety);
 
-                            else if (cMap.Cells[_selectedCellId].spaceObject.player != _activePlayer)
-                            {
-                                int flag = 0;
-                                int a = _activeShip.boxId;
-
-                                double x1 = cMap.Cells[a].x;
-                                double y1 = cMap.Cells[a].y;
-                                double x2 = cMap.Cells[_selectedCellId].x;
-                                double y2 = cMap.Cells[_selectedCellId].y;
-                                double range;
-
-                                // определяем расстояние между объектами
-
-                                range = Math.Sqrt((x2 - x1) * (x2 - x1) + ((y2 - y1) * (y2 - y1)) * 0.35);
-
-                                if(_activeShip.EquippedWeapon.attackRange >= (int)range)
-                                {
-                                    flag = 1; // устанавливаем флаг, если расстояние не превышает дальности атаки
-                                }
-                                if (flag == 1)
-                                {
-                                    if(_activeShip.actionsLeft >= _activeShip.EquippedWeapon.energyСonsumption)  // если у корабля остались очки действий
-                                    {
-                                        double angle, targetx, targety;
-
-                                        targetx = cMap.Cells[_selectedCellId].x;
-                                        targety = cMap.Cells[_selectedCellId].y;
-
-                                        angle = attackAngleSearch(targetx, targety);
-
-                                        // поворачиваем корабль на угол angle
-                                        doShipRotate(angle);
+                        // поворачиваем корабль на угол angle
+                        RotateShip(angle);
                                         
-                                        // отрисовка атаки
-                                        Thread.Sleep(150);
+                        // отрисовка атаки
+                        Thread.Sleep(150);
 
-                                        if (_activeShip.Attack(cMap, cMap.Cells[_selectedCellId].id, ref combatBitmap, player, ref pictureMap))
-                                            UpdateShipCount();
-                                        Draw();
+                        if (_activeShip.Attack(cMap, selectedCell.id, ref combatBitmap, player, ref pictureMap))
+                            UpdateShipCount();
+                        UpdateUi();
 
-                                        // возвращаем корабль в исходное положение
-                                        resetShipRotate(angle);
+                        // возвращаем корабль в исходное положение
+                        RotateShip(-angle);
 
-                                        // убираем подсветку с корабля, если у него не осталось очков передвижений
-                                        if (_activeShip.actionsLeft == 0)
-                                        {
-                                            _activeShip = null;
-                                            Draw();
-                                        }
-                                        flag = 0;
-
-                                        break;
-                                    } 
-                                }
-                            } 
-
-                            }
+                        // убираем подсветку с корабля, если у него не осталось очков передвижений
+                        if (_activeShip.actionsLeft == 0)
+                        {
+                            _activeShip = null;
+                            UpdateUi();
                         }
-                    break;
+                    }
                 }
             }
         }
@@ -432,7 +381,7 @@ namespace qwerty
 
             _objectManager.EndTurn();
 
-            Draw();
+            UpdateUi();
         }
 
         private void buttonDebug_Click(object sender, EventArgs e)
