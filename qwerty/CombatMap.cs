@@ -36,7 +36,7 @@ namespace qwerty
             }
         }
 
-        public Cell GetCellByCoordinates(int x, int y)
+        public Cell GetCellByCellCoordinates(int x, int y)
         {
             if (x < 0 || y < 0 || x*FieldHeight + y > FieldWidth*FieldHeight)
             {
@@ -44,6 +44,13 @@ namespace qwerty
             }
 
             return Cells[x*FieldHeight + y];
+        }
+
+        public Cell GetCellByPixelCoordinates(int x, int y)
+        {
+            return
+                Cells.FirstOrDefault(
+                    cell => x > cell.xpoint2 && x < cell.xpoint3 && y > cell.ypoint2 && y < cell.ypoint6);
         }
 
         public void PlaceShip(Ship ship)
@@ -65,12 +72,12 @@ namespace qwerty
 
         private void InitializeMap()
         {
-            for(int i = 0; i < FieldWidth; i++)
+            for (int i = 0; i < FieldWidth; i++)
             {
                 for (int j = 0; j < FieldHeight; j++)
                 {
-                    Cells.Add(new Cell(CellSideLength, i, j, i*FieldHeight + j,
-                        new Size((int)(CellSideLength + 10), (int) (Math.Sin(Math.PI/3)*CellSideLength + 10))));
+                    Cells.Add(new Cell(CellSideLength, i, j, i * FieldHeight + j,
+                        new Size((int)(CellSideLength + 10), (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10))));
                 }
             }
         }

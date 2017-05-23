@@ -47,7 +47,7 @@ namespace qwerty.Objects
                 }
                 else
                 {
-                    pointB = cMap.GetCellByCoordinates(newx, newy).id;
+                    pointB = cMap.GetCellByCellCoordinates(newx, newy).id;
 
                     if (cMap.Cells[pointB].spaceObject == null)
                     {
