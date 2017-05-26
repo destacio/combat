@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using qwerty.Objects.Weapons;
 
@@ -12,8 +13,9 @@ namespace qwerty.Objects
     class Ship : SpaceObject
     {
         public readonly Weapon EquippedWeapon;
-        public int weaponPointX;
-        public int weaponPointY;
+        //public int weaponPointX;
+        //public int weaponPointY;
+        public PointF WeaponPoint;
 
         public Ship(int playerId, WeaponType wpnType)
         {
@@ -68,7 +70,10 @@ namespace qwerty.Objects
                 return false;
             }
 
-            EquippedWeapon.drawAttack(cMap.Cells[boxId].xcenter + weaponPointX, cMap.Cells[boxId].ycenter + weaponPointY,
+            /*EquippedWeapon.drawAttack(cMap.Cells[boxId].xcenter + weaponPointX, cMap.Cells[boxId].ycenter + weaponPointY,
+                cMap.Cells[pointB].xcenter, cMap.Cells[pointB].ycenter,
+                ref bmap, player, ref pictureMap);*/
+            EquippedWeapon.drawAttack((int)(cMap.Cells[boxId].xcenter + WeaponPoint.X), (int)(cMap.Cells[boxId].ycenter + WeaponPoint.Y),
                 cMap.Cells[pointB].xcenter, cMap.Cells[pointB].ycenter,
                 ref bmap, player, ref pictureMap);
 
@@ -89,15 +94,24 @@ namespace qwerty.Objects
 
         public void Rotate(double angle)
         {
-            int xold, yold;
+            //int xold, yold;
             angle = angle * Math.PI / 180;
-            for (int i = 0; i < xpoints.Count; i++)
+            /*for (int i = 0; i < xpoints.Count; i++)
             {
                 xold = xpoints[i];
                 yold = ypoints[i];
                 xpoints[i] = (int)(Math.Round((double)xold * Math.Cos(angle) - (double)yold * Math.Sin(angle), 0));
                 ypoints[i] = (int)(Math.Round((double)xold * Math.Sin(angle) + (double)yold * Math.Cos(angle), 0));
+            }*/
+            for (int i = 0; i < PolygonPoints.Count; i++)
+            {
+                PolygonPoints[i] =
+                    new PointF((float) (PolygonPoints[i].X * Math.Cos(angle) - PolygonPoints[i].Y * Math.Sin(angle)),
+                        (float) (PolygonPoints[i].X * Math.Sin(angle) + PolygonPoints[i].Y * Math.Cos(angle)));
             }
+            /*weaponPointX = (int)(Math.Round((double)weaponPointX * Math.Cos(angle) - (double)weaponPointY * Math.Sin(angle), 0));
+            weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));*/
+
             weaponPointX = (int)(Math.Round((double)weaponPointX * Math.Cos(angle) - (double)weaponPointY * Math.Sin(angle), 0));
             weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));
         }

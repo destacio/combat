@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using qwerty.Objects.Weapons;
 
@@ -47,7 +48,7 @@ namespace qwerty.Objects
             maxActions = 2;
             actionsLeft = maxActions;
 
-            xpoints.Add(-16); // координаты точек относительно центра ячейки
+            /*xpoints.Add(-16); // координаты точек относительно центра ячейки
             xpoints.Add(6);
             xpoints.Add(18);
             xpoints.Add(6);
@@ -60,8 +61,8 @@ namespace qwerty.Objects
             ypoints.Add(0);
             ypoints.Add(10);
             ypoints.Add(15);
-
-            PolygonPoints = new[]
+            */
+            PolygonPoints = new List<PointF>
             {
                 new PointF(-16, -15),
                 new PointF(6, -10),
@@ -70,8 +71,9 @@ namespace qwerty.Objects
                 new PointF(-16, 15),  
             };
 
-            weaponPointX = xpoints[2];
-            weaponPointY = ypoints[2];
+            /*weaponPointX = xpoints[2];
+            weaponPointY = ypoints[2];*/
+            WeaponPoint = PolygonPoints[2];
         }
     }
 }

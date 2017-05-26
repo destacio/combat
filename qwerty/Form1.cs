@@ -265,11 +265,13 @@ namespace qwerty
                         List<int> yold = new List<int>();
 
                         // запоминаем координаты
-                        for (int n = 0; n < _activeShip.xpoints.Count; n++ )
+                        /*for (int n = 0; n < _activeShip.xpoints.Count; n++ )
                         {
                             xold.Add(_activeShip.xpoints[n]);
                             yold.Add(_activeShip.ypoints[n]);
-                        }
+                        }*/
+
+                        var oldPoints = new List<PointF>(_activeShip.PolygonPoints);
 
                         var range = (int)Math.Sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
                         var dx = range / 15;
@@ -280,20 +282,26 @@ namespace qwerty
                                 
                         for (int count1 = 0; count1 < range - 10; count1 += dx)
                         {
-                            for (int j = 0; j < _activeShip.xpoints.Count; j++)
+                            /*for (int j = 0; j < _activeShip.xpoints.Count; j++)
                             {
                                 _activeShip.xpoints[j] += deltax;
                                 _activeShip.ypoints[j] += deltay;
+                            }*/
+                            for (var i = 0; i < _activeShip.PolygonPoints.Count; i++)
+                            {
+                                _activeShip.PolygonPoints[i] = new PointF(_activeShip.PolygonPoints[i].X + deltax,
+                                    _activeShip.PolygonPoints[i].Y + deltay);
                             }
                             Thread.Sleep(5);
                             UpdateUi(); 
                         } 
                         // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
-                        for (int n = 0; n < _activeShip.xpoints.Count; n++)
+                        /*for (int n = 0; n < _activeShip.xpoints.Count; n++)
                         {
                             _activeShip.xpoints[n] = xold[n];
                             _activeShip.ypoints[n] = yold[n];
-                        }
+                        }*/
+                        _activeShip.PolygonPoints = oldPoints;
 
                         _activeShip.Move(cMap, _activeShip.boxId, selectedCell.id);
 

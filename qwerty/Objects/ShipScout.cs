@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using qwerty.Objects.Weapons;
 
@@ -28,11 +29,17 @@ namespace qwerty.Objects
             else
                 generalBrush = new SolidBrush(Color.Gray);
 
-            Point[] myPointArray = {
+            /*Point[] myPointArray = {
                     new Point(cMap.Cells[boxId].xcenter + xpoints[0], cMap.Cells[boxId].ycenter + ypoints[0]),
                     new Point(cMap.Cells[boxId].xcenter + xpoints[1], cMap.Cells[boxId].ycenter + ypoints[1]),
                     new Point(cMap.Cells[boxId].xcenter + xpoints[2], cMap.Cells[boxId].ycenter + ypoints[2]),
                     };
+*/
+            PointF[] myPointArray = {
+                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[0],
+                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[1],
+                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[2],
+            };
             g.FillPolygon(generalBrush, myPointArray);
             g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.Cells[boxId].xpoint1 + 25, cMap.Cells[boxId].ypoint1 + 15));
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.Cells[boxId].xpoint1 + 20, cMap.Cells[boxId].ypoint1 - 25));
@@ -46,16 +53,16 @@ namespace qwerty.Objects
             actionsLeft = maxActions;
 
             // координаты точек относительно центра ячейки
-            xpoints.Add(-15);
+            /*xpoints.Add(-15);
             xpoints.Add(-15);
             xpoints.Add(17);
             // лишние точки
 
             ypoints.Add(-14);
             ypoints.Add(14);
-            ypoints.Add(0);
+            ypoints.Add(0);*/
 
-            PolygonPoints = new[]
+            PolygonPoints = new List<PointF>
             {
                 new PointF(-15, -14),
                 new PointF(-15, 14),
@@ -64,8 +71,9 @@ namespace qwerty.Objects
      
             // лишние точки
 
-            weaponPointX = xpoints[2];
-            weaponPointY = ypoints[2];
+            /*weaponPointX = xpoints[2];
+            weaponPointY = ypoints[2];*/
+            WeaponPoint = PolygonPoints[2];
 
         }
     }
