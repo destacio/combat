@@ -155,8 +155,8 @@ namespace qwerty
 
             if (_activeShip != null)
             {
-                shipx = cMap.Cells[_activeShip.boxId].x;  // координаты выделенного корабля
-                shipy = cMap.Cells[_activeShip.boxId].y;
+                shipx = cMap.Cells[_activeShip.boxId].xcenter;  // координаты выделенного корабля
+                shipy = cMap.Cells[_activeShip.boxId].ycenter;
 
                 if (shipx == targetx) // избегаем деления на ноль
                 {
@@ -252,7 +252,7 @@ namespace qwerty
                     if (_activeShip.actionsLeft <= 0) return;
                     if (cMap.Cells[_activeShip.boxId].IsNeighborCell(selectedCell.x, selectedCell.y))
                     {
-                        var rotateAngle = attackAngleSearch(selectedCell.x, selectedCell.y);
+                        var rotateAngle = attackAngleSearch(selectedCell.xcenter, selectedCell.ycenter);
 
                         RotateShip(rotateAngle);
 
@@ -344,10 +344,7 @@ namespace qwerty
                             return;
                         }
 
-                        double targetx = selectedCell.x;
-                        double targety = selectedCell.y;
-
-                        var angle = attackAngleSearch(targetx, targety);
+                        var angle = attackAngleSearch(selectedCell.xcenter, selectedCell.ycenter);
 
                         // поворачиваем корабль на угол angle
                         RotateShip(angle);
