@@ -22,10 +22,6 @@ namespace qwerty.Objects
             objectType = ObjectType.Ship;
 
             player = playerId;
-            if (player == 2)
-            {
-                Rotate(180);
-            }
 
             switch (wpnType)
             {
@@ -112,8 +108,8 @@ namespace qwerty.Objects
             /*weaponPointX = (int)(Math.Round((double)weaponPointX * Math.Cos(angle) - (double)weaponPointY * Math.Sin(angle), 0));
             weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));*/
 
-            weaponPointX = (int)(Math.Round((double)weaponPointX * Math.Cos(angle) - (double)weaponPointY * Math.Sin(angle), 0));
-            weaponPointY = (int)(Math.Round((double)weaponPointX * Math.Sin(angle) + (double)weaponPointY * Math.Cos(angle), 0));
+            WeaponPoint = new PointF((float) (WeaponPoint.X * Math.Cos(angle) - WeaponPoint.Y * Math.Sin(angle)),
+                (float) (WeaponPoint.X * Math.Sin(angle) + WeaponPoint.Y * Math.Cos(angle)));
         }
 
         public void RefillEnergy()

@@ -36,9 +36,9 @@ namespace qwerty.Objects
                     };
 */
             PointF[] myPointArray = {
-                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[0],
-                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[1],
-                new PointF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter) + PolygonPoints[2],
+                PointF.Add(PolygonPoints[0],  new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[1], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[2],new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter))
             };
             g.FillPolygon(generalBrush, myPointArray);
             g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.Cells[boxId].xpoint1 + 25, cMap.Cells[boxId].ypoint1 + 15));
@@ -75,6 +75,10 @@ namespace qwerty.Objects
             weaponPointY = ypoints[2];*/
             WeaponPoint = PolygonPoints[2];
 
+            if (player == 2)
+            {
+                Rotate(180);
+            }
         }
     }
 }

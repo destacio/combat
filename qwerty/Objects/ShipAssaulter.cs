@@ -28,7 +28,7 @@ namespace qwerty.Objects
                 generalBrush = new SolidBrush(Color.Red);
             else
                 generalBrush = new SolidBrush(Color.Gray);
-
+/*
             Point[] myPointArray = {
                     new Point(cMap.Cells[boxId].xcenter + xpoints[0], cMap.Cells[boxId].ycenter + ypoints[0]),
                     new Point(cMap.Cells[boxId].xcenter + xpoints[1], cMap.Cells[boxId].ycenter + ypoints[1]),
@@ -36,6 +36,15 @@ namespace qwerty.Objects
                     new Point(cMap.Cells[boxId].xcenter + xpoints[3], cMap.Cells[boxId].ycenter + ypoints[3]),
                     new Point(cMap.Cells[boxId].xcenter + xpoints[4], cMap.Cells[boxId].ycenter + ypoints[4])
                     };
+*/
+            PointF[] myPointArray = {
+                PointF.Add(PolygonPoints[0], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[1], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[2], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[3], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter)),
+                PointF.Add(PolygonPoints[4], new SizeF(cMap.Cells[boxId].xcenter, cMap.Cells[boxId].ycenter))
+            };
+
             g.FillPolygon(generalBrush, myPointArray);
             g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, new PointF(cMap.Cells[boxId].xpoint1 + 25, cMap.Cells[boxId].ypoint1 + 15));
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, new PointF(cMap.Cells[boxId].xpoint1 + 20, cMap.Cells[boxId].ypoint1 - 25));
@@ -74,6 +83,11 @@ namespace qwerty.Objects
             /*weaponPointX = xpoints[2];
             weaponPointY = ypoints[2];*/
             WeaponPoint = PolygonPoints[2];
+
+            if (player == 2)
+            {
+                Rotate(180);
+            }
         }
     }
 }
