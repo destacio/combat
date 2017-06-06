@@ -69,7 +69,6 @@ namespace qwerty
         }
         public void meteorCreate()
         {
-            bool createNewMeteor = true;
             int box4meteor = 0;
             int xWay = Constants.RIGHT;
             int yWay = Constants.MEDIUM_TOP;
@@ -95,7 +94,7 @@ namespace qwerty
                         }
                         else break;
                     }
-                    if(i == 10) createNewMeteor = false;
+                    if(i == 10) return;
                         xWay = Constants.RIGHT;
                     if(rand.Next(1, 100) > 50)
                     {
@@ -118,7 +117,7 @@ namespace qwerty
                         }
                         else break;
                     }
-                    if (i == 10) createNewMeteor = false;
+                    if (i == 10) return;
                     if (rand.Next(1, 100) > 50)
                     {
                         xWay = Constants.RIGHT;
@@ -141,7 +140,7 @@ namespace qwerty
                         }
                         else break;
                     }
-                    if (i == 10) createNewMeteor = false;
+                    if (i == 10) return;
                     xWay = Constants.LEFT;
                     if (rand.Next(1, 100) > 50)
                     {
@@ -164,7 +163,7 @@ namespace qwerty
                         }
                         else break;
                     }
-                    if (i == 10) createNewMeteor = false;
+                    if (i == 10) return;
                     if (rand.Next(1, 100) > 50)
                     {
                         xWay = Constants.RIGHT;
@@ -176,17 +175,13 @@ namespace qwerty
                     yWay = Constants.MEDIUM_TOP;
                     break;
             }
-            
-            if (createNewMeteor)
-            {
-                var meteorHealth = rand.Next(1, 150);
-                var meteorDmg = meteorHealth / 4;
 
-                var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
-                Meteors.Add(newMeteor);
-                CombatMap.Cells[box4meteor].spaceObject = newMeteor;
-            }
-            
+            var meteorHealth = rand.Next(1, 150);
+            var meteorDmg = meteorHealth / 4;
+
+            var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
+            Meteors.Add(newMeteor);
+            CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }
 
         private static Ship CreateShip(ShipType type, int p, WeaponType wpn)

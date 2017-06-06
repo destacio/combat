@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Media;
 using System.Windows.Forms;
 
 namespace qwerty.Objects.Weapons
@@ -16,33 +17,21 @@ namespace qwerty.Objects.Weapons
         }
         public override string Description => ""; 
 
-        public override void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
+        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
         {
             System.Threading.Thread.Sleep(150);
-            player.SoundLocation = @"../../Sounds/laser1.wav";
+            soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Graphics g = Graphics.FromImage(bmap);
-            //Rectangle rect;  //  --- размер изображения
-            //Bitmap oldImage;  //  --- переменная, в которую его засунем
-
+            Graphics g = Graphics.FromImage(bitmap);
             Pen laserPen1 = new Pen(Color.GreenYellow, 2);
 
-            player.Play();
+            soundPlayer.Play();
             for (int i = 0; i < 5; i++)
             {
-                // --- 1) находим размер изображения
-                //rect = new Rectangle(0, 0, combatBitmap.Width, combatBitmap.Height); 
-                // --- 2) клонируем наш битмап
-                //oldImage = combatBitmap.Clone(rect, combatBitmap.PixelFormat);
+                g.DrawLine(laserPen1, sourcePoint, PointF.Add(targetPoint, new Size(i,0)));
 
-                g.DrawLine(laserPen1, new Point(x, y), new Point(targetx + i, targety));
-
-                pictureMap.Image = bmap;
-                pictureMap.Refresh();
-
-                // --- 3) отрисовываем тот битмам, который сохранили выше
-                //g.DrawImage(oldImage, 0, 0);
-
+                pictureBox.Image = bitmap;
+                pictureBox.Refresh();
 
                 System.Threading.Thread.Sleep(35);
             }

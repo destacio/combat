@@ -139,8 +139,8 @@ namespace qwerty
 
                 }
 #if DEBUG
-                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, new PointF(cMap.Cells[i].xpoint1 + 10, cMap.Cells[i].ypoint1 + 10));
-                g.DrawString($"({cMap.Cells[i].x}, {cMap.Cells[i].y})", new Font("Arial", 8.0F), Brushes.DeepSkyBlue, new PointF(cMap.Cells[i].xpoint1 + 30, cMap.Cells[i].ypoint1 + 10));
+                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, PointF.Add(cMap.Cells[i].CellPoints[3], new Size(10, 10)));
+                g.DrawString($"({cMap.Cells[i].x}, {cMap.Cells[i].y})", new Font("Arial", 8.0F), Brushes.DeepSkyBlue, PointF.Add(cMap.Cells[i].CellPoints[3], new Size(30, 10)));
 #endif
             }
                 pictureMap.Image = combatBitmap;
@@ -155,8 +155,8 @@ namespace qwerty
 
             if (_activeShip != null)
             {
-                shipx = cMap.Cells[_activeShip.boxId].xcenter;  // координаты выделенного корабля
-                shipy = cMap.Cells[_activeShip.boxId].ycenter;
+                shipx = cMap.Cells[_activeShip.boxId].CellCenter.X;  // координаты выделенного корабля
+                shipy = cMap.Cells[_activeShip.boxId].CellCenter.Y;
 
                 if (shipx == targetx) // избегаем деления на ноль
                 {
@@ -252,24 +252,14 @@ namespace qwerty
                     if (_activeShip.actionsLeft <= 0) return;
                     if (cMap.Cells[_activeShip.boxId].IsNeighborCell(selectedCell.x, selectedCell.y))
                     {
-                        var rotateAngle = attackAngleSearch(selectedCell.xcenter, selectedCell.ycenter);
+                        var rotateAngle = attackAngleSearch(selectedCell.CellCenter.X, selectedCell.CellCenter.Y);
 
                         RotateShip(rotateAngle);
 
-                        var x1 = cMap.Cells[_activeShip.boxId].xcenter;
-                        var y1 = cMap.Cells[_activeShip.boxId].ycenter;
-                        var x2 = selectedCell.xcenter;
-                        var y2 = selectedCell.ycenter;
-
-                        List<int> xold = new List<int>();
-                        List<int> yold = new List<int>();
-
-                        // запоминаем координаты
-                        /*for (int n = 0; n < _activeShip.xpoints.Count; n++ )
-                        {
-                            xold.Add(_activeShip.xpoints[n]);
-                            yold.Add(_activeShip.ypoints[n]);
-                        }*/
+                        var x1 = cMap.Cells[_activeShip.boxId].CellCenter.X;
+                        var y1 = cMap.Cells[_activeShip.boxId].CellCenter.Y;
+                        var x2 = selectedCell.CellCenter.X;
+                        var y2 = selectedCell.CellCenter.Y;
 
                         var oldPoints = new List<PointF>(_activeShip.PolygonPoints);
 
@@ -282,11 +272,6 @@ namespace qwerty
                                 
                         for (int count1 = 0; count1 < range - 10; count1 += dx)
                         {
-                            /*for (int j = 0; j < _activeShip.xpoints.Count; j++)
-                            {
-                                _activeShip.xpoints[j] += deltax;
-                                _activeShip.ypoints[j] += deltay;
-                            }*/
                             for (var i = 0; i < _activeShip.PolygonPoints.Count; i++)
                             {
                                 _activeShip.PolygonPoints[i] = new PointF(_activeShip.PolygonPoints[i].X + deltax,
@@ -295,12 +280,7 @@ namespace qwerty
                             Thread.Sleep(5);
                             UpdateUi(); 
                         } 
-                        // восстанавливаем исходные координаты (смещение корабля по х и y, если быть точнее)
-                        /*for (int n = 0; n < _activeShip.xpoints.Count; n++)
-                        {
-                            _activeShip.xpoints[n] = xold[n];
-                            _activeShip.ypoints[n] = yold[n];
-                        }*/
+
                         _activeShip.PolygonPoints = oldPoints;
 
                         _activeShip.Move(cMap, _activeShip.boxId, selectedCell.id);
@@ -344,7 +324,7 @@ namespace qwerty
                             return;
                         }
 
-                        var angle = attackAngleSearch(selectedCell.xcenter, selectedCell.ycenter);
+                        var angle = attackAngleSearch(selectedCell.CellCenter.X, selectedCell.CellCenter.Y);
 
                         // поворачиваем корабль на угол angle
                         RotateShip(angle);

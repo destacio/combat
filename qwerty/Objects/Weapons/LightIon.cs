@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Media;
 using System.Windows.Forms;
 
 namespace qwerty.Objects.Weapons
@@ -17,36 +18,35 @@ namespace qwerty.Objects.Weapons
 
         public override string Description => "";
     
-        public override void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
+        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
         {
             System.Threading.Thread.Sleep(150);
-            player.SoundLocation = @"../../Sounds/laser1.wav";
+            soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Graphics g = Graphics.FromImage(bmap);
+            Graphics g = Graphics.FromImage(bitmap);
             Rectangle rect;  //  --- размер изображения
             Bitmap oldImage;  //  --- переменная, в которую его засунем
-            player.Play();
+            soundPlayer.Play();
 
             SolidBrush brush1 = new SolidBrush(Color.CadetBlue);
             SolidBrush brush = new SolidBrush(Color.CornflowerBlue);
 
-            int dx, dy;
-            
-            dx = (targetx - x) / 10;
-            dy = (targety - y) / 10;
+            // TODO: review to match points
+            var dx = (targetPoint.X - sourcePoint.X) / 10;
+            var dy = (targetPoint.Y - sourcePoint.Y) / 10;
 
             for (int i = 0; i < 10; i++)
             {
                 // --- 1) находим размер изображения
-                rect = new Rectangle(0, 0, bmap.Width, bmap.Height); 
+                rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height); 
                 // --- 2) клонируем наш битмап
-                oldImage = bmap.Clone(rect, bmap.PixelFormat);
+                oldImage = bitmap.Clone(rect, bitmap.PixelFormat);
 
-                g.FillEllipse(brush, x - 5 + dx * i, y - 5 + dy * i, 10, 10);
-                g.FillEllipse(brush1, x - 3 + dx * i, y - 3 + dy * i, 6, 6);
+                g.FillEllipse(brush, sourcePoint.X - 5 + dx * i, sourcePoint.Y - 5 + dy * i, 10, 10);
+                g.FillEllipse(brush1, sourcePoint.X - 3 + dx * i, sourcePoint.Y - 3 + dy * i, 6, 6);
 
-                pictureMap.Image = bmap;
-                pictureMap.Refresh();
+                pictureBox.Image = bitmap;
+                pictureBox.Refresh();
 
                 // --- 3) отрисовываем тот битмам, который сохранили выше
                 g.DrawImage(oldImage, 0, 0);

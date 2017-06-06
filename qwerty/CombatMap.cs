@@ -48,9 +48,10 @@ namespace qwerty
 
         public Cell GetCellByPixelCoordinates(int x, int y)
         {
+            // TODO: better check if point is inside polygon
             return
                 Cells.FirstOrDefault(
-                    cell => x > cell.xpoint2 && x < cell.xpoint3 && y > cell.ypoint2 && y < cell.ypoint6);
+                    cell => x > cell.CellPoints[2].X && x < cell.CellPoints[1].X && y > cell.CellPoints[5].Y && y < cell.CellPoints[1].Y);
         }
 
         public void PlaceShip(Ship ship)

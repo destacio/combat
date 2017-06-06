@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Media;
 using System.Windows.Forms;
 
 namespace qwerty.Objects.Weapons
@@ -17,22 +18,22 @@ namespace qwerty.Objects.Weapons
         public override Color AttackColorPrimary => Color.Orange;
         public override Color AttackColorSecondary => Color.Orange;
 
-        public override void drawAttack(int x, int y, int targetx, int targety, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
+        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
         {
             System.Threading.Thread.Sleep(150);
-            player.SoundLocation = @"../../Sounds/laser1.wav";
+            soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";
 
-            Graphics g = Graphics.FromImage(bmap);
+            Graphics g = Graphics.FromImage(bitmap);
             
             Pen laserPen1 = new Pen(Color.Orange, 3);
 
-            player.Play();
+            soundPlayer.Play();
             for (int i = -2; i < 2; i++)
             {
-                g.DrawLine(laserPen1, new Point(x, y), new Point(targetx + i, targety));
+                g.DrawLine(laserPen1, sourcePoint, PointF.Add(targetPoint, new Size(i,0)));
 
-                pictureMap.Image = bmap;
-                pictureMap.Refresh();
+                pictureBox.Image = bitmap;
+                pictureBox.Refresh();
 
                 System.Threading.Thread.Sleep(35);
             }
