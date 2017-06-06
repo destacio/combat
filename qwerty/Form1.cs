@@ -68,23 +68,13 @@ namespace qwerty
             Graphics g = Graphics.FromImage(combatBitmap);
             g.FillRectangle(Brushes.Black, 0, 0, combatBitmap.Width, combatBitmap.Height); //рисуем фон окна
 
-            Pen generalPen;
             Pen redPen = new Pen(Color.Red, 3);
             Pen grayPen = new Pen(Color.Gray, 3);
             Pen PurplePen = new Pen(Color.Purple);
             Pen activeShipAriaPen = new Pen(Color.Purple, 5);
 
-            SolidBrush redBrush = new SolidBrush(Color.Red);
-            SolidBrush blueBrush = new SolidBrush(Color.Blue);
-            SolidBrush blackBrush = new SolidBrush(Color.Black);
-            SolidBrush grayBrush = new SolidBrush(Color.Gray);
-            SolidBrush activeShipBrush = new SolidBrush(Color.DarkGreen);
-            SolidBrush mediumPurpleBrush = new SolidBrush(Color.MediumPurple);
-            SolidBrush brush;
-
             for (int i = 0; i < cMap.Cells.Count; i++)
             {
-                generalPen = PurplePen;
                 // Если выделили судно с очками передвижения, подсвечиваем его и соседние клетки
 
                 if (_activeShip != null)
@@ -128,12 +118,6 @@ namespace qwerty
 
                 if (cMap.Cells[i].spaceObject != null)
                 {
-                    if (cMap.Cells[i].spaceObject.player == 1)
-                        brush = blueBrush;
-                    else if (cMap.Cells[i].spaceObject.player == 2)
-                        brush = redBrush;
-                    else brush = grayBrush;
-
                     // this call is as dumb as it could ever be
                     _objectManager.drawSpaceShit(i, ref combatBitmap);
 
