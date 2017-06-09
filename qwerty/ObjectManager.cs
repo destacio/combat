@@ -48,7 +48,7 @@ namespace qwerty
                 CombatMap.PlaceShip(ship);
             }
 
-            meteorCreate();
+            CreateMeteor();
         }
 
         public void moveMeteors()
@@ -64,25 +64,35 @@ namespace qwerty
             Random rand = new Random();
             if (rand.Next(0, 100) <= MeteorAppearanceChance)
             {
-                meteorCreate();
+                CreateMeteor();
             }
         }
-        public void meteorCreate()
+        public void CreateMeteor()
         {
             int box4meteor = 0;
-            int xWay = Constants.RIGHT;
-            int yWay = Constants.MEDIUM_TOP;
+            int newMeteorCellX = 0;
+            int newMeteorCellY = 0;
+            int movementDirectionX = 1;
+            int movementDirectionY = -1;
             int i;
 
             Random rand = new Random();
-            int randomNum = rand.Next(1, 100) % 4;
-            
+            int randomNum = rand.Next(1, 5);
 
             // место появления и направление полёта
             switch(randomNum)
             {
                 
                 case 1:  // left
+                    newMeteorCellY = rand.Next(0, CombatMap.FieldHeight);
+                    for (int offset = 0; offset <= CombatMap.FieldHeight; offset++)
+                    {
+                        if (CombatMap.GetCellByCellCoordinates(newMeteorCellX, newMeteorCellY + offset).spaceObject == null)
+                        {
+                            break;
+                        }
+                    }
+
                     box4meteor = rand.Next(0, CombatMap.FieldHeight);
                     for (i = 0; i < 10; i++ )
                     {
@@ -95,14 +105,14 @@ namespace qwerty
                         else break;
                     }
                     if(i == 10) return;
-                        xWay = Constants.RIGHT;
+                        movementDirectionX = Constants.RIGHT;
                     if(rand.Next(1, 100) > 50)
                     {
-                        yWay = Constants.MEDIUM_TOP;
+                        movementDirectionY = Constants.MEDIUM_TOP;
                     }
                     else 
                     {
-                        yWay = Constants.MEDIUM_BOTTOM;
+                        movementDirectionY = Constants.MEDIUM_BOTTOM;
                     }
                     break;
                 case 2: // top
@@ -120,13 +130,13 @@ namespace qwerty
                     if (i == 10) return;
                     if (rand.Next(1, 100) > 50)
                     {
-                        xWay = Constants.RIGHT;
+                        movementDirectionX = Constants.RIGHT;
                     }
                     else
                     {
-                        xWay = Constants.LEFT;
+                        movementDirectionX = Constants.LEFT;
                     }
-                    yWay = Constants.MEDIUM_BOTTOM;
+                    movementDirectionY = Constants.MEDIUM_BOTTOM;
                     break;
                 case 3: // right
                     box4meteor = rand.Next(CombatMap.Cells.Count-1 - CombatMap.FieldHeight, CombatMap.Cells.Count-1);
@@ -141,14 +151,14 @@ namespace qwerty
                         else break;
                     }
                     if (i == 10) return;
-                    xWay = Constants.LEFT;
+                    movementDirectionX = Constants.LEFT;
                     if (rand.Next(1, 100) > 50)
                     {
-                        yWay = Constants.MEDIUM_TOP;
+                        movementDirectionY = Constants.MEDIUM_TOP;
                     }
                     else
                     {
-                        yWay = Constants.MEDIUM_BOTTOM;
+                        movementDirectionY = Constants.MEDIUM_BOTTOM;
                     }
                     break;
                 case 0: // bottom
@@ -166,20 +176,20 @@ namespace qwerty
                     if (i == 10) return;
                     if (rand.Next(1, 100) > 50)
                     {
-                        xWay = Constants.RIGHT;
+                        movementDirectionX = Constants.RIGHT;
                     }
                     else
                     {
-                        xWay = Constants.LEFT;
+                        movementDirectionX = Constants.LEFT;
                     }
-                    yWay = Constants.MEDIUM_TOP;
+                    movementDirectionY = Constants.MEDIUM_TOP;
                     break;
             }
 
             var meteorHealth = rand.Next(1, 150);
             var meteorDmg = meteorHealth / 4;
 
-            var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
+            var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, movementDirectionX, movementDirectionY);
             Meteors.Add(newMeteor);
             CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }
