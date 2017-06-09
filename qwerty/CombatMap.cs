@@ -54,6 +54,69 @@ namespace qwerty
                     cell => x > cell.CellPoints[2].X && x < cell.CellPoints[1].X && y > cell.CellPoints[5].Y && y < cell.CellPoints[1].Y);
         }
 
+        public double GetAngle(int sourceCellId, int targetCellId, int activePlayerId)
+        {
+            double angle;
+
+            double shipx = Cells[sourceCellId].CellCenter.X;
+            double shipy = Cells[sourceCellId].CellCenter.Y;
+            double targetx = Cells[targetCellId].CellCenter.X;
+            double targety = Cells[targetCellId].CellCenter.Y;
+
+            if (shipx == targetx) // избегаем деления на ноль
+            {
+                if (shipy > targety)
+                {
+                    angle = -90;
+                }
+                else
+                {
+                    angle = 90;
+                }
+                if (activePlayerId == 2) angle = -angle;
+
+            }
+            else // находим угол, на который нужно повернуть корабль (если он не равен 90 градусов)
+            {
+                angle = Math.Atan((targety - shipy) / (targetx - shipx)) * 180 / Math.PI;
+            }
+            // дальше идет коррекция, не пытайся разобраться как это работает, просто оставь как есть
+            if (activePlayerId == 1)
+            {
+                if (shipy == targety && shipx > targetx)
+                {
+                    angle = 180;
+                }
+                else if (shipx > targetx && shipy < targety)
+                {
+                    angle += 180;
+                }
+                else if (shipx > targetx && shipy > targety)
+                {
+                    angle = angle - 180;
+                }
+            }
+            else if (activePlayerId == 2)
+            {
+                if (shipy == targety && shipx < targetx)
+                {
+                    angle = 180;
+                }
+                else if (shipx < targetx && shipy < targety)
+                {
+                    angle -= 180;
+                }
+                else if (shipx < targetx && shipy > targety)
+                {
+                    angle += 180;
+                }
+            }
+
+            if (angle > 150) angle = 150;
+            else if (angle < -150) angle = -150;
+            return angle;
+        }
+
         public void PlaceShip(Ship ship)
         {
             var rand = new Random();
