@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using qwerty.Objects;
+using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
@@ -11,12 +12,18 @@ namespace qwerty
         public int FieldWidth;
         public int FieldHeight;
         private const float CellSideLength = 40;
-        public readonly List<Cell> Cells = new List<Cell>(); 
+
+        public Hex.HexLayout<Hex.Point, Hex.PointPolicy> HexGrid = Hex.HexLayoutFactory.CreateFlatHexLayout(
+            new Hex.Point(CellSideLength, CellSideLength), new Hex.Point(0, 0),
+            Hex.Offset.Odd);
+        
+        public readonly List<Cell> Cells = new List<Cell>();
+        public SpaceObject[] SpaceObjects;
         public CombatMap(int w, int h) 
         {
             FieldWidth = w;
             FieldHeight = h;
-
+            SpaceObjects = new SpaceObject[w * h];
             InitializeMap();
         }
 
@@ -24,7 +31,10 @@ namespace qwerty
         {
             get
             {
-                return (int)(Cells.Last().CellPoints.Max(cell => cell.X) + 10);
+                var hexagonOffset =
+                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth, FieldHeight)));
+                var cornerOffset = HexGrid.HexCornerOffset(0);
+                return (int)(hexagonOffset.X + cornerOffset.X);
             }
         }
 
@@ -32,7 +42,10 @@ namespace qwerty
         {
             get
             {
-                return (int)(Cells.Last().CellPoints.Max(cell => cell.Y) + 10);
+                var hexagonOffset =
+                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth, FieldHeight)));
+                var cornerOffset = HexGrid.HexCornerOffset(1);
+                return (int)(hexagonOffset.Y + cornerOffset.Y);
             }
         }
 

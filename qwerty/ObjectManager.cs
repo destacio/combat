@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using qwerty.Objects;
 using qwerty.Objects.Weapons;
+using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
@@ -16,7 +17,7 @@ namespace qwerty
         private const int MeteorAppearanceChance = 20;
 
         public CombatMap CombatMap;
-
+        
         public int FirstPlayerShipCount => Ships.Count(sh => sh.player == 1);
         public int SecondPlayerShipCount => Ships.Count(sh => sh.player == 2);
         public int FieldWidth => CombatMap.FieldWidthPixels;
@@ -31,8 +32,7 @@ namespace qwerty
             Ship holycow = CreateShip(ShipType.Scout, 1, WeaponType.LightIon);
             Ships.Add(holycow);
             Ship leroy = CreateShip(ShipType.Assaulter, 1, WeaponType.HeavyLaser);
-            Ships.Add(leroy);
-
+            Ships.Add(leroy);        
 
             Ship pandorum = CreateShip(ShipType.Scout, 2, WeaponType.LightLaser);
             Ships.Add(pandorum);
