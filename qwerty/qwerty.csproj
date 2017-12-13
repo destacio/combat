@@ -54,6 +54,7 @@
     <Compile Include="Cell.cs" />
     <Compile Include="CombatMap.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FieldPainter.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
