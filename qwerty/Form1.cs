@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Media;
 using qwerty.Objects;
+using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
@@ -37,7 +38,7 @@ namespace qwerty
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            UpdateUi();
+            UpdateUi();    
 
             UpdateShipCount();
 #if !DEBUG
@@ -101,18 +102,18 @@ namespace qwerty
 
                                 if ((int)range <= _activeShip.EquippedWeapon.attackRange)
                                 {
-                                    g.DrawPolygon(redPen, cMap.Cells[allShips[count].boxId].CellPoints);
+                                    g.DrawPolygon(redPen, cMap.GetHexagonCorners(cMap.Cells[allShips[count].boxId]));
                                 }
                             }
                         }
                     }
                 }
-
-                g.DrawPolygon(PurplePen, cMap.Cells[i].CellPoints);
+                
+                g.DrawPolygon(PurplePen, cMap.GetHexagonCorners(cMap.Cells[i]));
 
                 if (_activeShip != null && _activeShip.boxId == i)
                 {
-                    g.DrawPolygon(activeShipAriaPen, cMap.Cells[i].CellPoints);
+                    g.DrawPolygon(activeShipAriaPen, cMap.GetHexagonCorners(cMap.Cells[i]));
 
                 }
 
@@ -130,72 +131,7 @@ namespace qwerty
                 pictureMap.Image = combatBitmap;
                 pictureMap.Refresh();
             
-        }
-
-        public double attackAngleSearch(double targetx, double targety)
-        {
-            double angle = 0;
-            double shipx, shipy;
-
-            if (_activeShip != null)
-            {
-                shipx = cMap.Cells[_activeShip.boxId].CellCenter.X;  // координаты выделенного корабля
-                shipy = cMap.Cells[_activeShip.boxId].CellCenter.Y;
-
-                if (shipx == targetx) // избегаем деления на ноль
-                {
-                    if (shipy > targety)
-                    {
-                        angle = -90;
-                    }
-                    else
-                    {
-                        angle = 90;
-                    }
-                    if (_activePlayer == 2) angle = -angle;
-
-                }
-                else // находим угол, на который нужно повернуть корабль (если он не равен 90 градусов)
-                {
-                    angle = Math.Atan((targety - shipy) / (targetx - shipx)) * 180 / Math.PI;
-                }
-                // дальше идет коррекция, не пытайся разобраться как это работает, просто оставь как есть
-                if (_activePlayer == 1)
-                {
-                    if (shipy == targety && shipx > targetx)
-                    {
-                        angle = 180;
-                    }
-                    else if (shipx > targetx && shipy < targety)
-                    {
-                        angle += 180;
-                    }
-                    else if (shipx > targetx && shipy > targety)
-                    {
-                        angle = angle - 180;
-                    }
-                }
-                else if (_activePlayer == 2)
-                {
-                    if (shipy == targety && shipx < targetx)
-                    {
-                        angle = 180;
-                    }
-                    else if (shipx < targetx && shipy < targety)
-                    {
-                        angle -= 180;
-                    }
-                    else if (shipx < targetx && shipy > targety)
-                    {
-                        angle += 180;
-                    }
-                }
-
-                if (angle > 150) angle = 150;
-                else if (angle < -150) angle = -150;
-            }
-            return angle;
-        }
+        }   
 
         public void RotateShip(double angle)
         {
@@ -234,9 +170,9 @@ namespace qwerty
                 if (selectedCell.spaceObject == null)
                 {
                     if (_activeShip.actionsLeft <= 0) return;
-                    if (cMap.Cells[_activeShip.boxId].IsNeighborCell(selectedCell.x, selectedCell.y))
+                    if (cMap.AreNeighbors(new Hex.OffsetCoordinates(cMap.Cells[_activeShip.boxId].x, cMap.Cells[_activeShip.boxId].y), new Hex.OffsetCoordinates(selectedCell.x, selectedCell.y)))
                     {
-                        var rotateAngle = attackAngleSearch(selectedCell.CellCenter.X, selectedCell.CellCenter.Y);
+                        var rotateAngle = cMap.GetAngle(_activeShip.boxId, selectedCell.id, _activePlayer);
 
                         RotateShip(rotateAngle);
 
@@ -308,7 +244,7 @@ namespace qwerty
                             return;
                         }
 
-                        var angle = attackAngleSearch(selectedCell.CellCenter.X, selectedCell.CellCenter.Y);
+                        var angle = cMap.GetAngle(_activeShip.boxId, selectedCell.id, _activePlayer);
 
                         // поворачиваем корабль на угол angle
                         RotateShip(angle);
