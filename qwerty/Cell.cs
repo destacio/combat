@@ -45,25 +45,5 @@ namespace qwerty
             
             CellCenter = new PointF((CellPoints[1].X + CellPoints[2].X)/2, (CellPoints[1].Y + CellPoints[5].Y)/2);
         }
-
-        public bool IsNeighborCell(int newCellX, int newCellY)
-        {
-            int deltaX = newCellX - x;
-            int deltaY = newCellY - y;
-
-            switch (deltaX)
-            {
-                case 0:
-                    return deltaY == -1 || deltaY == 1;
-                case 1:
-                case -1:
-                    return deltaY == 0 ||
-                           (x%2 == 0
-                               ? deltaY == -1
-                               : deltaY == 1);
-                default:
-                    return false;
-            }
-        }
     }
 }
