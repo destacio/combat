@@ -14,7 +14,7 @@ namespace qwerty
         private const float CellSideLength = 40;
 
         public Hex.HexLayout<Hex.Point, Hex.PointPolicy> HexGrid = Hex.HexLayoutFactory.CreateFlatHexLayout(
-            new Hex.Point(CellSideLength, CellSideLength), new Hex.Point(0, 0),
+            new Hex.Point(CellSideLength, CellSideLength), new Hex.Point((int)(CellSideLength + 10),  (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10)),
             Hex.Offset.Odd);
         
         public readonly List<Cell> Cells = new List<Cell>();
@@ -61,10 +61,37 @@ namespace qwerty
 
         public Cell GetCellByPixelCoordinates(int x, int y)
         {
-            // TODO: better check if point is inside polygon
-            return
-                Cells.FirstOrDefault(
-                    cell => x > cell.CellPoints[2].X && x < cell.CellPoints[1].X && y > cell.CellPoints[5].Y && y < cell.CellPoints[1].Y);
+            var hexagon = HexGrid.PixelToHex(new Hex.Point(x, y)).Round();
+            var offsetCoordinates = HexGrid.ToOffsetCoordinates(hexagon);
+            return Cells.Find(c => c.x == offsetCoordinates.Column && c.y == offsetCoordinates.Row);
+        }
+
+        public bool AreNeighbors(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
+        {
+            return AreNeighbors(HexGrid.ToCubeCoordinates(firstHexagon), HexGrid.ToCubeCoordinates(secondHexagon));
+        }
+        
+        public bool AreNeighbors(Hex.CubeCoordinates firstHexagon, Hex.CubeCoordinates secondHexagon)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (Hex.CubeCoordinates.Neighbor(firstHexagon, i).Equals(secondHexagon))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public PointF[] GetHexagonCorners(Cell cell)
+        {
+            return GetHexagonCorners(cell.x, cell.y);
+        }
+        
+        public PointF[] GetHexagonCorners(int x, int y)
+        {
+            var coordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x, y));
+            return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
         }
 
         public double GetAngle(int sourceCellId, int targetCellId, int activePlayerId)

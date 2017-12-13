@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Media;
 using qwerty.Objects;
+using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
@@ -37,7 +38,7 @@ namespace qwerty
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            UpdateUi();
+            UpdateUi();    
 
             UpdateShipCount();
 #if !DEBUG
@@ -101,18 +102,18 @@ namespace qwerty
 
                                 if ((int)range <= _activeShip.EquippedWeapon.attackRange)
                                 {
-                                    g.DrawPolygon(redPen, cMap.Cells[allShips[count].boxId].CellPoints);
+                                    g.DrawPolygon(redPen, cMap.GetHexagonCorners(cMap.Cells[allShips[count].boxId]));
                                 }
                             }
                         }
                     }
                 }
-
-                g.DrawPolygon(PurplePen, cMap.Cells[i].CellPoints);
+                
+                g.DrawPolygon(PurplePen, cMap.GetHexagonCorners(cMap.Cells[i]));
 
                 if (_activeShip != null && _activeShip.boxId == i)
                 {
-                    g.DrawPolygon(activeShipAriaPen, cMap.Cells[i].CellPoints);
+                    g.DrawPolygon(activeShipAriaPen, cMap.GetHexagonCorners(cMap.Cells[i]));
 
                 }
 
@@ -169,7 +170,7 @@ namespace qwerty
                 if (selectedCell.spaceObject == null)
                 {
                     if (_activeShip.actionsLeft <= 0) return;
-                    if (cMap.Cells[_activeShip.boxId].IsNeighborCell(selectedCell.x, selectedCell.y))
+                    if (cMap.AreNeighbors(new Hex.OffsetCoordinates(cMap.Cells[_activeShip.boxId].x, cMap.Cells[_activeShip.boxId].y), new Hex.OffsetCoordinates(selectedCell.x, selectedCell.y)))
                     {
                         var rotateAngle = cMap.GetAngle(_activeShip.boxId, selectedCell.id, _activePlayer);
 
