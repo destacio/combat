@@ -9,8 +9,8 @@ namespace qwerty
 {
     class CombatMap
     {
-        public int FieldWidth;
-        public int FieldHeight;
+        public readonly int FieldWidth;
+        public readonly int FieldHeight;
         private const float CellSideLength = 40;
 
         public Hex.HexLayout<Hex.Point, Hex.PointPolicy> HexGrid = Hex.HexLayoutFactory.CreateFlatHexLayout(
@@ -18,12 +18,10 @@ namespace qwerty
             Hex.Offset.Odd);
         
         public readonly List<Cell> Cells = new List<Cell>();
-        public SpaceObject[] SpaceObjects;
         public CombatMap(int w, int h) 
         {
             FieldWidth = w;
             FieldHeight = h;
-            SpaceObjects = new SpaceObject[w * h];
             InitializeMap();
         }
 
@@ -32,7 +30,7 @@ namespace qwerty
             get
             {
                 var hexagonOffset =
-                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth, FieldHeight)));
+                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
                 var cornerOffset = HexGrid.HexCornerOffset(0);
                 return (int)(hexagonOffset.X + cornerOffset.X);
             }
@@ -43,8 +41,8 @@ namespace qwerty
             get
             {
                 var hexagonOffset =
-                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth, FieldHeight)));
-                var cornerOffset = HexGrid.HexCornerOffset(1);
+                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
+                var cornerOffset = HexGrid.HexCornerOffset(5);
                 return (int)(hexagonOffset.Y + cornerOffset.Y);
             }
         }
@@ -98,10 +96,12 @@ namespace qwerty
         {
             double angle;
 
-            double shipx = Cells[sourceCellId].CellCenter.X;
-            double shipy = Cells[sourceCellId].CellCenter.Y;
-            double targetx = Cells[targetCellId].CellCenter.X;
-            double targety = Cells[targetCellId].CellCenter.Y;
+            var sourceOffsetCoordinates = new Hex.OffsetCoordinates(Cells[sourceCellId].x, Cells[sourceCellId].y);
+            double shipx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).X;
+            double shipy = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).Y;
+            var targetOffsetCoordinates = new Hex.OffsetCoordinates(Cells[targetCellId].x, Cells[targetCellId].y);
+            double targetx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).X;
+            double targety = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).Y;
 
             if (shipx == targetx) // избегаем деления на ноль
             {
@@ -157,23 +157,6 @@ namespace qwerty
             return angle;
         }
 
-        public void PlaceShip(Ship ship)
-        {
-            var rand = new Random();
-            int randomBoxId;
-            do
-            {
-                randomBoxId = rand.Next(0, FieldHeight*2);
-                if (ship.player == 2)
-                {
-                    randomBoxId = Cells.Count - randomBoxId - 1;
-                }
-            } while (Cells[randomBoxId].spaceObject != null);
-
-            Cells[randomBoxId].spaceObject = ship;
-            ship.boxId = randomBoxId;
-        }
-
         private void InitializeMap()
         {
             for (int i = 0; i < FieldWidth; i++)
@@ -184,6 +167,23 @@ namespace qwerty
                         new Size((int)(CellSideLength + 10), (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10))));
                 }
             }
+        }
+
+        public Hex.OffsetCoordinates PixelToOffsetCoordinates(Point pixelCoordinates)
+        {
+            var cubeCoordinates = HexGrid.PixelToHex(pixelCoordinates.ConvertToHexPoint()).Round();
+            var offsetCoordinates = HexGrid.ToOffsetCoordinates(cubeCoordinates);
+            if (offsetCoordinates.Column < 0 || offsetCoordinates.Column > FieldWidth ||
+                offsetCoordinates.Row < 0 || offsetCoordinates.Row > FieldHeight)
+            {
+                throw new ArgumentOutOfRangeException($"Pixel ({pixelCoordinates.X},{pixelCoordinates.Y}) is outside game field.");
+            }
+            return offsetCoordinates;
+        }
+
+        public int GetDistance(Hex.CubeCoordinates firstHexagon, Hex.CubeCoordinates secondHexagon)
+        {
+            return Hex.CubeCoordinates.Distance(firstHexagon,secondHexagon);
         }
     }
 

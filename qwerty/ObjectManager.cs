@@ -12,43 +12,72 @@ namespace qwerty
 {
     class ObjectManager
     {
+        public int MapWidth { get; }
+        public int MapHeight { get; }
         public List<Meteor> Meteors = new List<Meteor>();
         public List<Ship> Ships = new List<Ship>();
         private const int MeteorAppearanceChance = 20;
 
         public CombatMap CombatMap;
+        public SpaceObject[] SpaceObjects;
         
-        public int FirstPlayerShipCount => Ships.Count(sh => sh.player == 1);
-        public int SecondPlayerShipCount => Ships.Count(sh => sh.player == 2);
+        public int FirstPlayerShipCount => Ships.Count(sh => sh.player == Player.FirstPlayer);
+        public int SecondPlayerShipCount => Ships.Count(sh => sh.player == Player.SecondPlayer);
         public int FieldWidth => CombatMap.FieldWidthPixels;
         public int FieldHeight => CombatMap.FieldHeightPixels;
 
         public ObjectManager(int mapWidth, int mapHeight)
         {
+            MapWidth = mapWidth;
+            MapHeight = mapHeight;
             CombatMap = new CombatMap(mapWidth, mapHeight);
+            SpaceObjects = new SpaceObject[mapWidth * mapHeight];
 
-            Ship penumbra = CreateShip(ShipType.Scout, 1, WeaponType.LightIon);
-            Ships.Add(penumbra);
-            Ship holycow = CreateShip(ShipType.Scout, 1, WeaponType.LightIon);
-            Ships.Add(holycow);
-            Ship leroy = CreateShip(ShipType.Assaulter, 1, WeaponType.HeavyLaser);
-            Ships.Add(leroy);        
+            CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
+            CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
+            CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.FirstPlayer);
 
-            Ship pandorum = CreateShip(ShipType.Scout, 2, WeaponType.LightLaser);
-            Ships.Add(pandorum);
-            Ship exodar = CreateShip(ShipType.Scout, 2, WeaponType.LightLaser);
-            Ships.Add(exodar);
-            Ship neveria = CreateShip(ShipType.Assaulter, 2, WeaponType.HeavyLaser);
-            Ships.Add(neveria);
-
-            // расставляем корабли по полю, синие - слева, красные - справа
-
-            foreach (var ship in Ships)
-            {
-                CombatMap.PlaceShip(ship);
-            }
+            CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
+            CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
+            CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.SecondPlayer);
 
             meteorCreate();
+        }
+
+        public SpaceObject PixelToSpaceObject(Point pixelCoordinates)
+        {
+            var hexOffsetCoordinates = PixelToOffsetCoordinates(pixelCoordinates);
+            return GetObjectByOffsetCoordinates(hexOffsetCoordinates.Column, hexOffsetCoordinates.Row);
+        }
+        
+        public Hex.OffsetCoordinates PixelToOffsetCoordinates(Point pixelCoordinates)
+        {
+            return CombatMap.PixelToOffsetCoordinates(pixelCoordinates);
+        }
+
+        public bool CanMoveObjectTo(SpaceObject spaceObject, Hex.CubeCoordinates destination)
+        {
+            return CombatMap.AreNeighbors(spaceObject.ObjectCoordinates, destination);
+        }
+
+        public SpaceObject GetObjectByOffsetCoordinates(int column, int row)
+        {
+            return SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)];
+        }
+
+        public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject, int column, int row)
+        {
+            SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)] = spaceObject;
+        }
+
+        private int GetObjectIndexByOffsetCoordinates(int column, int row)
+        {
+            return row * MapWidth + column;
+        }
+
+        public int GetDistance(SpaceObject firstObject, SpaceObject secondObject)
+        {
+            return CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
         }
 
         public void moveMeteors()
@@ -184,22 +213,38 @@ namespace qwerty
             CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }
 
-        private static Ship CreateShip(ShipType type, int p, WeaponType wpn)
+        private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
         {
-            Ship newShip = null;
-            switch (type)
+            Ship newShip;
+            switch (shipType)
             {
                 case ShipType.Scout:
-                    newShip = new ShipScout(p, wpn);
+                    newShip = new ShipScout((int)owner, weaponType);
                     break;
                 case ShipType.Assaulter:
-                    newShip = new ShipAssaulter(p, wpn);
+                    newShip = new ShipAssaulter((int)owner, weaponType);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null);
             }
-            return newShip;
+            
+            var rand = new Random();
+            int randomRow;
+            int randomColumn;
+            do
+            {
+                randomRow = rand.Next(0, FieldHeight - 1);
+                randomColumn = rand.Next(0, 1);
+                if (owner == Player.SecondPlayer)
+                {
+                    randomColumn = FieldWidth - randomColumn - 1;
+                }
+            } while (GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
+
+            SetObjectAtOffsetCoordinates(newShip, randomColumn, randomRow);
+            // TODO: assign right coordinates
+            newShip.ObjectCoordinates = randomColumn;
         }
-
-
 
         public void EndTurn()
         {
@@ -215,5 +260,6 @@ namespace qwerty
         {
             CombatMap.Cells[i].spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
         }
+
     }
 }
