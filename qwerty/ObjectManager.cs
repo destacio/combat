@@ -14,8 +14,8 @@ namespace qwerty
     {
         public int MapWidth { get; }
         public int MapHeight { get; }
-        public List<Meteor> Meteors = new List<Meteor>();
-        public List<Ship> Ships = new List<Ship>();
+        public List<Meteor> Meteors => SpaceObjects.OfType<Meteor>().ToList();
+        public List<Ship> Ships => SpaceObjects.OfType<Ship>().ToList();
         private const int MeteorAppearanceChance = 20;
 
         public CombatMap CombatMap;
@@ -55,7 +55,7 @@ namespace qwerty
             return CombatMap.PixelToOffsetCoordinates(pixelCoordinates);
         }
 
-        public bool CanMoveObjectTo(SpaceObject spaceObject, Hex.CubeCoordinates destination)
+        public bool CanMoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
         {
             return CombatMap.AreNeighbors(spaceObject.ObjectCoordinates, destination);
         }
@@ -79,7 +79,8 @@ namespace qwerty
         {
             return CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
         }
-
+        
+#region Meteors
         public void moveMeteors()
         {
             foreach (var meteor in Meteors)
@@ -212,17 +213,18 @@ namespace qwerty
             Meteors.Add(newMeteor);
             CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }
-
+#endregion
+        
         private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
         {
             Ship newShip;
             switch (shipType)
             {
                 case ShipType.Scout:
-                    newShip = new ShipScout((int)owner, weaponType);
+                    newShip = new ShipScout(owner, weaponType);
                     break;
                 case ShipType.Assaulter:
-                    newShip = new ShipAssaulter((int)owner, weaponType);
+                    newShip = new ShipAssaulter(owner, weaponType);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null);
@@ -233,17 +235,16 @@ namespace qwerty
             int randomColumn;
             do
             {
-                randomRow = rand.Next(0, FieldHeight - 1);
+                randomRow = rand.Next(0, MapHeight - 1);
                 randomColumn = rand.Next(0, 1);
                 if (owner == Player.SecondPlayer)
                 {
-                    randomColumn = FieldWidth - randomColumn - 1;
+                    randomColumn = MapWidth - randomColumn - 1;
                 }
             } while (GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
 
             SetObjectAtOffsetCoordinates(newShip, randomColumn, randomRow);
-            // TODO: assign right coordinates
-            newShip.ObjectCoordinates = randomColumn;
+            newShip.ObjectCoordinates = new Hex.OffsetCoordinates(randomColumn, randomRow);
         }
 
         public void EndTurn()
