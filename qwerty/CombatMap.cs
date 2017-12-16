@@ -92,69 +92,15 @@ namespace qwerty
             return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
         }
 
-        public double GetAngle(int sourceCellId, int targetCellId, int activePlayerId)
+        public double GetAngle(int sourceCellId, int targetCellId)
         {
-            double angle;
-
             var sourceOffsetCoordinates = new Hex.OffsetCoordinates(Cells[sourceCellId].x, Cells[sourceCellId].y);
             double shipx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).X;
             double shipy = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).Y;
             var targetOffsetCoordinates = new Hex.OffsetCoordinates(Cells[targetCellId].x, Cells[targetCellId].y);
             double targetx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).X;
             double targety = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).Y;
-
-            if (shipx == targetx) // избегаем деления на ноль
-            {
-                if (shipy > targety)
-                {
-                    angle = -90;
-                }
-                else
-                {
-                    angle = 90;
-                }
-                if (activePlayerId == 2) angle = -angle;
-
-            }
-            else // находим угол, на который нужно повернуть корабль (если он не равен 90 градусов)
-            {
-                angle = Math.Atan((targety - shipy) / (targetx - shipx)) * 180 / Math.PI;
-            }
-            // дальше идет коррекция, не пытайся разобраться как это работает, просто оставь как есть
-            if (activePlayerId == 1)
-            {
-                if (shipy == targety && shipx > targetx)
-                {
-                    angle = 180;
-                }
-                else if (shipx > targetx && shipy < targety)
-                {
-                    angle += 180;
-                }
-                else if (shipx > targetx && shipy > targety)
-                {
-                    angle = angle - 180;
-                }
-            }
-            else if (activePlayerId == 2)
-            {
-                if (shipy == targety && shipx < targetx)
-                {
-                    angle = 180;
-                }
-                else if (shipx < targetx && shipy < targety)
-                {
-                    angle -= 180;
-                }
-                else if (shipx < targetx && shipy > targety)
-                {
-                    angle += 180;
-                }
-            }
-
-            if (angle > 150) angle = 150;
-            else if (angle < -150) angle = -150;
-            return angle;
+            return Math.Atan2(targety - shipy, targetx - shipx) * 180 / Math.PI;
         }
 
         private void InitializeMap()
@@ -185,7 +131,10 @@ namespace qwerty
         {
             return Hex.CubeCoordinates.Distance(firstHexagon,secondHexagon);
         }
-    }
-
- 
+        
+        public int GetDistance(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
+        {
+            return Hex.CubeCoordinates.Distance(HexGrid.ToCubeCoordinates(firstHexagon),HexGrid.ToCubeCoordinates(secondHexagon));
+        }
+    } 
 }
