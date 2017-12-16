@@ -43,7 +43,7 @@ namespace qwerty.Objects
                 if (newx < 0 || newx > cMap.FieldWidth - 1
                     || newy < 0 || newy > cMap.FieldHeight * 2 - 1)
                 {
-                    cMap.Cells[boxId].spaceObject.player = -1;
+                    cMap.Cells[boxId].spaceObject.player = Player.None;
                     cMap.Cells[boxId].spaceObject = null;
                     boxId = -1;
                 }
@@ -62,11 +62,11 @@ namespace qwerty.Objects
                         cMap.Cells[pointB].spaceObject.currentHealth -= explodeDmg;
                         if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
                         {
-                            cMap.Cells[pointB].spaceObject.player = -1;
+                            cMap.Cells[pointB].spaceObject.player = Player.None;
                             cMap.Cells[pointB].spaceObject.boxId = -1;
                             cMap.Cells[pointB].spaceObject = null;
                         }
-                        cMap.Cells[boxId].spaceObject.player = -1;
+                        cMap.Cells[boxId].spaceObject.player = Player.None;
                         cMap.Cells[boxId].spaceObject = null;
                         boxId = -1;
                     }

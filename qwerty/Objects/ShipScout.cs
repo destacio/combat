@@ -23,9 +23,9 @@ namespace qwerty.Objects
             
             SolidBrush generalBrush;
 
-            if (player == 1)
+            if (player == Player.FirstPlayer)
                 generalBrush = new SolidBrush(Color.Blue);
-            else if (player == 2)
+            else if (player == Player.SecondPlayer)
                 generalBrush = new SolidBrush(Color.Red);
             else
                 generalBrush = new SolidBrush(Color.Gray);
@@ -38,7 +38,7 @@ namespace qwerty.Objects
             g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(cMap.Cells[boxId].CellPoints[3], new Size(20, -25)));
         }
 
-        public ShipScout(int playerId, WeaponType weaponType) : base(playerId, weaponType)
+        public ShipScout(Player playerId, WeaponType weaponType) : base(playerId, weaponType)
         {
             maxHealth = 50;
             currentHealth = maxHealth;
@@ -54,7 +54,7 @@ namespace qwerty.Objects
 
             WeaponPoint = PolygonPoints[2];
 
-            if (player == 2)
+            if (player == Player.SecondPlayer)
             {
                 Rotate(180);
             }

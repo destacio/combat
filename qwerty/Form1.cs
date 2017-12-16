@@ -22,7 +22,7 @@ namespace qwerty
         private List<Ship> allShips => _objectManager.Ships;
 
         private readonly ObjectManager _objectManager = new ObjectManager(8, 6);
-        private int _activePlayer = 1; // ход 1-ого или 2-ого игрока
+        private Player _activePlayer = Player.FirstPlayer; // ход 1-ого или 2-ого игрока
         private Ship _activeShip = null; // выделенное судно
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
         
@@ -172,7 +172,7 @@ namespace qwerty
                     if (_activeShip.actionsLeft <= 0) return;
                     if (cMap.AreNeighbors(new Hex.OffsetCoordinates(cMap.Cells[_activeShip.boxId].x, cMap.Cells[_activeShip.boxId].y), new Hex.OffsetCoordinates(selectedCell.x, selectedCell.y)))
                     {
-                        var rotateAngle = cMap.GetAngle(_activeShip.boxId, selectedCell.id, _activePlayer);
+                        var rotateAngle = cMap.GetAngle(_activeShip.boxId, selectedCell.id);
 
                         RotateShip(rotateAngle);
 
@@ -244,7 +244,7 @@ namespace qwerty
                             return;
                         }
 
-                        var angle = cMap.GetAngle(_activeShip.boxId, selectedCell.id, _activePlayer);
+                        var angle = cMap.GetAngle(_activeShip.boxId, selectedCell.id);
 
                         // поворачиваем корабль на угол angle
                         RotateShip(angle);
@@ -277,8 +277,7 @@ namespace qwerty
                 return;
             }
 
-            if (_activePlayer == 1) _activePlayer = 2;
-            else _activePlayer = 1;
+            _activePlayer = _activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
 
             lblTurn.Text = "Ходит " + _activePlayer + "-й игрок";
 

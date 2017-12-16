@@ -15,7 +15,7 @@ namespace qwerty.Objects
         public readonly Weapon EquippedWeapon;
         public PointF WeaponPoint;
 
-        public Ship(int playerId, WeaponType wpnType)
+        public Ship(Player playerId, WeaponType wpnType)
         {
             objectType = ObjectType.Ship;
 
@@ -73,7 +73,7 @@ namespace qwerty.Objects
             actionsLeft -= 1;
             if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
             {
-                cMap.Cells[pointB].spaceObject.player = -1;
+                cMap.Cells[pointB].spaceObject.player = Player.None;
                 cMap.Cells[pointB].spaceObject.boxId = -1;
                 cMap.Cells[pointB].spaceObject = null;
                 return true;
