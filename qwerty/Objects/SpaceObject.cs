@@ -14,7 +14,7 @@ namespace qwerty.Objects
         public ObjectType objectType; // подробности смотри в константах
         public Player player; // 0,1,2 ..0 - нейтральные объекты 
         public int boxId; // ячейка, в которой находится
-        public CubeCoordinates ObjectCoordinates;
+        public OffsetCoordinates ObjectCoordinates;
         public int maxHealth; // hit points
         public int currentHealth;
 
