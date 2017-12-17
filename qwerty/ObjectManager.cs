@@ -236,8 +236,8 @@ namespace qwerty
             int randomColumn;
             do
             {
-                randomRow = rand.Next(0, MapHeight - 1);
-                randomColumn = rand.Next(0, 1);
+                randomRow = rand.Next(0, MapHeight);
+                randomColumn = rand.Next(0, 2);
                 if (owner == Player.SecondPlayer)
                 {
                     randomColumn = MapWidth - randomColumn - 1;
