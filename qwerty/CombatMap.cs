@@ -57,6 +57,12 @@ namespace qwerty
             return Cells[x*FieldHeight + y];
         }
 
+        public Point HexToPixel(int x, int y)
+        {
+            var cubeCoordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x,y));
+            return HexGrid.HexToPixel(cubeCoordinates).ConvertToDrawingPoint();
+        }
+        
         public Cell GetCellByPixelCoordinates(int x, int y)
         {
             var hexagon = HexGrid.PixelToHex(new Hex.Point(x, y)).Round();
@@ -90,6 +96,22 @@ namespace qwerty
         {
             var coordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x, y));
             return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
+        }
+
+        public List<PointF[]> AllHexagonCorners
+        {
+            get
+            {
+                var cornerPointList = new List<PointF[]>();
+                for (int x = 0; x < FieldWidth; x++)
+                {
+                    for (int y = 0; y < FieldHeight; y++)
+                    {
+                        cornerPointList.Add(GetHexagonCorners(x, y));
+                    }
+                }
+                return cornerPointList;
+            }
         }
 
         public double GetAngle(int sourceCellId, int targetCellId)
@@ -135,6 +157,11 @@ namespace qwerty
         public int GetDistance(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
         {
             return Hex.CubeCoordinates.Distance(HexGrid.ToCubeCoordinates(firstHexagon),HexGrid.ToCubeCoordinates(secondHexagon));
+        }
+
+        public Point HexToPixel(Hex.OffsetCoordinates objectCoordinates)
+        {
+            return HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(objectCoordinates)).ConvertToDrawingPoint();
         }
     } 
 }
