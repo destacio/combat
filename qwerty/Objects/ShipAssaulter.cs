@@ -30,12 +30,13 @@ namespace qwerty.Objects
             else
                 generalBrush = new SolidBrush(Color.Gray);
 
-            var offset = new SizeF(cMap.HexToPixel(ObjectCoordinates));
-            var myPointArray = PolygonPoints.Select(p => PointF.Add(p, offset)).ToArray();
+            var hexOffset = new SizeF(cMap.HexToPixel(ObjectCoordinates));
+            var myPointArray = PolygonPoints.Select(p => PointF.Add(p, hexOffset)).ToArray();
 
             g.FillPolygon(generalBrush, myPointArray);
-            g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, PointF.Add(cMap.Cells[boxId].CellPoints[3], new Size(25, 15)));
-            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(cMap.Cells[boxId].CellPoints[3], new Size(20, -25)));
+            PointF leftMostHexagonPoint = PointF.Add(cMap.GetHexagonCornerOffset(3), hexOffset);
+            g.DrawString(actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, PointF.Add(leftMostHexagonPoint, new Size(25, 15)));
+            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(leftMostHexagonPoint, new Size(20, -25)));
         }
 
         public ShipAssaulter(Player playerId, WeaponType weaponType) : base(playerId, weaponType)

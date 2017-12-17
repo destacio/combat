@@ -70,6 +70,11 @@ namespace qwerty
             return Cells.Find(c => c.x == offsetCoordinates.Column && c.y == offsetCoordinates.Row);
         }
 
+        public Point GetHexagonCornerOffset(int cornerIndex)
+        {
+            return HexGrid.HexCornerOffset(cornerIndex).ConvertToDrawingPoint();
+        }
+
         public bool AreNeighbors(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
         {
             return AreNeighbors(HexGrid.ToCubeCoordinates(firstHexagon), HexGrid.ToCubeCoordinates(secondHexagon));
