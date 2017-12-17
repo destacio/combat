@@ -8,7 +8,7 @@ using Point = System.Drawing.Point;
 
 namespace qwerty
 {
-    public class GameLogic
+    class GameLogic
     {
         private Ship activeShip
         {
@@ -16,7 +16,7 @@ namespace qwerty
             set { objectManager.ActiveShip = value; }
         }
 
-        private readonly ObjectManager objectManager;
+        public readonly ObjectManager objectManager;
         private Player activePlayer = Player.FirstPlayer;
 
         public GameLogic(int fieldWidth, int fieldHeight)

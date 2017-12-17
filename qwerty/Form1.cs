@@ -15,10 +15,10 @@ namespace qwerty
 {
     public partial class Form1 : Form
     {
-        private CombatMap cMap => _objectManager.CombatMap;
-        private List<Ship> allShips => _objectManager.Ships;
+        private CombatMap cMap => objectManager.CombatMap;
+        private List<Ship> allShips => objectManager.Ships;
 
-        private readonly ObjectManager _objectManager = new ObjectManager(8, 6);
+        private ObjectManager objectManager => gameLogic.objectManager;
         private readonly GameLogic gameLogic = new GameLogic(8,6);
         private readonly FieldPainter fieldPainter;
         private Player _activePlayer = Player.FirstPlayer; // ход 1-ого или 2-ого игрока
@@ -30,12 +30,12 @@ namespace qwerty
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
             InitializeComponent();
-            pictureMap.Width = _objectManager.FieldWidth;
-            pictureMap.Height = _objectManager.FieldHeight;
+            pictureMap.Width = objectManager.FieldWidth;
+            pictureMap.Height = objectManager.FieldHeight;
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            fieldPainter = new FieldPainter(cMap.FieldWidthPixels, cMap.FieldHeightPixels, _objectManager);
+            fieldPainter = new FieldPainter(cMap.FieldWidthPixels, cMap.FieldHeightPixels, objectManager);
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
@@ -48,8 +48,8 @@ namespace qwerty
 
         public bool UpdateShipCount()
         {
-            int blueShipsCount = _objectManager.FirstPlayerShipCount;
-            int redShipsCount = _objectManager.SecondPlayerShipCount;
+            int blueShipsCount = objectManager.FirstPlayerShipCount;
+            int redShipsCount = objectManager.SecondPlayerShipCount;
 
             if (blueShipsCount == 0 || redShipsCount == 0)
             {
@@ -67,6 +67,7 @@ namespace qwerty
         {
             gameLogic.HandleFieldClick(e.Location);
             fieldPainter.DrawField();
+            pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
         }
 
@@ -74,6 +75,7 @@ namespace qwerty
         {
             gameLogic.EndTurn();
             fieldPainter.DrawField();
+            pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
         }
 
