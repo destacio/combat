@@ -64,8 +64,8 @@ namespace qwerty.Objects
                 return false;
             }
 
-            EquippedWeapon.drawAttack(PointF.Add(cMap.Cells[boxId].CellCenter, new SizeF(WeaponPoint)),
-                cMap.Cells[pointB].CellCenter, ref bmap, player, ref pictureMap);
+            EquippedWeapon.drawAttack(PointF.Add(cMap.HexToPixel(ObjectCoordinates), new SizeF(WeaponPoint)),
+                cMap.HexToPixel(ObjectCoordinates), ref bmap, player, ref pictureMap);
 
             Random rand = new Random();
             int damage = rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;

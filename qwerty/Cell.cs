@@ -17,7 +17,6 @@ namespace qwerty
         public int y;
 
         public PointF[] CellPoints;
-        public PointF CellCenter;
 
         public Cell(float sideLength, int cellX, int cellY, int cellId, Size fieldOffset = default(Size))
         {
@@ -42,8 +41,6 @@ namespace qwerty
             {
                 CellPoints[i] = PointF.Add(CellPoints[i], fieldOffset + cellOffset);
             }
-            
-            CellCenter = new PointF((CellPoints[1].X + CellPoints[2].X)/2, (CellPoints[1].Y + CellPoints[5].Y)/2);
         }
     }
 }

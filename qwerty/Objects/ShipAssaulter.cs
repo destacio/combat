@@ -30,7 +30,7 @@ namespace qwerty.Objects
             else
                 generalBrush = new SolidBrush(Color.Gray);
 
-            var offset = new SizeF(cMap.Cells[boxId].CellCenter);
+            var offset = new SizeF(cMap.HexToPixel(ObjectCoordinates));
             var myPointArray = PolygonPoints.Select(p => PointF.Add(p, offset)).ToArray();
 
             g.FillPolygon(generalBrush, myPointArray);
