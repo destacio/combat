@@ -25,6 +25,7 @@ namespace qwerty
         public int SecondPlayerShipCount => Ships.Count(sh => sh.player == Player.SecondPlayer);
         public int FieldWidth => CombatMap.FieldWidthPixels;
         public int FieldHeight => CombatMap.FieldHeightPixels;
+        public Ship ActiveShip { get; set; }
 
         public ObjectManager(int mapWidth, int mapHeight)
         {
@@ -243,8 +244,8 @@ namespace qwerty
                 }
             } while (GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
 
-            SetObjectAtOffsetCoordinates(newShip, randomColumn, randomRow);
             newShip.ObjectCoordinates = new Hex.OffsetCoordinates(randomColumn, randomRow);
+            SetObjectAtOffsetCoordinates(newShip, randomColumn, randomRow);
         }
 
         public void EndTurn()
@@ -259,8 +260,12 @@ namespace qwerty
 
         public void drawSpaceShit(int i, ref Bitmap combatBitmap)
         {
-            CombatMap.Cells[i].spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
+            drawSpaceShit(CombatMap.Cells[i].spaceObject, ref combatBitmap);
         }
 
+        public void drawSpaceShit(SpaceObject spaceObject, ref Bitmap combatBitmap)
+        {
+            spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
+        }
     }
 }
