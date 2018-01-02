@@ -44,19 +44,6 @@ namespace qwerty.Objects
             
         }
 
-        public void Move(CombatMap cMap, int pointAId, int pointBId)
-        {
-
-            if (actionsLeft > 0)
-            {
-
-                boxId = pointBId;
-                cMap.Cells[pointAId].spaceObject = null;
-                cMap.Cells[pointBId].spaceObject = this;
-                actionsLeft -= 1;
-
-            }
-        }
         public bool Attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
             if (actionsLeft < EquippedWeapon.energyСonsumption)

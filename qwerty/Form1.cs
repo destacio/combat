@@ -21,8 +21,6 @@ namespace qwerty
         private ObjectManager objectManager => gameLogic.objectManager;
         private readonly GameLogic gameLogic = new GameLogic(8,6);
         private readonly FieldPainter fieldPainter;
-        private Player _activePlayer = Player.FirstPlayer; // ход 1-ого или 2-ого игрока
-        private Ship _activeShip = null; // выделенное судно
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
         
         public Form1()

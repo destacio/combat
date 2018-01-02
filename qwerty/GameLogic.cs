@@ -109,11 +109,15 @@ namespace qwerty
         private void MoveActiveShip(OffsetCoordinates clickedHexagon)
         {
             if (activeShip.actionsLeft <= 0 || !objectManager.CanMoveObjectTo(activeShip, clickedHexagon)) return;
-            /*
-                         * rotate
-                         * move
-                         * rotate back
-                         */
+			/*
+             * rotate
+             * move
+             * rotate back
+             */
+
+			objectManager.MoveObjectTo(activeShip, clickedHexagon);
+			activeShip.actionsLeft--;
+
 //            var rotateAngle = cMap.GetAngle(activeShip.boxId, selectedCell.id, activePlayer);
 //
 //            RotateShip(rotateAngle);

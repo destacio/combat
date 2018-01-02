@@ -214,9 +214,17 @@ namespace qwerty
             Meteors.Add(newMeteor);
             CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }
-#endregion
-        
-        private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
+
+		#endregion
+
+		public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
+		{
+			SpaceObjects[GetObjectIndexByOffsetCoordinates(spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row)] = null;
+			SpaceObjects[GetObjectIndexByOffsetCoordinates(destination.Column, destination.Row)] = spaceObject;
+			spaceObject.ObjectCoordinates = destination;
+		}
+
+		private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
         {
             Ship newShip;
             switch (shipType)
