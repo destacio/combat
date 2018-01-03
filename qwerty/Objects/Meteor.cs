@@ -10,7 +10,7 @@ namespace qwerty.Objects
         public int ydirection;
         public Meteor(int box, int health, int dmg, int x, int y)
         {
-            boxId = box;
+            //boxId = box;
             objectType = ObjectType.Meteor;
             player = 0;
             maxHealth = health;
@@ -25,10 +25,10 @@ namespace qwerty.Objects
         {
             Graphics g = Graphics.FromImage(bmap);
             SolidBrush grayBrush = new SolidBrush(Color.Gray);
-            var rect = new RectangleF(PointF.Add(cMap.Cells[boxId].CellPoints[3], new SizeF(17, -12)), new SizeF(25, 25));
-            g.FillEllipse(Brushes.Gray, rect);
-            g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
-                PointF.Add(cMap.Cells[boxId].CellPoints[3], new Size(20, 25)));
+            //var rect = new RectangleF(PointF.Add(cMap.Cells[boxId].CellPoints[3], new SizeF(17, -12)), new SizeF(25, 25));
+            //g.FillEllipse(Brushes.Gray, rect);
+            //g.DrawString(currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
+            //PointF.Add(cMap.Cells[boxId].CellPoints[3], new Size(20, 25)));
         }
 
         public void move(CombatMap cMap)
@@ -36,7 +36,7 @@ namespace qwerty.Objects
                 int newx;
                 int newy;
                 int pointB;
-
+			/*
                 newx = cMap.Cells[boxId].x + xdirection;
                 newy = cMap.Cells[boxId].y + ydirection;
 
@@ -72,6 +72,7 @@ namespace qwerty.Objects
                     }
                     
                 }
+            */
         }
         public override string Description
         {

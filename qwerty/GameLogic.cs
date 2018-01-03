@@ -16,6 +16,23 @@ namespace qwerty
             set { objectManager.ActiveShip = value; }
         }
 
+		public string ActiveShipDescription => activeShip?.Description ?? "";
+		public string ActivePlayerDescription
+		{
+			get
+			{
+				switch (activePlayer)
+				{
+					case Player.FirstPlayer:
+						return "First player";
+					case Player.SecondPlayer:
+						return "Second player";
+					default:
+						return activePlayer.ToString();
+				}
+			}
+		}
+
         public readonly ObjectManager objectManager;
         private Player activePlayer = Player.FirstPlayer;
 
@@ -48,8 +65,6 @@ namespace qwerty
                 {
                     activeShip = (Ship) clickedObject;
                 }
-                //boxDescription.Text = clickedObject.Description;
-                //UpdateUi();
                 return;
             }
             
@@ -60,13 +75,9 @@ namespace qwerty
                 return;
             }
             
-            
             if (clickedObject.player == activePlayer)
             {
-                //boxDescription.Text = clickedObject.Description;
                 activeShip = (Ship) clickedObject;
-
-                //UpdateUi();
             }
             else
             {

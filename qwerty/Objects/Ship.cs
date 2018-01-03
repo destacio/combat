@@ -61,7 +61,7 @@ namespace qwerty.Objects
             if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
             {
                 cMap.Cells[pointB].spaceObject.player = Player.None;
-                cMap.Cells[pointB].spaceObject.boxId = -1;
+                //cMap.Cells[pointB].spaceObject.boxId = -1;
                 cMap.Cells[pointB].spaceObject = null;
                 return true;
             }

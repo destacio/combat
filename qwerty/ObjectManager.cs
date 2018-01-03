@@ -86,10 +86,10 @@ namespace qwerty
         {
             foreach (var meteor in Meteors)
             {
-                if (meteor.boxId >= 0)
-                {
+                //if (meteor.boxId >= 0)
+                //{
                     meteor.move(CombatMap);
-                }
+                //}
             }
 
             Random rand = new Random();
@@ -263,7 +263,7 @@ namespace qwerty
                 ship.RefillEnergy();
             }
 
-            moveMeteors();
+            //moveMeteors();
         }
 
         public void drawSpaceShit(int i, ref Bitmap combatBitmap)

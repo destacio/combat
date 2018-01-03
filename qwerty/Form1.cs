@@ -67,6 +67,7 @@ namespace qwerty
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
+			boxDescription.Text = gameLogic.ActiveShipDescription;
         }
 
         private void btnEndTurn_Click(object sender, EventArgs e)
@@ -75,6 +76,8 @@ namespace qwerty
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
+			boxDescription.Text = gameLogic.ActiveShipDescription;
+			lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
         }
 
         private void buttonDebug_Click(object sender, EventArgs e)
