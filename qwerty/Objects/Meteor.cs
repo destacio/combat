@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Hex = Barbar.HexGrid;
 
 namespace qwerty.Objects
 {
@@ -8,10 +9,13 @@ namespace qwerty.Objects
         public string staticDescription = "Moving meteor";
         public int xdirection;
         public int ydirection;
-        public Meteor(int box, int health, int dmg, int x, int y)
+		public readonly Hex.CubeCoordinates movementDirection;
+
+		public Meteor(int box, int health, int dmg, int x, int y, Hex.CubeCoordinates movementDirection)
         {
-            //boxId = box;
-            objectType = ObjectType.Meteor;
+			this.movementDirection = movementDirection;
+			//boxId = box;
+			objectType = ObjectType.Meteor;
             player = 0;
             maxHealth = health;
             currentHealth = maxHealth;

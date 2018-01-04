@@ -61,6 +61,11 @@ namespace qwerty
             return CombatMap.AreNeighbors(spaceObject.ObjectCoordinates, destination);
         }
 
+		public void DeleteObject(SpaceObject spaceObject)
+		{
+			SpaceObjects[Array.IndexOf(SpaceObjects, spaceObject)] = null;
+		}
+
         public SpaceObject GetObjectByOffsetCoordinates(int column, int row)
         {
             return SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)];
@@ -76,7 +81,8 @@ namespace qwerty
             return row * MapWidth + column;
         }
 
-        public int GetDistance(SpaceObject firstObject, SpaceObject secondObject)
+
+		public int GetDistance(SpaceObject firstObject, SpaceObject secondObject)
         {
             return CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
         }
@@ -89,7 +95,7 @@ namespace qwerty
                 //if (meteor.boxId >= 0)
                 //{
                     meteor.move(CombatMap);
-                //}
+				//}
             }
 
             Random rand = new Random();
@@ -103,7 +109,8 @@ namespace qwerty
             int box4meteor = 0;
             int xWay = Constants.RIGHT;
             int yWay = Constants.MEDIUM_TOP;
-            int i;
+			Hex.CubeCoordinates movementDirection = new Hex.CubeCoordinates(0,0,0);
+			int i;
 
             Random rand = new Random();
             int randomNum = rand.Next(1, 100) % 4;
@@ -210,7 +217,7 @@ namespace qwerty
             var meteorHealth = rand.Next(1, 150);
             var meteorDmg = meteorHealth / 4;
 
-            var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay);
+			var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay, movementDirection);
             Meteors.Add(newMeteor);
             CombatMap.Cells[box4meteor].spaceObject = newMeteor;
         }

@@ -36,6 +36,9 @@ namespace qwerty
         public readonly ObjectManager objectManager;
         private Player activePlayer = Player.FirstPlayer;
 
+		public int FirstPlayerShipCount => objectManager.FirstPlayerShipCount;
+		public int SecondPlayerShipCount=> objectManager.SecondPlayerShipCount;
+
         public GameLogic(int fieldWidth, int fieldHeight)
         {
             objectManager = new ObjectManager(fieldWidth, fieldHeight);
@@ -93,6 +96,13 @@ namespace qwerty
                 // another object is out of range or requires more energy than is left
                 return;
             }
+
+			enemyObject.currentHealth -= activeShip.AttackDamage;
+			if (enemyObject.currentHealth < 0)
+			{
+				objectManager.DeleteObject(enemyObject);
+			}
+			activeShip.actionsLeft--;
 //
 //            var angle = cMap.GetAngle(activeShip.boxId, selectedCell.id, activePlayer);
 //

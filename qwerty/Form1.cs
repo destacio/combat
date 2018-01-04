@@ -46,8 +46,8 @@ namespace qwerty
 
         public bool UpdateShipCount()
         {
-            int blueShipsCount = objectManager.FirstPlayerShipCount;
-            int redShipsCount = objectManager.SecondPlayerShipCount;
+			int blueShipsCount = gameLogic.FirstPlayerShipCount;
+			int redShipsCount = gameLogic.SecondPlayerShipCount;
 
             if (blueShipsCount == 0 || redShipsCount == 0)
             {
@@ -68,6 +68,7 @@ namespace qwerty
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
 			boxDescription.Text = gameLogic.ActiveShipDescription;
+			UpdateShipCount();
         }
 
         private void btnEndTurn_Click(object sender, EventArgs e)
