@@ -182,20 +182,9 @@ namespace qwerty
 
         public void EndTurn()
         {
-//            if (!UpdateShipCount())
-//            {
-//                return;
-//            }
-
             activePlayer = activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
-
-            //lblTurn.Text = "Ходит " + _activePlayer + "-й игрок";
-
             activeShip = null;
-
-            objectManager.EndTurn();
-
-            //UpdateUi();
+			objectManager.EndTurn();
         }
     }
 }

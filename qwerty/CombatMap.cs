@@ -99,9 +99,14 @@ namespace qwerty
         
         public PointF[] GetHexagonCorners(int x, int y)
         {
-            var coordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x, y));
-            return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
+			return GetHexagonCorners(new Hex.OffsetCoordinates(x, y));
         }
+
+		public PointF[] GetHexagonCorners(Hex.OffsetCoordinates offsetCoordinates)
+		{
+			var coordinates = HexGrid.ToCubeCoordinates(offsetCoordinates);
+			return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
+		}
 
         public List<PointF[]> AllHexagonCorners
         {
@@ -119,15 +124,16 @@ namespace qwerty
             }
         }
 
-        public double GetAngle(int sourceCellId, int targetCellId)
+		public double GetAngle(Hex.CubeCoordinates sourceCoordinates, Hex.CubeCoordinates targetCoordinates)
+		{
+			double dx = HexGrid.HexToPixel(targetCoordinates).X - HexGrid.HexToPixel(sourceCoordinates).X;
+			double dy = HexGrid.HexToPixel(targetCoordinates).Y - HexGrid.HexToPixel(sourceCoordinates).Y;
+			return Math.Atan2(dy, dx) * 180 / Math.PI;
+		}
+
+		public double GetAngle(Hex.OffsetCoordinates sourceOffsetCoordinates, Hex.OffsetCoordinates targetOffsetCoordinates)
         {
-            var sourceOffsetCoordinates = new Hex.OffsetCoordinates(Cells[sourceCellId].x, Cells[sourceCellId].y);
-            double shipx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).X;
-            double shipy = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates)).Y;
-            var targetOffsetCoordinates = new Hex.OffsetCoordinates(Cells[targetCellId].x, Cells[targetCellId].y);
-            double targetx = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).X;
-            double targety = HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(targetOffsetCoordinates)).Y;
-            return Math.Atan2(targety - shipy, targetx - shipx) * 180 / Math.PI;
+			return GetAngle(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates), HexGrid.ToCubeCoordinates(targetOffsetCoordinates));
         }
 
         private void InitializeMap()
@@ -163,6 +169,35 @@ namespace qwerty
         {
             return Hex.CubeCoordinates.Distance(HexGrid.ToCubeCoordinates(firstHexagon),HexGrid.ToCubeCoordinates(secondHexagon));
         }
+
+		public List<Hex.OffsetCoordinates> GetAllHexagonsInRange(Hex.OffsetCoordinates centerHexagon, int range)
+		{
+			var allHexagons = new List<Hex.OffsetCoordinates>();
+			//  TODO: implement spiral ring algorithm from redblobgames
+			for (int x = 0; x<FieldWidth; x++)
+            {
+                for (int y = 0; y<FieldHeight; y++)
+                {
+					var coordinates = new Hex.OffsetCoordinates(x, y);
+					var distance = GetDistance(centerHexagon, coordinates);
+					if (distance <= range && distance > 0)
+					{
+						allHexagons.Add(coordinates);
+					}
+                }
+            }
+			return allHexagons;
+		}
+
+		public List<PointF[]> GetAllHexagonCornersInRange(Hex.OffsetCoordinates centerHexagon, int range)
+		{
+			var allHexagonCorners = new List<PointF[]>();
+			foreach (var hexagonCoordinates in GetAllHexagonsInRange(centerHexagon, range))
+			{
+				allHexagonCorners.Add(GetHexagonCorners(hexagonCoordinates));
+			}
+			return allHexagonCorners;
+		}
 
         public Point HexToPixel(Hex.OffsetCoordinates objectCoordinates)
         {
