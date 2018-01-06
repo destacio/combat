@@ -73,6 +73,7 @@ namespace qwerty
 
         public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject, int column, int row)
         {
+			// TODO: if object coordinates already set
             SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)] = spaceObject;
         }
 
@@ -106,14 +107,13 @@ namespace qwerty
         }
         public void meteorCreate()
         {
-            int box4meteor = 0;
             int xWay = Constants.RIGHT;
             int yWay = Constants.MEDIUM_TOP;
-			Hex.CubeCoordinates movementDirection = new Hex.CubeCoordinates(0,0,0);
-			int i;
+			Hex.OffsetCoordinates meteorCoordinates = new Hex.OffsetCoordinates();
+			Hex.CubeCoordinates movementDirection = new Hex.CubeCoordinates();
 
             Random rand = new Random();
-            int randomNum = rand.Next(1, 100) % 4;
+            int randomNum = rand.Next(1, 5);
             
 
             // место появления и направление полёта
@@ -121,19 +121,10 @@ namespace qwerty
             {
                 
                 case 1:  // left
-                    box4meteor = rand.Next(0, CombatMap.FieldHeight);
-                    for (i = 0; i < 10; i++ )
-                    {
-                        if (CombatMap.Cells[box4meteor].spaceObject != null)
-                        {
-                            box4meteor += 1;
-                            if (box4meteor >= CombatMap.FieldHeight - 1)
-                                box4meteor = 0;
-                        }
-                        else break;
-                    }
-                    if(i == 10) return;
-                        xWay = Constants.RIGHT;
+					meteorCoordinates = GetRandomVacantHexagon(0, 0, 0, MapHeight - 1);
+
+
+                    xWay = Constants.RIGHT;
                     if(rand.Next(1, 100) > 50)
                     {
                         yWay = Constants.MEDIUM_TOP;
@@ -144,18 +135,9 @@ namespace qwerty
                     }
                     break;
                 case 2: // top
-                    box4meteor = CombatMap.GetCellByCellCoordinates(rand.Next(0,CombatMap.FieldWidth/2-1) * 2, 0).id;
-                    for (i = 0; i < 10; i++ )
-                            {
-                        if (CombatMap.Cells[box4meteor].spaceObject != null)
-                        {
-                            box4meteor += CombatMap.FieldHeight * 2;
-                            if (box4meteor > CombatMap.FieldWidth + 1)
-                                box4meteor = 0;
-                        }
-                        else break;
-                    }
-                    if (i == 10) return;
+					meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, 0, 0);
+
+
                     if (rand.Next(1, 100) > 50)
                     {
                         xWay = Constants.RIGHT;
@@ -167,18 +149,9 @@ namespace qwerty
                     yWay = Constants.MEDIUM_BOTTOM;
                     break;
                 case 3: // right
-                    box4meteor = rand.Next(CombatMap.Cells.Count-1 - CombatMap.FieldHeight, CombatMap.Cells.Count-1);
-                    for (i = 0; i < 10; i++)
-                    {
-                        if (CombatMap.Cells[box4meteor].spaceObject != null)
-                        {
-                            box4meteor += 1;
-                            if (box4meteor > CombatMap.Cells.Count)
-                                box4meteor = CombatMap.Cells.Count - CombatMap.FieldHeight;
-                        }
-                        else break;
-                    }
-                    if (i == 10) return;
+					meteorCoordinates = GetRandomVacantHexagon(MapWidth - 1, MapWidth - 1, 0, MapHeight - 1);
+
+
                     xWay = Constants.LEFT;
                     if (rand.Next(1, 100) > 50)
                     {
@@ -189,19 +162,11 @@ namespace qwerty
                         yWay = Constants.MEDIUM_BOTTOM;
                     }
                     break;
-                case 0: // bottom
-                    box4meteor = CombatMap.GetCellByCellCoordinates(rand.Next(0, CombatMap.FieldWidth / 2 - 1) * 2+1, CombatMap.FieldHeight * 2 - 1).id;
-                    for (i = 0; i < 10; i++ )
-                    {
-                        if (CombatMap.Cells[box4meteor].spaceObject != null)
-                        {
-                            box4meteor += CombatMap.FieldHeight * 2;
-                            if (box4meteor > CombatMap.Cells.Count-1)
-                                box4meteor = CombatMap.FieldHeight - 1;
-                        }
-                        else break;
-                    }
-                    if (i == 10) return;
+                case 4: // bottom
+					meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, MapHeight - 1, MapHeight - 1);
+
+
+
                     if (rand.Next(1, 100) > 50)
                     {
                         xWay = Constants.RIGHT;
@@ -217,9 +182,8 @@ namespace qwerty
             var meteorHealth = rand.Next(1, 150);
             var meteorDmg = meteorHealth / 4;
 
-			var newMeteor = new Meteor(box4meteor, meteorHealth, meteorDmg, xWay, yWay, movementDirection);
-            Meteors.Add(newMeteor);
-            CombatMap.Cells[box4meteor].spaceObject = newMeteor;
+			var newMeteor = new Meteor(meteorCoordinates, meteorHealth, meteorDmg, xWay, yWay, movementDirection);
+			SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
         }
 
 		#endregion
@@ -245,23 +209,25 @@ namespace qwerty
                 default:
                     throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null);
             }
-            
-            var rand = new Random();
-            int randomRow;
-            int randomColumn;
+
+			int minColumnIndex = owner == Player.FirstPlayer ? 0 : MapWidth - 2;
+			int maxColumnIndex = owner == Player.FirstPlayer ? 1 : MapWidth - 1;
+			newShip.ObjectCoordinates = GetRandomVacantHexagon(minColumnIndex, maxColumnIndex, 0, MapHeight - 1);
+			SetObjectAtOffsetCoordinates(newShip, newShip.ObjectCoordinates.Column, newShip.ObjectCoordinates.Row);
+        }
+
+		private Hex.OffsetCoordinates GetRandomVacantHexagon(int minColumnIndex, int maxColumnIndex, int minRowIndex, int maxRowIndex)
+		{
+			var rand = new Random();
+			int randomColumn;
+			int randomRow;
             do
             {
-                randomRow = rand.Next(0, MapHeight);
-                randomColumn = rand.Next(0, 2);
-                if (owner == Player.SecondPlayer)
-                {
-                    randomColumn = MapWidth - randomColumn - 1;
-                }
+				randomColumn = rand.Next(minColumnIndex, maxColumnIndex+ 1);
+				randomRow = rand.Next(minRowIndex, maxRowIndex + 1);
             } while (GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
-
-            newShip.ObjectCoordinates = new Hex.OffsetCoordinates(randomColumn, randomRow);
-            SetObjectAtOffsetCoordinates(newShip, randomColumn, randomRow);
-        }
+			return new Hex.OffsetCoordinates(randomColumn, randomRow);
+		}
 
         public void EndTurn()
         {
@@ -271,11 +237,6 @@ namespace qwerty
             }
 
             //moveMeteors();
-        }
-
-        public void drawSpaceShit(int i, ref Bitmap combatBitmap)
-        {
-            drawSpaceShit(CombatMap.Cells[i].spaceObject, ref combatBitmap);
         }
 
         public void drawSpaceShit(SpaceObject spaceObject, ref Bitmap combatBitmap)

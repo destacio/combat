@@ -62,18 +62,7 @@ namespace qwerty.Objects
 
             EquippedWeapon.drawAttack(PointF.Add(cMap.HexToPixel(ObjectCoordinates), new SizeF(WeaponPoint)),
                 cMap.HexToPixel(ObjectCoordinates), ref bmap, player, ref pictureMap);
-
-            Random rand = new Random();
-            int damage = rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
-            cMap.Cells[pointB].spaceObject.currentHealth -= damage;
-            actionsLeft -= 1;
-            if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
-            {
-                cMap.Cells[pointB].spaceObject.player = Player.None;
-                //cMap.Cells[pointB].spaceObject.boxId = -1;
-                cMap.Cells[pointB].spaceObject = null;
-                return true;
-            }
+			
             return false;
         }
         

@@ -98,7 +98,7 @@ namespace qwerty
             }
 
 			enemyObject.currentHealth -= activeShip.AttackDamage;
-			if (enemyObject.currentHealth < 0)
+			if (enemyObject.currentHealth <= 0)
 			{
 				objectManager.DeleteObject(enemyObject);
 			}

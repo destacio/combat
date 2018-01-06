@@ -17,12 +17,11 @@ namespace qwerty
             new Hex.Point(CellSideLength, CellSideLength), new Hex.Point((int)(CellSideLength + 10),  (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10)),
             Hex.Offset.Odd);
         
-        public readonly List<Cell> Cells = new List<Cell>();
+        //public readonly List<Cell> Cells = new List<Cell>();
         public CombatMap(int w, int h) 
         {
             FieldWidth = w;
             FieldHeight = h;
-            InitializeMap();
         }
 
         public int FieldWidthPixels
@@ -47,29 +46,12 @@ namespace qwerty
             }
         }
 
-        public Cell GetCellByCellCoordinates(int x, int y)
-        {
-            if (x < 0 || y < 0 || x*FieldHeight + y > FieldWidth*FieldHeight)
-            {
-                return null;
-            }
-
-            return Cells[x*FieldHeight + y];
-        }
-
         public Point HexToPixel(int x, int y)
         {
             var cubeCoordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x,y));
             return HexGrid.HexToPixel(cubeCoordinates).ConvertToDrawingPoint();
         }
         
-        public Cell GetCellByPixelCoordinates(int x, int y)
-        {
-            var hexagon = HexGrid.PixelToHex(new Hex.Point(x, y)).Round();
-            var offsetCoordinates = HexGrid.ToOffsetCoordinates(hexagon);
-            return Cells.Find(c => c.x == offsetCoordinates.Column && c.y == offsetCoordinates.Row);
-        }
-
         public Point GetHexagonCornerOffset(int cornerIndex)
         {
             return HexGrid.HexCornerOffset(cornerIndex).ConvertToDrawingPoint();
@@ -134,18 +116,6 @@ namespace qwerty
 		public double GetAngle(Hex.OffsetCoordinates sourceOffsetCoordinates, Hex.OffsetCoordinates targetOffsetCoordinates)
         {
 			return GetAngle(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates), HexGrid.ToCubeCoordinates(targetOffsetCoordinates));
-        }
-
-        private void InitializeMap()
-        {
-            for (int i = 0; i < FieldWidth; i++)
-            {
-                for (int j = 0; j < FieldHeight; j++)
-                {
-                    Cells.Add(new Cell(CellSideLength, i, j, i * FieldHeight + j,
-                        new Size((int)(CellSideLength + 10), (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10))));
-                }
-            }
         }
 
         public Hex.OffsetCoordinates PixelToOffsetCoordinates(Point pixelCoordinates)

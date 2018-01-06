@@ -11,10 +11,10 @@ namespace qwerty.Objects
         public int ydirection;
 		public readonly Hex.CubeCoordinates movementDirection;
 
-		public Meteor(int box, int health, int dmg, int x, int y, Hex.CubeCoordinates movementDirection)
+		public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, int x, int y, Hex.CubeCoordinates movementDirection)
         {
 			this.movementDirection = movementDirection;
-			//boxId = box;
+			this.ObjectCoordinates = meteorCoordinates;
 			objectType = ObjectType.Meteor;
             player = 0;
             maxHealth = health;
