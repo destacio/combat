@@ -39,12 +39,7 @@ namespace qwerty.Objects
 
         public override string Description => "";
 
-        public override void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap)
-        {
-            
-        }
-
-		public int AttackDamage 
+        public int AttackDamage 
 		{
 			get 
 			{

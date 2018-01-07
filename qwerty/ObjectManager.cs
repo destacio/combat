@@ -238,10 +238,5 @@ namespace qwerty
 
             //moveMeteors();
         }
-
-        public void drawSpaceShit(SpaceObject spaceObject, ref Bitmap combatBitmap)
-        {
-            spaceObject.drawSpaceShit(ref CombatMap, ref combatBitmap);
-        }
     }
 }

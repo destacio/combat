@@ -19,8 +19,6 @@ namespace qwerty.Objects
 
         public abstract string Description { get; }
 
-        public abstract void drawSpaceShit(ref CombatMap cMap, ref System.Drawing.Bitmap bmap);
-
         public List<PointF> PolygonPoints;                                            
 
         public int maxActions; // максимальное количество действий на одном ходу
