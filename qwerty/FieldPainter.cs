@@ -1,7 +1,9 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using Barbar.HexGrid;
 using qwerty.Objects;
+using Point = System.Drawing.Point;
 
 namespace qwerty
 {
@@ -45,25 +47,41 @@ namespace qwerty
             }
             
             
-            // draw ships
-//                if (cMap.Cells[i].spaceObject != null)
-//                {
-//                    // this call is as dumb as it could ever be
-//                    _objectManager.drawSpaceShit(i, ref CurrentBitmap);
-//
-//                }
-//
             foreach (var ship in objectManager.Ships)
             {
 				DrawShip(ship);
             }
-//#if DEBUG
-//                g.DrawString(cMap.Cells[i].id.ToString(), new Font("Arial", 8.0F), Brushes.Yellow, PointF.Add(cMap.Cells[i].CellPoints[3], new Size(10, 10)));
-//                g.DrawString($"({cMap.Cells[i].x}, {cMap.Cells[i].y})", new Font("Arial", 8.0F), Brushes.DeepSkyBlue, PointF.Add(cMap.Cells[i].CellPoints[3], new Size(30, 10)));
-//#endif
+
+	        foreach (var meteor in objectManager.Meteors)
+	        {
+		        DrawMeteor(meteor);
+	        }
+	        
+#if DEBUG
+	        // draw hexagon coordinates
+	        for (int x = 0; x < combatMap.FieldWidth; x++)
+	        {
+		        for (int y = 0; y < combatMap.FieldHeight; y++)
+		        {
+			        g.DrawString($"C{x}R{y}", new Font("Arial", 7), Brushes.DeepSkyBlue, combatMap.GetHexagonCorners(x,y)[2]);
+			        
+			        var cubeCoordinates = combatMap.HexGrid.ToCubeCoordinates(new OffsetCoordinates(x, y));
+			        g.DrawString($"Q{cubeCoordinates.Q}R{cubeCoordinates.R}S{cubeCoordinates.S}", new Font("Arial", 7),
+				        Brushes.DeepSkyBlue, PointF.Add(combatMap.GetHexagonCorners(x, y)[4], new Size(0, -12)));
+		        }
+	        }
+#endif
         }
 
-		private void DrawShip(Ship ship)
+	    private void DrawMeteor(Meteor meteor)
+	    {
+			Graphics g = Graphics.FromImage(CurrentBitmap);
+			g.FillEllipse(Brushes.Gray, new Rectangle(Point.Subtract(combatMap.HexToPixel(meteor.ObjectCoordinates), new Size(15, 15)), new Size(30,30)));
+		    g.DrawString(meteor.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
+			    Point.Add(combatMap.HexToPixel(meteor.ObjectCoordinates), new Size(5, -25)));
+	    }
+
+	    private void DrawShip(Ship ship)
 		{
 			Graphics g = Graphics.FromImage(CurrentBitmap);
 
