@@ -74,11 +74,6 @@ namespace qwerty
             return false;
         }
 
-        public PointF[] GetHexagonCorners(Cell cell)
-        {
-            return GetHexagonCorners(cell.x, cell.y);
-        }
-        
         public PointF[] GetHexagonCorners(int x, int y)
         {
 			return GetHexagonCorners(new Hex.OffsetCoordinates(x, y));
