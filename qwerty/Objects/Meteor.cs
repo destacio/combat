@@ -8,95 +8,21 @@ namespace qwerty.Objects
         public string staticDescription = "Moving meteor";
         public int xdirection;
         public int ydirection;
-		public readonly Hex.CubeCoordinates movementDirection;
+		public readonly HexagonNeighborDirection MovementDirection;
 
-		public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, int x, int y, Hex.CubeCoordinates movementDirection)
+		public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, HexagonNeighborDirection movementDirection)
         {
-			this.movementDirection = movementDirection;
+			this.MovementDirection = movementDirection;
 			this.ObjectCoordinates = meteorCoordinates;
 			objectType = ObjectType.Meteor;
             player = 0;
             maxHealth = health;
             currentHealth = maxHealth;
             explodeDmg = dmg;
-            xdirection = x;
-            ydirection = y;
-            
         }
 
-        public void move(CombatMap cMap)
-        {
-                int newx;
-                int newy;
-                int pointB;
-			/*
-                newx = cMap.Cells[boxId].x + xdirection;
-                newy = cMap.Cells[boxId].y + ydirection;
-
-                if (newx < 0 || newx > cMap.FieldWidth - 1
-                    || newy < 0 || newy > cMap.FieldHeight * 2 - 1)
-                {
-                    cMap.Cells[boxId].spaceObject.player = Player.None;
-                    cMap.Cells[boxId].spaceObject = null;
-                    boxId = -1;
-                }
-                else
-                {
-                    pointB = cMap.GetCellByCellCoordinates(newx, newy).id;
-
-                    if (cMap.Cells[pointB].spaceObject == null)
-                    {
-                        cMap.Cells[boxId].spaceObject = null;
-                        cMap.Cells[pointB].spaceObject = this;
-                        boxId = cMap.Cells[pointB].id;
-                    }
-                    else
-                    {
-                        cMap.Cells[pointB].spaceObject.currentHealth -= explodeDmg;
-                        if (cMap.Cells[pointB].spaceObject.currentHealth <= 0)
-                        {
-                            cMap.Cells[pointB].spaceObject.player = Player.None;
-                            cMap.Cells[pointB].spaceObject.boxId = -1;
-                            cMap.Cells[pointB].spaceObject = null;
-                        }
-                        cMap.Cells[boxId].spaceObject.player = Player.None;
-                        cMap.Cells[boxId].spaceObject = null;
-                        boxId = -1;
-                    }
-                    
-                }
-            */
-        }
-        public override string Description
-        {
-            get
-            {
-                string x = "";
-                string y = "";
-
-                switch (xdirection)
-                {
-                    case -1:
-                        x = "left ";
-                        break;
-                    case 1:
-                        x = "right ";
-                        break;
-                }
-                switch (ydirection)
-                {
-                    case -1:
-                        y = "top ";
-                        break;
-                    case 1:
-                        y = "bottom ";
-                        break;
-                }
-
-                return staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg
-                       + "\nhp - " + currentHealth
-                       + "\nНаправление: \n" + x + y;
-            }
-        }
+        public override string Description => staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg
+                                              + "\nhp - " + currentHealth
+                                              + "\nНаправление: \n" + MovementDirection;
     }
 }
