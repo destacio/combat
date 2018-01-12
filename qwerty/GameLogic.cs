@@ -97,11 +97,7 @@ namespace qwerty
                 return;
             }
 
-			enemyObject.currentHealth -= activeShip.AttackDamage;
-			if (enemyObject.currentHealth <= 0)
-			{
-				objectManager.DeleteObject(enemyObject);
-			}
+			DealDamage(enemyObject, activeShip.AttackDamage);
 			activeShip.actionsLeft--;
 //
 //            var angle = cMap.GetAngle(activeShip.boxId, selectedCell.id, activePlayer);
@@ -127,6 +123,15 @@ namespace qwerty
 //            }
         }
 
+        private void DealDamage(SpaceObject victim, int damageAmount)
+        {
+            victim.currentHealth -= damageAmount;
+            if (victim.currentHealth <= 0)
+            {
+                objectManager.DeleteObject(victim);
+            }
+        }
+        
         private void MoveActiveShip(OffsetCoordinates clickedHexagon)
         {
             if (activeShip.actionsLeft <= 0 || !objectManager.CanMoveObjectTo(activeShip, clickedHexagon)) return;
@@ -179,11 +184,35 @@ namespace qwerty
 //            if (activeShip.actionsLeft == 0) activeShip = null;
 //            //UpdateUi();
         }
+        
+        private void MoveMeteors()
+        {
+            foreach (var meteor in objectManager.Meteors)
+            {
+                var meteorNextStepCoordinates = objectManager.GetMeteorNextStepCoordinates(meteor);
+                var objectOnTheWay = objectManager.GetObjectByOffsetCoordinates(meteorNextStepCoordinates.Column, meteorNextStepCoordinates.Row);
+
+                if (objectOnTheWay == null)
+                {
+                    objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates);
+                    continue;
+                }
+                
+                DealDamage(objectOnTheWay, meteor.explodeDmg);
+                objectManager.DeleteObject(meteor);
+            }
+
+            if (new Random().Next(0, 100) <= ObjectManager.MeteorAppearanceChance)
+            {
+                objectManager.CreateMeteor();
+            }
+        }
 
         public void EndTurn()
         {
             activePlayer = activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
             activeShip = null;
+            MoveMeteors();
 			objectManager.EndTurn();
         }
     }
