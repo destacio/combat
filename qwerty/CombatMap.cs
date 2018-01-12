@@ -7,6 +7,19 @@ using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
+    /// <summary>
+    /// Hexagon neighbor direction names as they are listed in "Directions" list of the cube coordinates in HexGrid library
+    /// </summary>
+    public enum HexagonNeighborDirection
+    {
+        SouthEast = 0,
+        NorthEast,
+        North,
+        NorthWest,
+        SouthWest,
+        South
+    }
+    
     class CombatMap
     {
         public readonly int FieldWidth;
@@ -16,8 +29,7 @@ namespace qwerty
         public Hex.HexLayout<Hex.Point, Hex.PointPolicy> HexGrid = Hex.HexLayoutFactory.CreateFlatHexLayout(
             new Hex.Point(CellSideLength, CellSideLength), new Hex.Point((int)(CellSideLength + 10),  (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10)),
             Hex.Offset.Odd);
-        
-        //public readonly List<Cell> Cells = new List<Cell>();
+
         public CombatMap(int w, int h) 
         {
             FieldWidth = w;
@@ -167,6 +179,12 @@ namespace qwerty
         public Point HexToPixel(Hex.OffsetCoordinates objectCoordinates)
         {
             return HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(objectCoordinates)).ConvertToDrawingPoint();
+        }
+
+        public Hex.OffsetCoordinates GetNeighborCoordinates(Hex.OffsetCoordinates hexagonOffsetCoordinates, int neighborDirection)
+        {
+            return HexGrid.ToOffsetCoordinates(
+                Hex.CubeCoordinates.Neighbor(HexGrid.ToCubeCoordinates(hexagonOffsetCoordinates), neighborDirection));
         }
     } 
 }
