@@ -16,7 +16,7 @@ namespace qwerty
         public int MapHeight { get; }
         public List<Meteor> Meteors => SpaceObjects.OfType<Meteor>().ToList();
         public List<Ship> Ships => SpaceObjects.OfType<Ship>().ToList();
-        private const int MeteorAppearanceChance = 20;
+        public const int MeteorAppearanceChance = 20;
 
         public CombatMap CombatMap;
         public SpaceObject[] SpaceObjects;
@@ -42,7 +42,7 @@ namespace qwerty
             CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
             CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.SecondPlayer);
 
-            meteorCreate();
+            CreateMeteor();
         }
 
         public SpaceObject PixelToSpaceObject(Point pixelCoordinates)
@@ -68,6 +68,10 @@ namespace qwerty
 
         public SpaceObject GetObjectByOffsetCoordinates(int column, int row)
         {
+            if (column < 0 || column >= MapWidth || row < 0 || row >= MapHeight)
+            {
+                return null;
+            }
             return SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)];
         }
 
@@ -87,109 +91,63 @@ namespace qwerty
         {
             return CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
         }
-        
-#region Meteors
-        public void moveMeteors()
-        {
-            foreach (var meteor in Meteors)
-            {
-                //if (meteor.boxId >= 0)
-                //{
-                    meteor.move(CombatMap);
-				//}
-            }
 
-            Random rand = new Random();
-            if (rand.Next(0, 100) <= MeteorAppearanceChance)
-            {
-                meteorCreate();
-            }
+        public Hex.OffsetCoordinates GetMeteorNextStepCoordinates(Meteor meteor)
+        {
+            return CombatMap.GetNeighborCoordinates(meteor.ObjectCoordinates, (int)meteor.MovementDirection);
         }
-        public void meteorCreate()
+        
+        public void CreateMeteor()
         {
-            int xWay = Constants.RIGHT;
-            int yWay = Constants.MEDIUM_TOP;
-			Hex.OffsetCoordinates meteorCoordinates = new Hex.OffsetCoordinates();
-			Hex.CubeCoordinates movementDirection = new Hex.CubeCoordinates();
-
-            Random rand = new Random();
-            int randomNum = rand.Next(1, 5);
+			var meteorCoordinates = new Hex.OffsetCoordinates();
+            HexagonNeighborDirection movementDirection = 0;
             
-
-            // место появления и направление полёта
-            switch(randomNum)
+            var rand = new Random();
+            var randomMapSide = rand.Next(4);
+            switch(randomMapSide)
             {
-                
-                case 1:  // left
+                case 0:  // left
 					meteorCoordinates = GetRandomVacantHexagon(0, 0, 0, MapHeight - 1);
-
-
-                    xWay = Constants.RIGHT;
-                    if(rand.Next(1, 100) > 50)
-                    {
-                        yWay = Constants.MEDIUM_TOP;
-                    }
-                    else 
-                    {
-                        yWay = Constants.MEDIUM_BOTTOM;
-                    }
+                    movementDirection = rand.Next(2) == 0
+                        ? HexagonNeighborDirection.NorthEast
+                        : HexagonNeighborDirection.SouthEast;
                     break;
-                case 2: // top
+                case 1: // top
 					meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, 0, 0);
-
-
-                    if (rand.Next(1, 100) > 50)
-                    {
-                        xWay = Constants.RIGHT;
-                    }
-                    else
-                    {
-                        xWay = Constants.LEFT;
-                    }
-                    yWay = Constants.MEDIUM_BOTTOM;
+                    movementDirection = rand.Next(2) == 0
+                        ? HexagonNeighborDirection.SouthEast
+                        : HexagonNeighborDirection.SouthWest;
                     break;
-                case 3: // right
+                case 2: // right
 					meteorCoordinates = GetRandomVacantHexagon(MapWidth - 1, MapWidth - 1, 0, MapHeight - 1);
-
-
-                    xWay = Constants.LEFT;
-                    if (rand.Next(1, 100) > 50)
-                    {
-                        yWay = Constants.MEDIUM_TOP;
-                    }
-                    else
-                    {
-                        yWay = Constants.MEDIUM_BOTTOM;
-                    }
+                    movementDirection = rand.Next(2) == 0
+                        ? HexagonNeighborDirection.NorthWest
+                        : HexagonNeighborDirection.SouthWest;
                     break;
-                case 4: // bottom
+                case 3: // bottom
 					meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, MapHeight - 1, MapHeight - 1);
-
-
-
-                    if (rand.Next(1, 100) > 50)
-                    {
-                        xWay = Constants.RIGHT;
-                    }
-                    else
-                    {
-                        xWay = Constants.LEFT;
-                    }
-                    yWay = Constants.MEDIUM_TOP;
+                    movementDirection = rand.Next(2) == 0
+                        ? HexagonNeighborDirection.NorthEast
+                        : HexagonNeighborDirection.NorthWest;
                     break;
             }
 
             var meteorHealth = rand.Next(1, 150);
             var meteorDmg = meteorHealth / 4;
 
-			var newMeteor = new Meteor(meteorCoordinates, meteorHealth, meteorDmg, xWay, yWay, movementDirection);
+			var newMeteor = new Meteor(meteorCoordinates, meteorHealth, meteorDmg, movementDirection);
 			SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
         }
 
-		#endregion
-
 		public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
 		{
+		    if (destination.Column < 0 || destination.Column >= MapWidth ||
+		        destination.Row < 0 || destination.Row >= MapHeight)
+		    {
+		        // moving object outside bounds = deleting object
+		        DeleteObject(spaceObject);
+		        return;
+		    }
 			SpaceObjects[GetObjectIndexByOffsetCoordinates(spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row)] = null;
 			SpaceObjects[GetObjectIndexByOffsetCoordinates(destination.Column, destination.Row)] = spaceObject;
 			spaceObject.ObjectCoordinates = destination;
