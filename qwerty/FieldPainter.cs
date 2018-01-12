@@ -79,6 +79,10 @@ namespace qwerty
 			g.FillEllipse(Brushes.Gray, new Rectangle(Point.Subtract(combatMap.HexToPixel(meteor.ObjectCoordinates), new Size(15, 15)), new Size(30,30)));
 		    g.DrawString(meteor.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
 			    Point.Add(combatMap.HexToPixel(meteor.ObjectCoordinates), new Size(5, -25)));
+		    // TODO: better indicate meteor's way
+		    var directionAngle = 390 - 60 * (int)meteor.MovementDirection;
+		    g.DrawArc(new Pen(Color.Blue, 2), combatMap.HexToPixel(meteor.ObjectCoordinates).X - 10,
+			    combatMap.HexToPixel(meteor.ObjectCoordinates).Y - 10, 20, 20, directionAngle - 20, 40);
 	    }
 
 	    private void DrawShip(Ship ship)
