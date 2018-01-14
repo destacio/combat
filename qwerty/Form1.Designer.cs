@@ -36,6 +36,7 @@
             this.txtBlueShips = new System.Windows.Forms.Label();
             this.txtRedShips = new System.Windows.Forms.Label();
             this.buttonDebug = new System.Windows.Forms.Button();
+            this.imageUpdater = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,9 +84,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 272);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(122, 13);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Кораблей на поле боя:";
+            this.label1.Text = "Ships alive:";
             // 
             // txtBlueShips
             // 
@@ -114,6 +115,13 @@
             this.buttonDebug.Text = "DEBUG";
             this.buttonDebug.UseVisualStyleBackColor = true;
             this.buttonDebug.Click += new System.EventHandler(this.buttonDebug_Click);
+            // 
+            // imageUpdater
+            // 
+            this.imageUpdater.WorkerReportsProgress = true;
+            this.imageUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.imageUpdater_DoWork);
+            this.imageUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.imageUpdater_ProgressChanged);
+            this.imageUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.imageUpdater_RunWorkerCompleted);
             // 
             // Form1
             // 
@@ -148,6 +156,7 @@
         private System.Windows.Forms.Label txtRedShips;
         public System.Windows.Forms.PictureBox pictureMap;
         private System.Windows.Forms.Button buttonDebug;
+        private System.ComponentModel.BackgroundWorker imageUpdater;
     }
 }
 

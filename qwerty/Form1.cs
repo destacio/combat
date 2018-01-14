@@ -33,7 +33,7 @@ namespace qwerty
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            fieldPainter = new FieldPainter(cMap.FieldWidthPixels, cMap.FieldHeightPixels, objectManager);
+            fieldPainter = new FieldPainter(cMap.FieldWidthPixels, cMap.FieldHeightPixels, objectManager, imageUpdater);
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
@@ -46,8 +46,8 @@ namespace qwerty
 
         public bool UpdateShipCount()
         {
-			int blueShipsCount = gameLogic.FirstPlayerShipCount;
-			int redShipsCount = gameLogic.SecondPlayerShipCount;
+            int blueShipsCount = gameLogic.FirstPlayerShipCount;
+            int redShipsCount = gameLogic.SecondPlayerShipCount;
 
             if (blueShipsCount == 0 || redShipsCount == 0)
             {
@@ -64,26 +64,43 @@ namespace qwerty
         private void pictureMap_MouseClick(object sender, MouseEventArgs e)
         {
             gameLogic.HandleFieldClick(e.Location);
-            fieldPainter.DrawField();
-            pictureMap.Image = fieldPainter.CurrentBitmap;
-            pictureMap.Refresh();
-			boxDescription.Text = gameLogic.ActiveShipDescription;
-			UpdateShipCount();
+            //fieldPainter.DrawField();
+            //pictureMap.Image = fieldPainter.CurrentBitmap;
+            //pictureMap.Refresh();
+            imageUpdater.RunWorkerAsync();
+            boxDescription.Text = gameLogic.ActiveShipDescription;
+            UpdateShipCount();
         }
 
         private void btnEndTurn_Click(object sender, EventArgs e)
         {
             gameLogic.EndTurn();
-            fieldPainter.DrawField();
-            pictureMap.Image = fieldPainter.CurrentBitmap;
-            pictureMap.Refresh();
-			boxDescription.Text = gameLogic.ActiveShipDescription;
-			lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
+            //fieldPainter.DrawField();
+            //pictureMap.Image = fieldPainter.CurrentBitmap;
+            //pictureMap.Refresh();
+            imageUpdater.RunWorkerAsync();
+            boxDescription.Text = gameLogic.ActiveShipDescription;
+            lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
         }
 
         private void buttonDebug_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Hello from debug!");
+        }
+
+        private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            fieldPainter.DrawField();
+        }
+
+        private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pictureMap.Refresh();
+        }
+
+        private void imageUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            pictureMap.Refresh();
         }
     }
 }
