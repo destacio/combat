@@ -16,28 +16,30 @@ namespace qwerty
             set { objectManager.ActiveShip = value; }
         }
 
-		public string ActiveShipDescription => activeShip?.Description ?? "";
-		public string ActivePlayerDescription
-		{
-			get
-			{
-				switch (activePlayer)
-				{
-					case Player.FirstPlayer:
-						return "First player";
-					case Player.SecondPlayer:
-						return "Second player";
-					default:
-						return activePlayer.ToString();
-				}
-			}
-		}
+        public string ActiveShipDescription => activeShip?.Description ?? "";
+        public string ActivePlayerDescription
+        {
+            get
+            {
+                switch (activePlayer)
+                {
+                    case Player.FirstPlayer:
+                        return "First player";
+                    case Player.SecondPlayer:
+                        return "Second player";
+                    default:
+                        return activePlayer.ToString();
+                }
+            }
+        }
 
         public readonly ObjectManager objectManager;
         private Player activePlayer = Player.FirstPlayer;
 
-		public int FirstPlayerShipCount => objectManager.FirstPlayerShipCount;
-		public int SecondPlayerShipCount=> objectManager.SecondPlayerShipCount;
+        public int FirstPlayerShipCount => objectManager.FirstPlayerShipCount;
+        public int SecondPlayerShipCount=> objectManager.SecondPlayerShipCount;
+        public int BitmapWidth => this.objectManager.BitmapWidth;
+        public int BitmapHeight => this.objectManager.BitmapHeight;
 
         public GameLogic(int fieldWidth, int fieldHeight)
         {
@@ -97,8 +99,8 @@ namespace qwerty
                 return;
             }
 
-			DealDamage(enemyObject, activeShip.AttackDamage);
-			activeShip.actionsLeft--;
+            DealDamage(enemyObject, activeShip.AttackDamage);
+            activeShip.actionsLeft--;
 //
 //            var angle = cMap.GetAngle(activeShip.boxId, selectedCell.id, activePlayer);
 //
@@ -135,14 +137,14 @@ namespace qwerty
         private void MoveActiveShip(OffsetCoordinates clickedHexagon)
         {
             if (activeShip.actionsLeft <= 0 || !objectManager.CanMoveObjectTo(activeShip, clickedHexagon)) return;
-			/*
+            /*
              * rotate
              * move
              * rotate back
              */
 
-			objectManager.MoveObjectTo(activeShip, clickedHexagon);
-			activeShip.actionsLeft--;
+            objectManager.MoveObjectTo(activeShip, clickedHexagon);
+            activeShip.actionsLeft--;
 
 //            var rotateAngle = cMap.GetAngle(activeShip.boxId, selectedCell.id, activePlayer);
 //
@@ -213,7 +215,7 @@ namespace qwerty
             activePlayer = activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
             activeShip = null;
             MoveMeteors();
-			objectManager.EndTurn();
+            objectManager.EndTurn();
         }
     }
 }
