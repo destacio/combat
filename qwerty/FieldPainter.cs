@@ -34,9 +34,6 @@ namespace qwerty
                 g.DrawPolygon(Pens.Purple, hexagonCorners);
             }
 
-            imageUpdater.ReportProgress(0);
-            Thread.Sleep(500);
-
             if (objectManager.ActiveShip != null)
             {
                 // highlight active ship attack range
