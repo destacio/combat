@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -8,16 +7,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Media;
-using qwerty.Objects;
 using Hex = Barbar.HexGrid;
 
 namespace qwerty
 {
     public partial class Form1 : Form
     {
-        private CombatMap cMap => objectManager.CombatMap;
-        private List<Ship> allShips => objectManager.Ships;
-
         private ObjectManager objectManager => gameLogic.objectManager;
         private readonly GameLogic gameLogic = new GameLogic(8,6);
         private readonly FieldPainter fieldPainter;
@@ -27,13 +22,15 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
+            ObjectManager.ObjectAnimated += this.OnAnimationPending;
+
             InitializeComponent();
-            pictureMap.Width = objectManager.FieldWidth;
-            pictureMap.Height = objectManager.FieldHeight;
+            pictureMap.Width = this.gameLogic.BitmapWidth;
+            pictureMap.Height = this.gameLogic.BitmapHeight;
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            fieldPainter = new FieldPainter(cMap.FieldWidthPixels, cMap.FieldHeightPixels, objectManager, imageUpdater);
+            fieldPainter = new FieldPainter(this.gameLogic.BitmapWidth, this.gameLogic.BitmapHeight, objectManager, imageUpdater);
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
@@ -67,6 +64,10 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
+            while (this.imageUpdater.IsBusy)
+            {
+                
+            }
             imageUpdater.RunWorkerAsync();
             boxDescription.Text = gameLogic.ActiveShipDescription;
             UpdateShipCount();
@@ -78,6 +79,10 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
+            while (this.imageUpdater.IsBusy)
+            {
+
+            }
             imageUpdater.RunWorkerAsync();
             boxDescription.Text = gameLogic.ActiveShipDescription;
             lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
@@ -88,9 +93,21 @@ namespace qwerty
             MessageBox.Show("Hello from debug!");
         }
 
+        private void OnAnimationPending(object sender, AnimationEventArgs e)
+        {
+            this.imageUpdater.RunWorkerAsync(e);
+        }
+
         private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
-            fieldPainter.DrawField();
+            if (e.Argument == null)
+            {
+                fieldPainter.DrawField();
+                return;
+            }
+
+            // perform animation
+            this.fieldPainter.DrawField();
         }
 
         private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

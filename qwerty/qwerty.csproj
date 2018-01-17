@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimationEventArgs.cs" />
     <Compile Include="CombatMap.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FieldPainter.cs" />
