@@ -64,11 +64,10 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
-            while (this.imageUpdater.IsBusy)
+            if (!this.imageUpdater.IsBusy)
             {
-                
+                imageUpdater.RunWorkerAsync();
             }
-            imageUpdater.RunWorkerAsync();
             boxDescription.Text = gameLogic.ActiveShipDescription;
             UpdateShipCount();
         }
@@ -79,11 +78,10 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
-            while (this.imageUpdater.IsBusy)
+            if (!this.imageUpdater.IsBusy)
             {
-
+                imageUpdater.RunWorkerAsync();
             }
-            imageUpdater.RunWorkerAsync();
             boxDescription.Text = gameLogic.ActiveShipDescription;
             lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
         }
@@ -95,16 +93,16 @@ namespace qwerty
 
         private void OnAnimationPending(object sender, AnimationEventArgs e)
         {
-            this.imageUpdater.RunWorkerAsync(e);
+            this.imageUpdater.RunWorkerAsync();
         }
 
         private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (e.Argument == null)
-            {
-                fieldPainter.DrawField();
-                return;
-            }
+            //if (e.Argument == null)
+            //{
+            //    fieldPainter.DrawField();
+            //    return;
+            //}
 
             // perform animation
             this.fieldPainter.DrawField();
