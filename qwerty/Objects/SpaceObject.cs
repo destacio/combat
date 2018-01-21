@@ -18,6 +18,7 @@ namespace qwerty.Objects
         public int currentHealth;
 
         public abstract string Description { get; }
+        public bool IsMoving { get; set; }
 
         public List<PointF> PolygonPoints;                                            
 

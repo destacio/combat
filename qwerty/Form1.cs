@@ -93,19 +93,19 @@ namespace qwerty
 
         private void OnAnimationPending(object sender, AnimationEventArgs e)
         {
-            this.imageUpdater.RunWorkerAsync();
+            this.imageUpdater.RunWorkerAsync(e);
         }
 
         private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
-            //if (e.Argument == null)
-            //{
-            //    fieldPainter.DrawField();
-            //    return;
-            //}
+            if (e.Argument == null)
+            {
+                fieldPainter.DrawField();
+                return;
+            }
 
             // perform animation
-            this.fieldPainter.DrawField();
+            this.fieldPainter.PerformAnimation((AnimationEventArgs)e.Argument);
         }
 
         private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
