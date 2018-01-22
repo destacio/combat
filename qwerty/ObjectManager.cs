@@ -143,7 +143,10 @@ namespace qwerty
 
         public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
         {
-            ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, this.CombatMap.HexToPixel(destination)));
+            if (spaceObject.GetType() == typeof(Meteor))
+            {
+                ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, this.CombatMap.HexToPixel(spaceObject.ObjectCoordinates), this.CombatMap.HexToPixel(destination)));
+            }
             if (destination.Column < 0 || destination.Column >= MapWidth ||
                 destination.Row < 0 || destination.Row >= MapHeight)
             {
