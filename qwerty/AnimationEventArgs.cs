@@ -11,13 +11,15 @@ namespace qwerty
     class AnimationEventArgs: EventArgs
     {
         public SpaceObject SpaceObject { get; }
+        public Point MovementStart { get; }
         public List<Bitmap> AttackSprites { get; }
         public double RotationAngle { get; }
         public Point MovementDestination { get; }
 
-        public AnimationEventArgs(SpaceObject spaceObject, Point movementDestination)
+        public AnimationEventArgs(SpaceObject spaceObject, Point movementStart, Point movementDestination)
         {
             this.SpaceObject = spaceObject;
+            this.MovementStart = movementStart;
             this.MovementDestination = movementDestination;
         }
 

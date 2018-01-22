@@ -105,7 +105,7 @@ namespace qwerty
             }
 
             // perform animation
-            this.fieldPainter.PerformAnimation((AnimationEventArgs)e.Argument);
+            this.fieldPainter.OnAnimationPending(this, (AnimationEventArgs)e.Argument);
         }
 
         private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

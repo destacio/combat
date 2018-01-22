@@ -118,23 +118,22 @@ namespace qwerty
             g.DrawString(ship.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(combatMap.HexToPixel(ship.ObjectCoordinates), new Size(0, -25)));
         }
 
-        public void PerformAnimation(AnimationEventArgs eventArgs)
+        public void OnAnimationPending(object sender, AnimationEventArgs eventArgs)
         {
-            AnimateMovingObject(eventArgs.SpaceObject, eventArgs.MovementDestination);
+            AnimateMovingObject(eventArgs.SpaceObject, eventArgs.MovementStart,eventArgs.MovementDestination);
         }
 
-        private void AnimateMovingObject(SpaceObject spaceObject, Point destination)
+        private void AnimateMovingObject(SpaceObject spaceObject, Point start, Point destination)
         {
             spaceObject.IsMoving = true;
-            var stepDifference = new Size((destination.X - combatMap.HexToPixel(spaceObject.ObjectCoordinates).X) / 10,
-                (destination.Y - combatMap.HexToPixel(spaceObject.ObjectCoordinates).Y) / 10);
-            var currentCoordinates = combatMap.HexToPixel(spaceObject.ObjectCoordinates);
+            var stepDifference = new Size((destination.X - start.X) / 10, (destination.Y - start.Y) / 10);
+            var currentCoordinates = start;
             for (int i = 0; i < 10; i++)
             {
                 DrawField();
                 DrawMeteor((Meteor)spaceObject, currentCoordinates);
                 this.imageUpdater.ReportProgress(0);
-                Point.Add(currentCoordinates, stepDifference);
+                currentCoordinates = Point.Add(currentCoordinates, stepDifference);
                 Thread.Sleep(50);
             }
             spaceObject.IsMoving = false;
