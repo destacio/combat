@@ -22,7 +22,6 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-            ObjectManager.ObjectAnimated += this.OnAnimationPending;
 
             InitializeComponent();
             pictureMap.Width = this.gameLogic.BitmapWidth;
@@ -31,6 +30,7 @@ namespace qwerty
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
             fieldPainter = new FieldPainter(this.gameLogic.BitmapWidth, this.gameLogic.BitmapHeight, objectManager, imageUpdater);
+            ObjectManager.ObjectAnimated += this.fieldPainter.OnAnimationPending;
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
@@ -91,21 +91,11 @@ namespace qwerty
             MessageBox.Show("Hello from debug!");
         }
 
-        private void OnAnimationPending(object sender, AnimationEventArgs e)
-        {
-            this.imageUpdater.RunWorkerAsync(e);
-        }
-
         private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (e.Argument == null)
-            {
-                fieldPainter.DrawField();
-                return;
-            }
-
-            // perform animation
-            this.fieldPainter.OnAnimationPending(this, (AnimationEventArgs)e.Argument);
+            this.btnEndTurn.Enabled = false;
+            this.fieldPainter.UpdateBitmap();
+            this.btnEndTurn.Enabled = true;
         }
 
         private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

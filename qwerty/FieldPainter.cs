@@ -1,4 +1,5 @@
 ﻿﻿using System;
+ using System.Collections.Generic;
  using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -18,11 +19,30 @@ namespace qwerty
 
         private CombatMap combatMap => objectManager.CombatMap;
 
+        private List<AnimationEventArgs> pendingAnimations = new List<AnimationEventArgs>();
+
+        private bool IsAnimationPending => this.pendingAnimations?.Count > 0;
+
         public FieldPainter(int fieldWidth, int fieldHeight, ObjectManager objectManager, System.ComponentModel.BackgroundWorker imageUpdater)
         {
             this.objectManager = objectManager;
             this.imageUpdater = imageUpdater;
             CurrentBitmap = new Bitmap(fieldWidth, fieldHeight, PixelFormat.Format32bppArgb);
+        }
+
+        public void UpdateBitmap()  
+        {
+            if (!this.IsAnimationPending)
+            {
+                this.DrawField();
+                return;
+            }
+
+            foreach (var pendingAnimation in this.pendingAnimations)
+            {
+                this.AnimateMovingObject(pendingAnimation.SpaceObject, pendingAnimation.MovementStart, pendingAnimation.MovementDestination);
+            }
+            this.pendingAnimations.Clear();
         }
         
         public void DrawField()
@@ -54,7 +74,10 @@ namespace qwerty
             
             foreach (var ship in objectManager.Ships)
             {
-                DrawShip(ship);
+                if (!ship.IsMoving)
+                {
+                    DrawShip(ship);
+                }
             }
 
             foreach (var meteor in objectManager.Meteors)
@@ -81,6 +104,27 @@ namespace qwerty
 #endif
         }
 
+        private void DrawSpaceObject(SpaceObject spaceObject)
+        {
+            this.DrawSpaceObject(spaceObject, combatMap.HexToPixel(spaceObject.ObjectCoordinates));
+        }
+
+        private void DrawSpaceObject(SpaceObject spaceObject, Point spaceObjectCoordinates)
+        {
+            if (spaceObject is Meteor)
+            {
+                this.DrawMeteor((Meteor) spaceObject, spaceObjectCoordinates);
+                return;
+            }
+            if (spaceObject is Ship)
+            {
+                this.DrawShip((Ship) spaceObject, spaceObjectCoordinates);
+                return;
+            }
+
+            throw new ArgumentException($"Drawing of {spaceObject.GetType()} not supported");
+        }
+
         private void DrawMeteor(Meteor meteor)
         {
             DrawMeteor(meteor, combatMap.HexToPixel(meteor.ObjectCoordinates));
@@ -101,6 +145,11 @@ namespace qwerty
 
         private void DrawShip(Ship ship)
         {
+            DrawShip(ship, combatMap.HexToPixel(ship.ObjectCoordinates));
+        }
+
+        private void DrawShip(Ship ship, Point shipCoordinates)
+        {
             Graphics g = Graphics.FromImage(CurrentBitmap);
 
             SolidBrush generalBrush;
@@ -112,29 +161,29 @@ namespace qwerty
             else
                 generalBrush = new SolidBrush(Color.Gray);
 
-            var myPointArray = ship.PolygonPoints.Select(p => PointF.Add(p, new Size(combatMap.HexToPixel(ship.ObjectCoordinates)))).ToArray();
+            var myPointArray = ship.PolygonPoints.Select(p => PointF.Add(p, new Size(shipCoordinates))).ToArray();
             g.FillPolygon(generalBrush, myPointArray);
-            g.DrawString(ship.actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, Point.Add(combatMap.HexToPixel(ship.ObjectCoordinates), new Size(0, 15)));
-            g.DrawString(ship.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(combatMap.HexToPixel(ship.ObjectCoordinates), new Size(0, -25)));
+            g.DrawString(ship.actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, Point.Add(shipCoordinates, new Size(0, 15)));
+            g.DrawString(ship.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(shipCoordinates, new Size(0, -25)));
         }
 
         public void OnAnimationPending(object sender, AnimationEventArgs eventArgs)
         {
-            AnimateMovingObject(eventArgs.SpaceObject, eventArgs.MovementStart,eventArgs.MovementDestination);
+            this.pendingAnimations.Add(eventArgs);
         }
 
         private void AnimateMovingObject(SpaceObject spaceObject, Point start, Point destination)
         {
             spaceObject.IsMoving = true;
-            var stepDifference = new Size((destination.X - start.X) / 10, (destination.Y - start.Y) / 10);
-            var currentCoordinates = start;
+            var stepDifference = new SizeF((float)(destination.X - start.X) / 10, (float)(destination.Y - start.Y) / 10);
+            PointF currentCoordinates = start;
             for (int i = 0; i < 10; i++)
             {
+                currentCoordinates = PointF.Add(currentCoordinates, stepDifference);
                 DrawField();
-                DrawMeteor((Meteor)spaceObject, currentCoordinates);
+                this.DrawSpaceObject(spaceObject, Point.Round(currentCoordinates));
                 this.imageUpdater.ReportProgress(0);
-                currentCoordinates = Point.Add(currentCoordinates, stepDifference);
-                Thread.Sleep(50);
+                Thread.Sleep(30);
             }
             spaceObject.IsMoving = false;
         }
