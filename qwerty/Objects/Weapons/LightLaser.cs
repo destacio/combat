@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 
@@ -17,24 +19,20 @@ namespace qwerty.Objects.Weapons
         }
         public override string Description => ""; 
 
-        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
+        public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {
-            System.Threading.Thread.Sleep(150);
-            soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";
-
-            Graphics g = Graphics.FromImage(bitmap);
             Pen laserPen1 = new Pen(Color.GreenYellow, 2);
-
-            soundPlayer.Play();
+            List<Bitmap> sprites = new List<Bitmap>();
             for (int i = 0; i < 5; i++)
             {
+                var sprite = new Bitmap((int) Math.Max(sourcePoint.X, targetPoint.X), (int) Math.Max(sourcePoint.Y, targetPoint.Y));
+                var g = Graphics.FromImage(sprite);
+
                 g.DrawLine(laserPen1, sourcePoint, PointF.Add(targetPoint, new Size(i,0)));
 
-                pictureBox.Image = bitmap;
-                pictureBox.Refresh();
-
-                System.Threading.Thread.Sleep(35);
+                sprites.Add(sprite);
             }
+            return sprites;
         }
     }
 }

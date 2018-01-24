@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Media;
 using System.Windows.Forms;
 
@@ -18,7 +19,7 @@ namespace qwerty.Objects.Weapons
 
         public override string Description => "";
     
-        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
+        public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {
             System.Threading.Thread.Sleep(150);
             soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";

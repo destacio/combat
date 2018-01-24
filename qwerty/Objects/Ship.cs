@@ -40,13 +40,13 @@ namespace qwerty.Objects
         public override string Description => "";
 
         public int AttackDamage 
-		{
-			get 
-			{
-				Random rand = new Random();
-				return rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
-			}
-		}
+        {
+            get 
+            {
+                Random rand = new Random();
+                return rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
+            }
+        }
 
         public bool Attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
@@ -55,9 +55,9 @@ namespace qwerty.Objects
                 return false;
             }
 
-            EquippedWeapon.drawAttack(PointF.Add(cMap.HexToPixel(ObjectCoordinates), new SizeF(WeaponPoint)),
-                cMap.HexToPixel(ObjectCoordinates), ref bmap, player, ref pictureMap);
-			
+            EquippedWeapon.GetAttackSprites(PointF.Add(cMap.HexToPixel(this.ObjectCoordinates), new SizeF(this.WeaponPoint)),
+                cMap.HexToPixel(this.ObjectCoordinates));
+            
             return false;
         }
         
