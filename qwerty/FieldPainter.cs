@@ -40,11 +40,22 @@ namespace qwerty
 
             foreach (var pendingAnimation in this.pendingAnimations)
             {
-                this.AnimateMovingObject(pendingAnimation.SpaceObject, pendingAnimation.MovementStart, pendingAnimation.MovementDestination);
+                switch (pendingAnimation.AnimationType)
+                {
+                    case AnimationType.Movement:
+                        this.AnimateMovingObjects(new List<SpaceObject>{pendingAnimation.SpaceObject}, new List<Point> {pendingAnimation.MovementStart},
+                            new List<Point> {pendingAnimation.MovementDestination});
+                        break;
+                    case AnimationType.Sprites:
+                        this.AnimateAttack(pendingAnimation.SpaceObject, pendingAnimation.OverlaySprites);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
             this.pendingAnimations.Clear();
         }
-        
+
         public void DrawField()
         {
             Graphics g = Graphics.FromImage(CurrentBitmap);
@@ -172,20 +183,40 @@ namespace qwerty
             this.pendingAnimations.Add(eventArgs);
         }
 
-        private void AnimateMovingObject(SpaceObject spaceObject, Point start, Point destination)
+        private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<Point> movementStartPoints, List<Point> movementDestinationPoints)
         {
-            spaceObject.IsMoving = true;
-            var stepDifference = new SizeF((float)(destination.X - start.X) / 10, (float)(destination.Y - start.Y) / 10);
-            PointF currentCoordinates = start;
+            // linq magic
+            spaceObjects.ForEach(o => o.IsMoving = true);
+            var stepDifferences = movementDestinationPoints.Zip(movementDestinationPoints,
+                (startPoint, destinationPoint) => new SizeF((float) (destinationPoint.X - startPoint.X) / 10,
+                    (float) (destinationPoint.Y - startPoint.Y) / 10));
+            var currentCoordinates = new List<Point>(movementStartPoints);
             for (int i = 0; i < 10; i++)
             {
-                currentCoordinates = PointF.Add(currentCoordinates, stepDifference);
+                //currentCoordinates.ForEach(PointF.Add(currentCoordinates, stepDifference));
                 DrawField();
-                this.DrawSpaceObject(spaceObject, Point.Round(currentCoordinates));
+                //spaceObjects.ForEach(o => this.DrawSpaceObject(o, Point.Round(currentCoordinates));
                 this.imageUpdater.ReportProgress(0);
                 Thread.Sleep(30);
             }
-            spaceObject.IsMoving = false;
+            spaceObjects.ForEach(o => o.IsMoving = false);
+            // redraw field with current standings
+            // could be dangerous if multiple animations get stacked up, but that's later
+            this.DrawField();
+        }
+        
+        private void AnimateAttack(SpaceObject pendingAnimationSpaceObject, List<Bitmap> pendingAnimationOverlaySprites)
+        {
+            foreach (var overlaySprite in pendingAnimationOverlaySprites)
+            {
+                this.DrawField();
+                Graphics g = Graphics.FromImage(this.CurrentBitmap);
+                g.DrawImage(overlaySprite, 0, 0);
+                this.imageUpdater.ReportProgress(0);
+                Thread.Sleep(50);
+            }
+            // animation fully drawn - redraw initial field
+            this.DrawField();
         }
     }
 }
