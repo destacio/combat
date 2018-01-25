@@ -8,16 +8,25 @@ using qwerty.Objects;
 
 namespace qwerty
 {
+    public enum AnimationType
+    {
+        Movement,
+        Rotation,
+        Sprites
+    }
+    
     class AnimationEventArgs: EventArgs
     {
         public SpaceObject SpaceObject { get; }
         public Point MovementStart { get; }
-        public List<Bitmap> AttackSprites { get; }
+        public List<Bitmap> OverlaySprites { get; }
         public double RotationAngle { get; }
         public Point MovementDestination { get; }
+        public AnimationType AnimationType { get; }
 
         public AnimationEventArgs(SpaceObject spaceObject, Point movementStart, Point movementDestination)
         {
+            this.AnimationType = AnimationType.Movement;
             this.SpaceObject = spaceObject;
             this.MovementStart = movementStart;
             this.MovementDestination = movementDestination;
@@ -25,14 +34,16 @@ namespace qwerty
 
         public AnimationEventArgs(SpaceObject spaceObject, double rotationAngle)
         {
+            this.AnimationType = AnimationType.Rotation;
             this.SpaceObject = spaceObject;
             this.RotationAngle = rotationAngle;
         }
 
-        public AnimationEventArgs(SpaceObject spaceObject, List<Bitmap> attackSprites)
+        public AnimationEventArgs(SpaceObject spaceObject, List<Bitmap> overlaySprites)
         {
+            this.AnimationType = AnimationType.Sprites;
             this.SpaceObject = spaceObject;
-            this.AttackSprites = attackSprites;
+            this.OverlaySprites = overlaySprites;
         }
     }
 }
