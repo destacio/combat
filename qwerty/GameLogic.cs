@@ -98,7 +98,10 @@ namespace qwerty
                 // another object is out of range or requires more energy than is left
                 return;
             }
+            
+            objectManager.AttackObject(activeShip, enemyObject);
 
+            // TODO: move methods to object manager
             DealDamage(enemyObject, activeShip.AttackDamage);
             activeShip.actionsLeft--;
 //

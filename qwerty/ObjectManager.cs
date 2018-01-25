@@ -156,6 +156,18 @@ namespace qwerty
             spaceObject.ObjectCoordinates = destination;
         }
 
+        public void AttackObject(SpaceObject attacker, SpaceObject victim)
+        {
+            if (attacker is Ship)
+            {
+                var attackerShip = (Ship) attacker;
+                var attackSprites = attackerShip.EquippedWeapon.GetAttackSprites(
+                    this.CombatMap.HexToPixel(attackerShip.ObjectCoordinates),
+                    this.CombatMap.HexToPixel(victim.ObjectCoordinates));
+                ObjectAnimated?.Invoke(this, new AnimationEventArgs(attacker, attackSprites));
+            }
+        }
+
         private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
         {
             Ship newShip;
@@ -196,8 +208,6 @@ namespace qwerty
             {
                 ship.RefillEnergy();
             }
-
-            //moveMeteors();
         }
     }
 }
