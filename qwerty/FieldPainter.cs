@@ -43,8 +43,8 @@ namespace qwerty
                 switch (pendingAnimation.AnimationType)
                 {
                     case AnimationType.Movement:
-                        this.AnimateMovingObjects(new List<SpaceObject>{pendingAnimation.SpaceObject}, new List<Point> {pendingAnimation.MovementStart},
-                            new List<Point> {pendingAnimation.MovementDestination});
+                        this.AnimateMovingObjects(new List<SpaceObject>{pendingAnimation.SpaceObject}, new List<PointF> {pendingAnimation.MovementStart},
+                            new List<PointF> {pendingAnimation.MovementDestination});
                         break;
                     case AnimationType.Sprites:
                         this.AnimateAttack(pendingAnimation.SpaceObject, pendingAnimation.OverlaySprites);
@@ -183,19 +183,20 @@ namespace qwerty
             this.pendingAnimations.Add(eventArgs);
         }
 
-        private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<Point> movementStartPoints, List<Point> movementDestinationPoints)
+        private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<PointF> movementStartPoints, List<PointF> movementDestinationPoints)
         {
             // linq magic
             spaceObjects.ForEach(o => o.IsMoving = true);
-            var stepDifferences = movementDestinationPoints.Zip(movementDestinationPoints,
+            var stepDifferences = movementStartPoints.Zip(movementDestinationPoints,
                 (startPoint, destinationPoint) => new SizeF((float) (destinationPoint.X - startPoint.X) / 10,
-                    (float) (destinationPoint.Y - startPoint.Y) / 10));
-            var currentCoordinates = new List<Point>(movementStartPoints);
+                    (float) (destinationPoint.Y - startPoint.Y) / 10)).ToList();
+            var currentCoordinates = new List<PointF>(movementStartPoints);
             for (int i = 0; i < 10; i++)
             {
-                //currentCoordinates.ForEach(PointF.Add(currentCoordinates, stepDifference));
-                DrawField();
-                //spaceObjects.ForEach(o => this.DrawSpaceObject(o, Point.Round(currentCoordinates));
+                currentCoordinates = currentCoordinates.Zip(stepDifferences, PointF.Add).ToList();
+                this.DrawField();
+                spaceObjects.Zip(currentCoordinates, Tuple.Create).ToList()
+                    .ForEach(tuple => this.DrawSpaceObject(tuple.Item1, Point.Round(tuple.Item2)));
                 this.imageUpdater.ReportProgress(0);
                 Thread.Sleep(30);
             }
