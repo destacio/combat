@@ -93,9 +93,9 @@ namespace qwerty
 
         private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
-            this.btnEndTurn.Enabled = false;
+            //this.btnEndTurn.Enabled = false;
             this.fieldPainter.UpdateBitmap();
-            this.btnEndTurn.Enabled = true;
+            //this.btnEndTurn.Enabled = true;
         }
 
         private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
