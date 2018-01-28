@@ -34,6 +34,7 @@ namespace qwerty
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
+            lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
 
             UpdateShipCount();
 #if !DEBUG
@@ -64,9 +65,11 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
+            this.fieldPainter.UpdateBitmap();
+            this.pictureMap.Refresh();
             if (!this.imageUpdater.IsBusy)
             {
-                imageUpdater.RunWorkerAsync();
+                //imageUpdater.RunWorkerAsync();
             }
             boxDescription.Text = gameLogic.ActiveShipDescription;
             UpdateShipCount();
@@ -78,12 +81,15 @@ namespace qwerty
             //fieldPainter.DrawField();
             //pictureMap.Image = fieldPainter.CurrentBitmap;
             //pictureMap.Refresh();
+            this.fieldPainter.UpdateBitmap();
+            this.pictureMap.Refresh();
             if (!this.imageUpdater.IsBusy)
             {
-                imageUpdater.RunWorkerAsync();
+                //imageUpdater.RunWorkerAsync();
             }
             boxDescription.Text = gameLogic.ActiveShipDescription;
             lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
+            this.UpdateShipCount();
         }
 
         private void buttonDebug_Click(object sender, EventArgs e)
