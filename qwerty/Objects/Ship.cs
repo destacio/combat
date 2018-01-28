@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using qwerty.Objects.Weapons;
 
 namespace qwerty.Objects
@@ -48,21 +47,8 @@ namespace qwerty.Objects
             }
         }
 
-        public bool Attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
-        {
-            if (actionsLeft < EquippedWeapon.energyСonsumption)
-            {
-                return false;
-            }
 
-            EquippedWeapon.GetAttackSprites(PointF.Add(cMap.HexToPixel(this.ObjectCoordinates), new SizeF(this.WeaponPoint)),
-                cMap.HexToPixel(this.ObjectCoordinates));
-            
-            return false;
-        }
-        
-
-        public void Rotate(double angle)
+        public override void Rotate(double angle)
         {
             angle = angle * Math.PI / 180;
             for (int i = 0; i < PolygonPoints.Count; i++)

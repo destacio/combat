@@ -6,9 +6,7 @@ namespace qwerty.Objects
     {
         public int explodeDmg;
         public string staticDescription = "Moving meteor";
-        public int xdirection;
-        public int ydirection;
-		public readonly HexagonNeighborDirection MovementDirection;
+	    public readonly HexagonNeighborDirection MovementDirection;
 
 		public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, HexagonNeighborDirection movementDirection)
         {
@@ -24,5 +22,10 @@ namespace qwerty.Objects
         public override string Description => staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg
                                               + "\nhp - " + currentHealth
                                               + "\nНаправление: \n" + MovementDirection;
+
+	    public override void Rotate(double angle)
+	    {
+		    throw new System.NotImplementedException();
+	    }
     }
 }

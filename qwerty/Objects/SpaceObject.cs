@@ -24,5 +24,7 @@ namespace qwerty.Objects
 
         public int maxActions; // максимальное количество действий на одном ходу
         public int actionsLeft; // оставшееся количество действий
+
+        public abstract void Rotate(double angle);
     }
 }
