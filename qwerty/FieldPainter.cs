@@ -17,7 +17,7 @@ namespace qwerty
         private ObjectManager objectManager;
         private readonly System.ComponentModel.BackgroundWorker imageUpdater;
 
-        private CombatMap combatMap => objectManager.CombatMap;
+        private CombatMap combatMap => this.objectManager.CombatMap;
 
         private List<AnimationEventArgs> pendingAnimations = new List<AnimationEventArgs>();
 
@@ -38,21 +38,38 @@ namespace qwerty
                 return;
             }
 
-            foreach (var pendingAnimation in this.pendingAnimations)
+            // collect movement animations to be performed simultaneously
+            var movementAnimations = new List<AnimationEventArgs>();
+            for (var i = 0; i < this.pendingAnimations.Count; i++)
             {
-                switch (pendingAnimation.AnimationType)
+                if (this.pendingAnimations[i].AnimationType == AnimationType.Movement)
                 {
-                    case AnimationType.Movement:
-                        this.AnimateMovingObjects(new List<SpaceObject>{pendingAnimation.SpaceObject}, new List<PointF> {pendingAnimation.MovementStart},
-                            new List<PointF> {pendingAnimation.MovementDestination});
-                        break;
-                    case AnimationType.Sprites:
-                        this.AnimateAttack(pendingAnimation.SpaceObject, pendingAnimation.OverlaySprites);
-                        break;
-                    default:
-                        throw new NotImplementedException();
+                    movementAnimations.Add(this.pendingAnimations[i]);
+                    if (i == this.pendingAnimations.Count - 1)
+                    {
+                        this.AnimateMovingObjects(movementAnimations.Select(a => a.SpaceObject).ToList(),
+                            movementAnimations.Select(a => (PointF) a.MovementStart).ToList(),
+                            movementAnimations.Select(a => (PointF) a.MovementDestination).ToList());
+                    }
+                }
+                else
+                {
+                    this.AnimateMovingObjects(movementAnimations.Select(a => a.SpaceObject).ToList(),
+                        movementAnimations.Select(a => (PointF) a.MovementStart).ToList(),
+                        movementAnimations.Select(a => (PointF) a.MovementDestination).ToList());
+                    movementAnimations.Clear();
+                    if (this.pendingAnimations[i].AnimationType == AnimationType.Sprites)
+                    {
+                        this.AnimateAttack(this.pendingAnimations[i].SpaceObject, this.pendingAnimations[i].OverlaySprites);
+                    }
+
+                    if (this.pendingAnimations[i].AnimationType == AnimationType.Rotation)
+                    {
+                        this.AnimateRotation(this.pendingAnimations[i].SpaceObject, this.pendingAnimations[i].RotationAngle);
+                    }
                 }
             }
+
             this.pendingAnimations.Clear();
         }
 
@@ -66,11 +83,11 @@ namespace qwerty
                 g.DrawPolygon(Pens.Purple, hexagonCorners);
             }
 
-            if (objectManager.ActiveShip != null)
+            if (this.objectManager.ActiveShip != null)
             {
                 // highlight active ship attack range
                 Pen redPen = new Pen(Color.Red, 1);
-                foreach (var hexagonCorners in combatMap.GetAllHexagonCornersInRange(objectManager.ActiveShip.ObjectCoordinates, objectManager.ActiveShip.EquippedWeapon.attackRange))
+                foreach (var hexagonCorners in combatMap.GetAllHexagonCornersInRange(this.objectManager.ActiveShip.ObjectCoordinates, this.objectManager.ActiveShip.EquippedWeapon.attackRange))
                 {
                     g.DrawPolygon(redPen, hexagonCorners);
                 }
@@ -78,12 +95,12 @@ namespace qwerty
                 // highlight active ship
                 Pen activeShipAriaPen = new Pen(Color.Purple, 5);
                 g.DrawPolygon(activeShipAriaPen,
-                              combatMap.GetHexagonCorners(objectManager.ActiveShip.ObjectCoordinates.Column,
-                                                          objectManager.ActiveShip.ObjectCoordinates.Row));
+                              combatMap.GetHexagonCorners(this.objectManager.ActiveShip.ObjectCoordinates.Column,
+                                                          this.objectManager.ActiveShip.ObjectCoordinates.Row));
             }
             
             
-            foreach (var ship in objectManager.Ships)
+            foreach (var ship in this.objectManager.Ships)
             {
                 if (!ship.IsMoving)
                 {
@@ -91,7 +108,7 @@ namespace qwerty
                 }
             }
 
-            foreach (var meteor in objectManager.Meteors)
+            foreach (var meteor in this.objectManager.Meteors)
             {
                 if (!meteor.IsMoving)
                 {
@@ -185,11 +202,15 @@ namespace qwerty
 
         private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<PointF> movementStartPoints, List<PointF> movementDestinationPoints)
         {
+            if (spaceObjects?.Count == 0)
+            {
+                return;
+            }
             // linq magic
             spaceObjects.ForEach(o => o.IsMoving = true);
             var stepDifferences = movementStartPoints.Zip(movementDestinationPoints,
-                (startPoint, destinationPoint) => new SizeF((float) (destinationPoint.X - startPoint.X) / 10,
-                    (float) (destinationPoint.Y - startPoint.Y) / 10)).ToList();
+                (startPoint, destinationPoint) => new SizeF((destinationPoint.X - startPoint.X) / 10,
+                    (destinationPoint.Y - startPoint.Y) / 10)).ToList();
             var currentCoordinates = new List<PointF>(movementStartPoints);
             for (int i = 0; i < 10; i++)
             {
@@ -217,6 +238,30 @@ namespace qwerty
                 Thread.Sleep(50);
             }
             // animation fully drawn - redraw initial field
+            this.DrawField();
+        }
+
+        private void AnimateRotation(SpaceObject spaceObject, double angle)
+        {
+            spaceObject.IsMoving = true;
+            angle = angle * Math.PI / 180;
+            var dAngle = angle / 10;
+
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < spaceObject.PolygonPoints.Count; j++)
+                {
+                    spaceObject.PolygonPoints[j] =
+                        new PointF((float) (spaceObject.PolygonPoints[j].X * Math.Cos(dAngle) - spaceObject.PolygonPoints[j].Y * Math.Sin(dAngle)),
+                            (float) (spaceObject.PolygonPoints[j].X * Math.Sin(dAngle) + spaceObject.PolygonPoints[j].Y * Math.Cos(dAngle)));
+                }
+                this.DrawField();
+                this.DrawSpaceObject(spaceObject);
+                this.imageUpdater.ReportProgress(0);
+                Thread.Sleep(20);
+                
+            }
+            spaceObject.IsMoving = false;
             this.DrawField();
         }
     }
