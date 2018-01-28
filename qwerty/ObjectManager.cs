@@ -141,12 +141,34 @@ namespace qwerty
             SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
         }
 
+        public double GetRelativeHexagonAngle(SpaceObject sourceSpaceObject, Hex.OffsetCoordinates targetOffsetCoordinates)
+        {
+            var angle = this.CombatMap.GetAngle(sourceSpaceObject.ObjectCoordinates, targetOffsetCoordinates);
+            if (sourceSpaceObject.player == Player.SecondPlayer)
+            {
+                angle -= 180;
+            }
+
+            while (angle > 180)
+            {
+                angle -= 360;
+            }
+            
+            while (angle < -180)
+            {
+                angle += 360;
+            }
+
+            Console.WriteLine(angle);
+            return angle;
+        }
+        
         public double GetTargetHexagonAngle(Hex.OffsetCoordinates sourceOffsetCoordinates, Hex.OffsetCoordinates targetOffsetCoordinates)
         {
             return this.CombatMap.GetAngle(sourceOffsetCoordinates, targetOffsetCoordinates);
         }
 
-        public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
+        public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination, bool onlyAnimate = false)
         {
             ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, this.CombatMap.HexToPixel(spaceObject.ObjectCoordinates), this.CombatMap.HexToPixel(destination)));
             if (destination.Column < 0 || destination.Column >= MapWidth ||
@@ -156,6 +178,12 @@ namespace qwerty
                 DeleteObject(spaceObject);
                 return;
             }
+
+            if (onlyAnimate)
+            {
+                return;
+            }
+            
             SpaceObjects[GetObjectIndexByOffsetCoordinates(spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row)] = null;
             SpaceObjects[GetObjectIndexByOffsetCoordinates(destination.Column, destination.Row)] = spaceObject;
             spaceObject.ObjectCoordinates = destination;

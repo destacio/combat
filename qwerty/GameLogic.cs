@@ -99,7 +99,7 @@ namespace qwerty
                 return;
             }
             
-            var rotateAngle = this.objectManager.GetTargetHexagonAngle(activeShip.ObjectCoordinates, enemyObject.ObjectCoordinates);
+            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(activeShip, enemyObject.ObjectCoordinates);
             objectManager.RotateObject(activeShip, rotateAngle);
             
             objectManager.AttackObject(activeShip, enemyObject);
@@ -129,10 +129,10 @@ namespace qwerty
         {
             if (activeShip.actionsLeft <= 0 || !objectManager.CanMoveObjectTo(activeShip, clickedHexagon)) return;
 
-            var rotateAngle = this.objectManager.GetTargetHexagonAngle(activeShip.ObjectCoordinates, clickedHexagon);
+            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(activeShip, clickedHexagon);
             objectManager.RotateObject(activeShip, rotateAngle);
             
-            objectManager.MoveObjectTo(activeShip, clickedHexagon);
+            objectManager.MoveObjectTo(this.activeShip, clickedHexagon);
             activeShip.actionsLeft--;
 
             objectManager.RotateObject(this.activeShip, -rotateAngle);
@@ -156,6 +156,7 @@ namespace qwerty
                     continue;
                 }
                 
+                objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates, true);
                 DealDamage(objectOnTheWay, meteor.explodeDmg);
                 objectManager.DeleteObject(meteor);
             }
