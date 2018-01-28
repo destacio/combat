@@ -9,7 +9,7 @@ namespace qwerty.Objects
         Ship, Meteor
     }
 
-    abstract class SpaceObject
+    public abstract class SpaceObject
     {
         public ObjectType objectType; // подробности смотри в константах
         public Player player; // 0,1,2 ..0 - нейтральные объекты 
