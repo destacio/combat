@@ -141,6 +141,11 @@ namespace qwerty
             SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
         }
 
+        public double GetTargetHexagonAngle(Hex.OffsetCoordinates sourceOffsetCoordinates, Hex.OffsetCoordinates targetOffsetCoordinates)
+        {
+            return this.CombatMap.GetAngle(sourceOffsetCoordinates, targetOffsetCoordinates);
+        }
+
         public void MoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
         {
             ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, this.CombatMap.HexToPixel(spaceObject.ObjectCoordinates), this.CombatMap.HexToPixel(destination)));
@@ -166,6 +171,12 @@ namespace qwerty
                     this.CombatMap.HexToPixel(victim.ObjectCoordinates));
                 ObjectAnimated?.Invoke(this, new AnimationEventArgs(attacker, attackSprites));
             }
+        }
+
+        public void RotateObject(SpaceObject spaceObject, double angle)
+        {
+            ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, angle));
+            spaceObject.Rotate(angle);
         }
 
         private void CreateShip(ShipType shipType, WeaponType weaponType, Player owner)
