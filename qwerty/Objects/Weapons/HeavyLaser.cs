@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -19,6 +20,8 @@ namespace qwerty.Objects.Weapons
 
         public override Color AttackColorPrimary => Color.Orange;
         public override Color AttackColorSecondary => Color.Orange;
+
+        public override Stream attackSound => Properties.Resources.laser1;
 
         public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {

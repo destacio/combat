@@ -21,7 +21,8 @@ namespace qwerty
         public CombatMap CombatMap;
         public SpaceObject[] SpaceObjects;
 
-        public static event EventHandler<AnimationEventArgs> ObjectAnimated; 
+        public static event EventHandler<AnimationEventArgs> ObjectAnimated;
+        public static event EventHandler<SoundEventArgs> SoundPlayed;
         
         public int FirstPlayerShipCount => Ships.Count(sh => sh.player == Player.FirstPlayer);
         public int SecondPlayerShipCount => Ships.Count(sh => sh.player == Player.SecondPlayer);
@@ -191,12 +192,13 @@ namespace qwerty
 
         public void AttackObject(SpaceObject attacker, SpaceObject victim)
         {
-            if (attacker is Ship)
+            var attackerShip = attacker as Ship;
+            if (attackerShip != null)
             {
-                var attackerShip = (Ship) attacker;
                 var attackSprites = attackerShip.EquippedWeapon.GetAttackSprites(
                     this.CombatMap.HexToPixel(attackerShip.ObjectCoordinates),
                     this.CombatMap.HexToPixel(victim.ObjectCoordinates));
+                SoundPlayed?.Invoke(this, new SoundEventArgs(attackerShip.EquippedWeapon.attackSound));
                 ObjectAnimated?.Invoke(this, new AnimationEventArgs(attacker, attackSprites));
             }
         }

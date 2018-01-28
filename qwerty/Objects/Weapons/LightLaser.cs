@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -17,7 +18,9 @@ namespace qwerty.Objects.Weapons
             attackRange = 3;
             energyСonsumption = 1;
         }
-        public override string Description => ""; 
+        public override string Description => "";
+
+        public override Stream attackSound => Properties.Resources.laser3;
 
         public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {

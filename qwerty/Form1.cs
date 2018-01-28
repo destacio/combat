@@ -22,7 +22,6 @@ namespace qwerty
         {
             player.SoundLocation = @"../../Sounds/laser1.wav";
 
-
             InitializeComponent();
             pictureMap.Width = this.gameLogic.BitmapWidth;
             pictureMap.Height = this.gameLogic.BitmapHeight;
@@ -31,6 +30,7 @@ namespace qwerty
             Height = pictureMap.Bottom + 45;
             fieldPainter = new FieldPainter(this.gameLogic.BitmapWidth, this.gameLogic.BitmapHeight, objectManager, imageUpdater);
             ObjectManager.ObjectAnimated += this.fieldPainter.OnAnimationPending;
+            ObjectManager.SoundPlayed += this.OnSoundEffect;
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
@@ -112,6 +112,18 @@ namespace qwerty
         private void imageUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             pictureMap.Refresh();
+        }
+
+        private void OnSoundEffect(object sender, SoundEventArgs e)
+        {
+            if (!checkBoxAudio.Checked)
+            {
+                return;
+            }
+            using (var soundPlayer = new SoundPlayer(e.AudioStream))
+            {
+                soundPlayer.Play();
+            }
         }
     }
 }

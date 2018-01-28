@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -21,6 +22,8 @@ namespace qwerty.Objects.Weapons
         public int attackRange;
         public int attackPower;
         public int energyСonsumption;
+
+        public abstract Stream attackSound { get; }
     }
     
 }
