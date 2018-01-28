@@ -198,6 +198,7 @@ namespace qwerty
         public void OnAnimationPending(object sender, AnimationEventArgs eventArgs)
         {
             this.pendingAnimations.Add(eventArgs);
+            this.UpdateBitmap();
         }
 
         private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<PointF> movementStartPoints, List<PointF> movementDestinationPoints)
@@ -246,7 +247,9 @@ namespace qwerty
             spaceObject.IsMoving = true;
             angle = angle * Math.PI / 180;
             var dAngle = angle / 10;
-
+            
+            var initialPolygonPoints = spaceObject.PolygonPoints.ToList();
+            
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < spaceObject.PolygonPoints.Count; j++)
@@ -261,6 +264,8 @@ namespace qwerty
                 Thread.Sleep(20);
                 
             }
+
+            spaceObject.PolygonPoints = initialPolygonPoints;
             spaceObject.IsMoving = false;
             this.DrawField();
         }
