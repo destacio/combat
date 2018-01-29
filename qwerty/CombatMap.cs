@@ -24,10 +24,11 @@ namespace qwerty
     {
         public readonly int FieldWidth;
         public readonly int FieldHeight;
-        private const float CellSideLength = 40;
+        private const float HexagonSideLength = 40;
+        private const int FieldBorderPixels = 10;
 
         public Hex.HexLayout<Hex.Point, Hex.PointPolicy> HexGrid = Hex.HexLayoutFactory.CreateFlatHexLayout(
-            new Hex.Point(CellSideLength, CellSideLength), new Hex.Point((int)(CellSideLength + 10),  (int)(Math.Sin(Math.PI / 3) * CellSideLength + 10)),
+            new Hex.Point(HexagonSideLength, HexagonSideLength), new Hex.Point((int)(HexagonSideLength + FieldBorderPixels),  (int)(Math.Sin(Math.PI / 3) * HexagonSideLength + FieldBorderPixels)),
             Hex.Offset.Odd);
 
         public CombatMap(int w, int h) 
@@ -43,7 +44,7 @@ namespace qwerty
                 var hexagonOffset =
                     HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
                 var cornerOffset = HexGrid.HexCornerOffset(0);
-                return (int)(hexagonOffset.X + cornerOffset.X);
+                return (int)(hexagonOffset.X + cornerOffset.X + FieldBorderPixels);
             }
         }
 
@@ -54,7 +55,7 @@ namespace qwerty
                 var hexagonOffset =
                     HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
                 var cornerOffset = HexGrid.HexCornerOffset(5);
-                return (int)(hexagonOffset.Y + cornerOffset.Y);
+                return (int)(hexagonOffset.Y + cornerOffset.Y + FieldBorderPixels);
             }
         }
 
