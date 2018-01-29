@@ -16,12 +16,10 @@ namespace qwerty
         private ObjectManager objectManager => gameLogic.objectManager;
         private readonly GameLogic gameLogic = new GameLogic(8,6);
         private readonly FieldPainter fieldPainter;
-        System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+        private readonly SoundPlayer soundPlayer = new SoundPlayer();
         
         public Form1()
         {
-            player.SoundLocation = @"../../Sounds/laser1.wav";
-
             InitializeComponent();
             pictureMap.Width = this.gameLogic.BitmapWidth;
             pictureMap.Height = this.gameLogic.BitmapHeight;
@@ -120,10 +118,8 @@ namespace qwerty
             {
                 return;
             }
-            using (var soundPlayer = new SoundPlayer(e.AudioStream))
-            {
-                soundPlayer.Play();
-            }
+            this.soundPlayer.Stream = e.AudioStream;
+            this.soundPlayer.Play();
         }
     }
 }
