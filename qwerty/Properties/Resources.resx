@@ -131,6 +131,6 @@
     <value>..\Sounds\344512__sharesynth__laser05.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="spaceShipFly" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Sounds\397948__inspectorj__spaceship-fly-by-a.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Sounds\55849__sergenious__ship.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

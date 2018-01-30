@@ -111,7 +111,7 @@
     <Content Include="Sounds\151022__bubaproducer__laser-shot-silenced.wav" />
     <Content Include="Sounds\196914__dpoggioli__laser-gun.wav" />
     <Content Include="Sounds\344512__sharesynth__laser05.wav" />
-    <Content Include="Sounds\397948__inspectorj__spaceship-fly-by-a.wav" />
+    <Content Include="Sounds\55849__sergenious__ship.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
