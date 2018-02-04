@@ -15,62 +15,40 @@ namespace qwerty
         public Bitmap CurrentBitmap;
 
         private ObjectManager objectManager;
-        private readonly System.ComponentModel.BackgroundWorker imageUpdater;
 
         private CombatMap combatMap => this.objectManager.CombatMap;
 
-        private List<AnimationEventArgs> pendingAnimations = new List<AnimationEventArgs>();
+        public event EventHandler BitmapUpdated;
 
-        private bool IsAnimationPending => this.pendingAnimations?.Count > 0;
-
-        public FieldPainter(int fieldWidth, int fieldHeight, ObjectManager objectManager, System.ComponentModel.BackgroundWorker imageUpdater)
+        public FieldPainter(int fieldWidth, int fieldHeight, ObjectManager objectManager)
         {
             this.objectManager = objectManager;
-            this.imageUpdater = imageUpdater;
             CurrentBitmap = new Bitmap(fieldWidth, fieldHeight, PixelFormat.Format32bppArgb);
         }
 
-        public void UpdateBitmap()  
+        public void UpdateBitmap(AnimationEventArgs animationToPerform = null)  
         {
-            if (!this.IsAnimationPending)
+            if (animationToPerform == null)
             {
                 this.DrawField();
                 return;
             }
 
-            // collect movement animations to be performed simultaneously
-            var movementAnimations = new List<AnimationEventArgs>();
-            for (var i = 0; i < this.pendingAnimations.Count; i++)
+            switch (animationToPerform.AnimationType)
             {
-                if (this.pendingAnimations[i].AnimationType == AnimationType.Movement)
-                {
-                    movementAnimations.Add(this.pendingAnimations[i]);
-                    if (i == this.pendingAnimations.Count - 1)
-                    {
-                        this.AnimateMovingObjects(movementAnimations.Select(a => a.SpaceObject).ToList(),
-                            movementAnimations.Select(a => (PointF) a.MovementStart).ToList(),
-                            movementAnimations.Select(a => (PointF) a.MovementDestination).ToList());
-                    }
-                }
-                else
-                {
-                    this.AnimateMovingObjects(movementAnimations.Select(a => a.SpaceObject).ToList(),
-                        movementAnimations.Select(a => (PointF) a.MovementStart).ToList(),
-                        movementAnimations.Select(a => (PointF) a.MovementDestination).ToList());
-                    movementAnimations.Clear();
-                    if (this.pendingAnimations[i].AnimationType == AnimationType.Sprites)
-                    {
-                        this.AnimateAttack(this.pendingAnimations[i].SpaceObject, this.pendingAnimations[i].OverlaySprites);
-                    }
-
-                    if (this.pendingAnimations[i].AnimationType == AnimationType.Rotation)
-                    {
-                        this.AnimateRotation(this.pendingAnimations[i].SpaceObject, this.pendingAnimations[i].RotationAngle);
-                    }
-                }
+                case AnimationType.Sprites:
+                    this.AnimateAttack(animationToPerform.SpaceObject, animationToPerform.OverlaySprites);
+                    break;
+                case AnimationType.Rotation:
+                    this.AnimateRotation(animationToPerform.SpaceObject, animationToPerform.RotationAngle);
+                    break;
+                case AnimationType.Movement:
+                    this.AnimateMovingObjects(animationToPerform.SpaceObject, animationToPerform.MovementStart,
+                        animationToPerform.MovementDestination);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-
-            this.pendingAnimations.Clear();
         }
 
         public void DrawField()
@@ -197,34 +175,29 @@ namespace qwerty
 
         public void OnAnimationPending(object sender, AnimationEventArgs eventArgs)
         {
-            this.pendingAnimations.Add(eventArgs);
-            this.UpdateBitmap();
+            this.UpdateBitmap(eventArgs);
         }
 
-        private void AnimateMovingObjects(List<SpaceObject> spaceObjects, List<PointF> movementStartPoints, List<PointF> movementDestinationPoints)
+        private void AnimateMovingObjects(SpaceObject spaceObject,PointF movementStartPoint, PointF movementDestinationPoint)
         {
-            if (spaceObjects?.Count == 0)
+            // disabling ability to move multiple objects at once, because it kinda hurts turn-based principle, where each object moves on it's own turn
+            if (spaceObject == null)
             {
                 return;
             }
-            // linq magic
-            spaceObjects.ForEach(o => o.IsMoving = true);
-            var stepDifferences = movementStartPoints.Zip(movementDestinationPoints,
-                (startPoint, destinationPoint) => new SizeF((destinationPoint.X - startPoint.X) / 10,
-                    (destinationPoint.Y - startPoint.Y) / 10)).ToList();
-            var currentCoordinates = new List<PointF>(movementStartPoints);
+            spaceObject.IsMoving = true;
+            var stepDifference = new SizeF((movementDestinationPoint.X - movementStartPoint.X) / 10, (movementDestinationPoint.Y - movementStartPoint.Y) / 10);
+            var currentCoordinates = movementStartPoint;
             for (int i = 0; i < 10; i++)
             {
-                currentCoordinates = currentCoordinates.Zip(stepDifferences, PointF.Add).ToList();
+                currentCoordinates = PointF.Add(currentCoordinates, stepDifference);
                 this.DrawField();
-                spaceObjects.Zip(currentCoordinates, Tuple.Create).ToList()
-                    .ForEach(tuple => this.DrawSpaceObject(tuple.Item1, Point.Round(tuple.Item2)));
-                this.imageUpdater.ReportProgress(0);
+                this.DrawSpaceObject(spaceObject, Point.Round(currentCoordinates));
+                this.BitmapUpdated?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(30);
             }
-            spaceObjects.ForEach(o => o.IsMoving = false);
-            // redraw field with current standings
-            // could be dangerous if multiple animations get stacked up, but that's later
+
+            spaceObject.IsMoving = false;
             this.DrawField();
         }
         
@@ -235,7 +208,7 @@ namespace qwerty
                 this.DrawField();
                 Graphics g = Graphics.FromImage(this.CurrentBitmap);
                 g.DrawImage(overlaySprite, 0, 0);
-                this.imageUpdater.ReportProgress(0);
+                this.BitmapUpdated?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(50);
             }
             // animation fully drawn - redraw initial field
@@ -260,7 +233,7 @@ namespace qwerty
                 }
                 this.DrawField();
                 this.DrawSpaceObject(spaceObject);
-                this.imageUpdater.ReportProgress(0);
+                this.BitmapUpdated?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(20);
                 
             }
