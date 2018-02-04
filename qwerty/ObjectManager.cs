@@ -77,10 +77,15 @@ namespace qwerty
             }
             return SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)];
         }
+        
+        public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject)
+        {
+            // TODO: rename before using - no coordinates in parameters
+            this.SetObjectAtOffsetCoordinates(spaceObject, spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row);
+        }
 
         public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject, int column, int row)
         {
-            // TODO: if object coordinates already set
             SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)] = spaceObject;
         }
 
