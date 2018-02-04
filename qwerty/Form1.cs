@@ -26,21 +26,22 @@ namespace qwerty
             // i'll leave this as constants -> calculation from window size or placing in container later
             Width = pictureMap.Right + 25;
             Height = pictureMap.Bottom + 45;
-            fieldPainter = new FieldPainter(this.gameLogic.BitmapWidth, this.gameLogic.BitmapHeight, objectManager, imageUpdater);
+            fieldPainter = new FieldPainter(this.gameLogic.BitmapWidth, this.gameLogic.BitmapHeight, objectManager);
             ObjectManager.ObjectAnimated += this.fieldPainter.OnAnimationPending;
             ObjectManager.SoundPlayed += this.OnSoundEffect;
+            this.fieldPainter.BitmapUpdated += this.OnBitmapUpdated;
             fieldPainter.DrawField();
             pictureMap.Image = fieldPainter.CurrentBitmap;
             pictureMap.Refresh();
             lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
 
-            UpdateShipCount();
+            this.UpdateShipCount();
 #if !DEBUG
             buttonDebug.Visible = false;
 #endif
         }
 
-        public bool UpdateShipCount()
+        public void UpdateShipCount()
         {
             int blueShipsCount = gameLogic.FirstPlayerShipCount;
             int redShipsCount = gameLogic.SecondPlayerShipCount;
@@ -50,41 +51,26 @@ namespace qwerty
                 txtBlueShips.Text = "";
                 txtRedShips.Text = "";
                 label1.Text = "GAME OVER!";
-                return false;
+                return;
             }
-            txtBlueShips.Text = "" + blueShipsCount;
-            txtRedShips.Text = "" + redShipsCount;
-            return true;
+            txtBlueShips.Text = $"{blueShipsCount}";
+            txtRedShips.Text = $"{redShipsCount}";
         }
 
         private void pictureMap_MouseClick(object sender, MouseEventArgs e)
         {
             gameLogic.HandleFieldClick(e.Location);
-            //fieldPainter.DrawField();
-            //pictureMap.Image = fieldPainter.CurrentBitmap;
-            //pictureMap.Refresh();
             this.fieldPainter.UpdateBitmap();
             this.pictureMap.Refresh();
-            if (!this.imageUpdater.IsBusy)
-            {
-                //imageUpdater.RunWorkerAsync();
-            }
             boxDescription.Text = gameLogic.ActiveShipDescription;
-            UpdateShipCount();
+            this.UpdateShipCount();
         }
 
         private void btnEndTurn_Click(object sender, EventArgs e)
         {
             gameLogic.EndTurn();
-            //fieldPainter.DrawField();
-            //pictureMap.Image = fieldPainter.CurrentBitmap;
-            //pictureMap.Refresh();
             this.fieldPainter.UpdateBitmap();
             this.pictureMap.Refresh();
-            if (!this.imageUpdater.IsBusy)
-            {
-                //imageUpdater.RunWorkerAsync();
-            }
             boxDescription.Text = gameLogic.ActiveShipDescription;
             lblTurn.Text = gameLogic.ActivePlayerDescription + "'s turn";
             this.UpdateShipCount();
@@ -94,20 +80,8 @@ namespace qwerty
         {
             MessageBox.Show("Hello from debug!");
         }
-
-        private void imageUpdater_DoWork(object sender, DoWorkEventArgs e)
-        {
-            //this.btnEndTurn.Enabled = false;
-            this.fieldPainter.UpdateBitmap();
-            //this.btnEndTurn.Enabled = true;
-        }
-
-        private void imageUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            pictureMap.Refresh();
-        }
-
-        private void imageUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+       
+        private void OnBitmapUpdated(object sender, EventArgs e)
         {
             pictureMap.Refresh();
         }

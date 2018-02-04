@@ -36,7 +36,6 @@
             this.txtBlueShips = new System.Windows.Forms.Label();
             this.txtRedShips = new System.Windows.Forms.Label();
             this.buttonDebug = new System.Windows.Forms.Button();
-            this.imageUpdater = new System.ComponentModel.BackgroundWorker();
             this.checkBoxAudio = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMap)).BeginInit();
             this.SuspendLayout();
@@ -117,13 +116,6 @@
             this.buttonDebug.UseVisualStyleBackColor = true;
             this.buttonDebug.Click += new System.EventHandler(this.buttonDebug_Click);
             // 
-            // imageUpdater
-            // 
-            this.imageUpdater.WorkerReportsProgress = true;
-            this.imageUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.imageUpdater_DoWork);
-            this.imageUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.imageUpdater_ProgressChanged);
-            this.imageUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.imageUpdater_RunWorkerCompleted);
-            // 
             // checkBoxAudio
             // 
             this.checkBoxAudio.AutoSize = true;
@@ -170,7 +162,6 @@
         private System.Windows.Forms.Label txtRedShips;
         public System.Windows.Forms.PictureBox pictureMap;
         private System.Windows.Forms.Button buttonDebug;
-        private System.ComponentModel.BackgroundWorker imageUpdater;
         private System.Windows.Forms.CheckBox checkBoxAudio;
     }
 }
