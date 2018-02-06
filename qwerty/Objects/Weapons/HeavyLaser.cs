@@ -11,9 +11,9 @@ namespace qwerty.Objects.Weapons
     {
         public HeavyLaser()
         {
-            attackPower = 50;
-            attackRange = 5;
-            energyСonsumption = 1;
+            this.attackPower = 50;
+            this.attackRange = 5;
+            this.energyСonsumption = 1;
         }
 
         public override string Description=> "";

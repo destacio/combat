@@ -11,30 +11,30 @@ namespace qwerty.Objects
 
         public override string Description =>
             $"{StaticDescription}{Environment.NewLine}" +
-            $"hp - {currentHealth}/{maxHealth}{Environment.NewLine}" +
-            $"actions - {actionsLeft}/{maxActions}{Environment.NewLine}" +
-            $"AP - {EquippedWeapon.attackPower}{Environment.NewLine}" +
-            $"Range - {EquippedWeapon.attackRange}";
+            $"hp - {this.currentHealth}/{this.maxHealth}{Environment.NewLine}" +
+            $"actions - {this.actionsLeft}/{this.maxActions}{Environment.NewLine}" +
+            $"AP - {this.EquippedWeapon.attackPower}{Environment.NewLine}" +
+            $"Range - {this.EquippedWeapon.attackRange}";
 
         public ShipScout(Player playerId, WeaponType weaponType) : base(playerId, weaponType)
         {
-            maxHealth = 50;
-            currentHealth = maxHealth;
-            maxActions = 3;
-            actionsLeft = maxActions;
+            this.maxHealth = 50;
+            this.currentHealth = this.maxHealth;
+            this.maxActions = 3;
+            this.actionsLeft = this.maxActions;
 
-            PolygonPoints = new List<PointF>
+            this.PolygonPoints = new List<PointF>
             {
                 new PointF(-15, -14),
                 new PointF(-15, 14),
                 new PointF(17, 0)
             };
 
-            WeaponPoint = PolygonPoints[2];
+            this.WeaponPoint = this.PolygonPoints[2];
 
-            if (player == Player.SecondPlayer)
+            if (this.Owner == Player.SecondPlayer)
             {
-                Rotate(180);
+                this.Rotate(180);
             }
         }
     }

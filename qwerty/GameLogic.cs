@@ -12,23 +12,23 @@ namespace qwerty
     {
         private Ship activeShip
         {
-            get { return objectManager.ActiveShip; }
-            set { objectManager.ActiveShip = value; }
+            get { return this.objectManager.ActiveShip; }
+            set { this.objectManager.ActiveShip = value; }
         }
 
-        public string ActiveShipDescription => activeShip?.Description ?? "";
+        public string ActiveShipDescription => this.activeShip?.Description ?? "";
         public string ActivePlayerDescription
         {
             get
             {
-                switch (activePlayer)
+                switch (this.activePlayer)
                 {
                     case Player.FirstPlayer:
                         return "First player";
                     case Player.SecondPlayer:
                         return "Second player";
                     default:
-                        return activePlayer.ToString();
+                        return this.activePlayer.ToString();
                 }
             }
         }
@@ -36,14 +36,14 @@ namespace qwerty
         public readonly ObjectManager objectManager;
         private Player activePlayer = Player.FirstPlayer;
 
-        public int FirstPlayerShipCount => objectManager.FirstPlayerShipCount;
-        public int SecondPlayerShipCount=> objectManager.SecondPlayerShipCount;
+        public int FirstPlayerShipCount => this.objectManager.FirstPlayerShipCount;
+        public int SecondPlayerShipCount=> this.objectManager.SecondPlayerShipCount;
         public int BitmapWidth => this.objectManager.BitmapWidth;
         public int BitmapHeight => this.objectManager.BitmapHeight;
 
         public GameLogic(int fieldWidth, int fieldHeight)
         {
-            objectManager = new ObjectManager(fieldWidth, fieldHeight);
+            this.objectManager = new ObjectManager(fieldWidth, fieldHeight);
         }
 
         public void HandleFieldClick(Point clickLocation)
@@ -52,8 +52,8 @@ namespace qwerty
             SpaceObject clickedObject;
             try
             {
-                clickedHexagon = objectManager.PixelToOffsetCoordinates(clickLocation);
-                clickedObject = objectManager.PixelToSpaceObject(clickLocation);
+                clickedHexagon = this.objectManager.PixelToOffsetCoordinates(clickLocation);
+                clickedObject = this.objectManager.PixelToSpaceObject(clickLocation);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -61,14 +61,14 @@ namespace qwerty
                 return;
             }
 
-            if (activeShip == null)
+            if (this.activeShip == null)
             {
                 // Nothing active and nothing to be activated
                 if (clickedObject == null) return;
 
-                if (activePlayer == clickedObject.player)
+                if (this.activePlayer == clickedObject.Owner)
                 {
-                    activeShip = (Ship) clickedObject;
+                    this.activeShip = (Ship) clickedObject;
                 }
                 return;
             }
@@ -76,43 +76,42 @@ namespace qwerty
             // если выбранная клетка пуста - определяем возможность перемещения 
             if (clickedObject == null)
             {
-                MoveActiveShip(clickedHexagon);
+                this.MoveActiveShip(clickedHexagon);
                 return;
             }
             
-            if (clickedObject.player == activePlayer)
+            if (clickedObject.Owner == this.activePlayer)
             {
-                activeShip = (Ship) clickedObject;
+                this.activeShip = (Ship) clickedObject;
             }
             else
             {
-                ActiveShipAttack(clickedObject);
+                this.ActiveShipAttack(clickedObject);
             }
         }
 
         private void ActiveShipAttack(SpaceObject enemyObject)
         {
-            if (activeShip.EquippedWeapon.attackRange < objectManager.GetDistance(activeShip, enemyObject) ||
-                activeShip.actionsLeft < activeShip.EquippedWeapon.energyСonsumption)
+            if (this.activeShip.EquippedWeapon.attackRange < this.objectManager.GetDistance(this.activeShip, enemyObject) || this.activeShip.actionsLeft < this.activeShip.EquippedWeapon.energyСonsumption)
             {
                 // another object is out of range or requires more energy than is left
                 return;
             }
             
-            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(activeShip, enemyObject.ObjectCoordinates);
-            objectManager.RotateObject(activeShip, rotateAngle);
-            
-            objectManager.AttackObject(activeShip, enemyObject);
+            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(this.activeShip, enemyObject.ObjectCoordinates);
+            this.objectManager.RotateObject(this.activeShip, rotateAngle);
+
+            this.objectManager.AttackObject(this.activeShip, enemyObject);
 
             // TODO: move methods to object manager
-            DealDamage(enemyObject, activeShip.AttackDamage);
-            activeShip.actionsLeft--;
+            this.DealDamage(enemyObject, this.activeShip.AttackDamage);
+            this.activeShip.actionsLeft--;
 
-            objectManager.RotateObject(activeShip, -rotateAngle);
+            this.objectManager.RotateObject(this.activeShip, -rotateAngle);
 
-            if (activeShip.actionsLeft == 0)
+            if (this.activeShip.actionsLeft == 0)
             {
-                activeShip = null;
+                this.activeShip = null;
             }
         }
 
@@ -121,58 +120,58 @@ namespace qwerty
             victim.currentHealth -= damageAmount;
             if (victim.currentHealth <= 0)
             {
-                objectManager.DeleteObject(victim);
+                this.objectManager.DeleteObject(victim);
             }
         }
         
         private void MoveActiveShip(OffsetCoordinates clickedHexagon)
         {
-            if (activeShip.actionsLeft <= 0 || !objectManager.CanMoveObjectTo(activeShip, clickedHexagon)) return;
+            if (this.activeShip.actionsLeft <= 0 || !this.objectManager.CanMoveObjectTo(this.activeShip, clickedHexagon)) return;
 
-            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(activeShip, clickedHexagon);
-            objectManager.RotateObject(activeShip, rotateAngle);
-            
-            objectManager.MoveObjectTo(this.activeShip, clickedHexagon);
-            activeShip.actionsLeft--;
+            var rotateAngle = this.objectManager.GetRelativeHexagonAngle(this.activeShip, clickedHexagon);
+            this.objectManager.RotateObject(this.activeShip, rotateAngle);
 
-            objectManager.RotateObject(this.activeShip, -rotateAngle);
+            this.objectManager.MoveObjectTo(this.activeShip, clickedHexagon);
+            this.activeShip.actionsLeft--;
 
-            if (activeShip.actionsLeft == 0)
+            this.objectManager.RotateObject(this.activeShip, -rotateAngle);
+
+            if (this.activeShip.actionsLeft == 0)
             {
-                activeShip = null;
+                this.activeShip = null;
             }
         }
         
         private void MoveMeteors()
         {
-            foreach (var meteor in objectManager.Meteors)
+            foreach (var meteor in this.objectManager.Meteors)
             {
-                var meteorNextStepCoordinates = objectManager.GetMeteorNextStepCoordinates(meteor);
-                var objectOnTheWay = objectManager.GetObjectByOffsetCoordinates(meteorNextStepCoordinates.Column, meteorNextStepCoordinates.Row);
+                var meteorNextStepCoordinates = this.objectManager.GetMeteorNextStepCoordinates(meteor);
+                var objectOnTheWay = this.objectManager.GetObjectByOffsetCoordinates(meteorNextStepCoordinates.Column, meteorNextStepCoordinates.Row);
 
                 if (objectOnTheWay == null)
                 {
-                    objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates);
+                    this.objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates);
                     continue;
                 }
-                
-                objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates, true);
-                DealDamage(objectOnTheWay, meteor.explodeDmg);
-                objectManager.DeleteObject(meteor);
+
+                this.objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates, true);
+                this.DealDamage(objectOnTheWay, meteor.explodeDmg);
+                this.objectManager.DeleteObject(meteor);
             }
 
             if (new Random().Next(0, 100) <= ObjectManager.MeteorAppearanceChance)
             {
-                objectManager.CreateMeteor();
+                this.objectManager.CreateMeteor();
             }
         }
 
         public void EndTurn()
         {
-            activePlayer = activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
-            activeShip = null;
-            MoveMeteors();
-            objectManager.EndTurn();
+            this.activePlayer = this.activePlayer == Player.FirstPlayer ? Player.SecondPlayer : Player.FirstPlayer;
+            this.activeShip = null;
+            this.MoveMeteors();
+            this.objectManager.EndTurn();
         }
     }
 }

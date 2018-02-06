@@ -14,8 +14,8 @@ namespace qwerty
     {
         public int MapWidth { get; }
         public int MapHeight { get; }
-        public List<Meteor> Meteors => SpaceObjects.OfType<Meteor>().ToList();
-        public List<Ship> Ships => SpaceObjects.OfType<Ship>().ToList();
+        public List<Meteor> Meteors => this.SpaceObjects.OfType<Meteor>().ToList();
+        public List<Ship> Ships => this.SpaceObjects.OfType<Ship>().ToList();
         public const int MeteorAppearanceChance = 20;
 
         public CombatMap CombatMap;
@@ -24,58 +24,58 @@ namespace qwerty
         public static event EventHandler<AnimationEventArgs> ObjectAnimated;
         public static event EventHandler<SoundEventArgs> SoundPlayed;
         
-        public int FirstPlayerShipCount => Ships.Count(sh => sh.player == Player.FirstPlayer);
-        public int SecondPlayerShipCount => Ships.Count(sh => sh.player == Player.SecondPlayer);
-        public int BitmapWidth => CombatMap.BitmapWidth;
-        public int BitmapHeight => CombatMap.BitmapHeight;
+        public int FirstPlayerShipCount => this.Ships.Count(sh => sh.Owner == Player.FirstPlayer);
+        public int SecondPlayerShipCount => this.Ships.Count(sh => sh.Owner == Player.SecondPlayer);
+        public int BitmapWidth => this.CombatMap.BitmapWidth;
+        public int BitmapHeight => this.CombatMap.BitmapHeight;
         public Ship ActiveShip { get; set; }
 
         public ObjectManager(int mapWidth, int mapHeight)
         {
-            MapWidth = mapWidth;
-            MapHeight = mapHeight;
-            CombatMap = new CombatMap(mapWidth, mapHeight);
-            SpaceObjects = new SpaceObject[mapWidth * mapHeight];
+            this.MapWidth = mapWidth;
+            this.MapHeight = mapHeight;
+            this.CombatMap = new CombatMap(mapWidth, mapHeight);
+            this.SpaceObjects = new SpaceObject[mapWidth * mapHeight];
 
-            CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
-            CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
-            CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.FirstPlayer);
+            this.CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
+            this.CreateShip(ShipType.Scout, WeaponType.LightIon, Player.FirstPlayer);
+            this.CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.FirstPlayer);
 
-            CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
-            CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
-            CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.SecondPlayer);
+            this.CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
+            this.CreateShip(ShipType.Scout, WeaponType.LightLaser, Player.SecondPlayer);
+            this.CreateShip(ShipType.Assaulter, WeaponType.HeavyLaser, Player.SecondPlayer);
 
-            CreateMeteor();
+            this.CreateMeteor();
         }
 
         public SpaceObject PixelToSpaceObject(Point pixelCoordinates)
         {
-            var hexOffsetCoordinates = PixelToOffsetCoordinates(pixelCoordinates);
-            return GetObjectByOffsetCoordinates(hexOffsetCoordinates.Column, hexOffsetCoordinates.Row);
+            var hexOffsetCoordinates = this.PixelToOffsetCoordinates(pixelCoordinates);
+            return this.GetObjectByOffsetCoordinates(hexOffsetCoordinates.Column, hexOffsetCoordinates.Row);
         }
         
         public Hex.OffsetCoordinates PixelToOffsetCoordinates(Point pixelCoordinates)
         {
-            return CombatMap.PixelToOffsetCoordinates(pixelCoordinates);
+            return this.CombatMap.PixelToOffsetCoordinates(pixelCoordinates);
         }
 
         public bool CanMoveObjectTo(SpaceObject spaceObject, Hex.OffsetCoordinates destination)
         {
-            return CombatMap.AreNeighbors(spaceObject.ObjectCoordinates, destination);
+            return this.CombatMap.AreNeighbors(spaceObject.ObjectCoordinates, destination);
         }
 
         public void DeleteObject(SpaceObject spaceObject)
         {
-            SpaceObjects[Array.IndexOf(SpaceObjects, spaceObject)] = null;
+            this.SpaceObjects[Array.IndexOf(this.SpaceObjects, spaceObject)] = null;
         }
 
         public SpaceObject GetObjectByOffsetCoordinates(int column, int row)
         {
-            if (column < 0 || column >= MapWidth || row < 0 || row >= MapHeight)
+            if (column < 0 || column >= this.MapWidth || row < 0 || row >= this.MapHeight)
             {
                 return null;
             }
-            return SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)];
+            return this.SpaceObjects[this.GetObjectIndexByOffsetCoordinates(column, row)];
         }
         
         public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject)
@@ -86,23 +86,23 @@ namespace qwerty
 
         public void SetObjectAtOffsetCoordinates(SpaceObject spaceObject, int column, int row)
         {
-            SpaceObjects[GetObjectIndexByOffsetCoordinates(column, row)] = spaceObject;
+            this.SpaceObjects[this.GetObjectIndexByOffsetCoordinates(column, row)] = spaceObject;
         }
 
         private int GetObjectIndexByOffsetCoordinates(int column, int row)
         {
-            return row * MapWidth + column;
+            return row * this.MapWidth + column;
         }
 
 
         public int GetDistance(SpaceObject firstObject, SpaceObject secondObject)
         {
-            return CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
+            return this.CombatMap.GetDistance(firstObject.ObjectCoordinates, secondObject.ObjectCoordinates);
         }
 
         public Hex.OffsetCoordinates GetMeteorNextStepCoordinates(Meteor meteor)
         {
-            return CombatMap.GetNeighborCoordinates(meteor.ObjectCoordinates, (int)meteor.MovementDirection);
+            return this.CombatMap.GetNeighborCoordinates(meteor.ObjectCoordinates, (int)meteor.MovementDirection);
         }
         
         public void CreateMeteor()
@@ -115,25 +115,25 @@ namespace qwerty
             switch(randomMapSide)
             {
                 case 0:  // left
-                    meteorCoordinates = GetRandomVacantHexagon(0, 0, 0, MapHeight - 1);
+                    meteorCoordinates = this.GetRandomVacantHexagon(0, 0, 0, this.MapHeight - 1);
                     movementDirection = rand.Next(2) == 0
                         ? HexagonNeighborDirection.NorthEast
                         : HexagonNeighborDirection.SouthEast;
                     break;
                 case 1: // top
-                    meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, 0, 0);
+                    meteorCoordinates = this.GetRandomVacantHexagon(0, this.MapWidth - 1, 0, 0);
                     movementDirection = rand.Next(2) == 0
                         ? HexagonNeighborDirection.SouthEast
                         : HexagonNeighborDirection.SouthWest;
                     break;
                 case 2: // right
-                    meteorCoordinates = GetRandomVacantHexagon(MapWidth - 1, MapWidth - 1, 0, MapHeight - 1);
+                    meteorCoordinates = this.GetRandomVacantHexagon(this.MapWidth - 1, this.MapWidth - 1, 0, this.MapHeight - 1);
                     movementDirection = rand.Next(2) == 0
                         ? HexagonNeighborDirection.NorthWest
                         : HexagonNeighborDirection.SouthWest;
                     break;
                 case 3: // bottom
-                    meteorCoordinates = GetRandomVacantHexagon(0, MapWidth - 1, MapHeight - 1, MapHeight - 1);
+                    meteorCoordinates = this.GetRandomVacantHexagon(0, this.MapWidth - 1, this.MapHeight - 1, this.MapHeight - 1);
                     movementDirection = rand.Next(2) == 0
                         ? HexagonNeighborDirection.NorthEast
                         : HexagonNeighborDirection.NorthWest;
@@ -144,13 +144,13 @@ namespace qwerty
             var meteorDmg = meteorHealth / 4;
 
             var newMeteor = new Meteor(meteorCoordinates, meteorHealth, meteorDmg, movementDirection);
-            SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
+            this.SetObjectAtOffsetCoordinates(newMeteor, meteorCoordinates.Column, meteorCoordinates.Row);
         }
 
         public double GetRelativeHexagonAngle(SpaceObject sourceSpaceObject, Hex.OffsetCoordinates targetOffsetCoordinates)
         {
             var angle = this.CombatMap.GetAngle(sourceSpaceObject.ObjectCoordinates, targetOffsetCoordinates);
-            if (sourceSpaceObject.player == Player.SecondPlayer)
+            if (sourceSpaceObject.Owner == Player.SecondPlayer)
             {
                 angle -= 180;
             }
@@ -181,11 +181,11 @@ namespace qwerty
                 SoundPlayed?.Invoke(this, new SoundEventArgs(Properties.Resources.spaceShipFly));
             }
             ObjectAnimated?.Invoke(this, new AnimationEventArgs(spaceObject, this.CombatMap.HexToPixel(spaceObject.ObjectCoordinates), this.CombatMap.HexToPixel(destination)));
-            if (destination.Column < 0 || destination.Column >= MapWidth ||
-                destination.Row < 0 || destination.Row >= MapHeight)
+            if (destination.Column < 0 || destination.Column >= this.MapWidth ||
+                destination.Row < 0 || destination.Row >= this.MapHeight)
             {
                 // moving object outside bounds = deleting object
-                DeleteObject(spaceObject);
+                this.DeleteObject(spaceObject);
                 return;
             }
 
@@ -193,9 +193,9 @@ namespace qwerty
             {
                 return;
             }
-            
-            SpaceObjects[GetObjectIndexByOffsetCoordinates(spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row)] = null;
-            SpaceObjects[GetObjectIndexByOffsetCoordinates(destination.Column, destination.Row)] = spaceObject;
+
+            this.SpaceObjects[this.GetObjectIndexByOffsetCoordinates(spaceObject.ObjectCoordinates.Column, spaceObject.ObjectCoordinates.Row)] = null;
+            this.SpaceObjects[this.GetObjectIndexByOffsetCoordinates(destination.Column, destination.Row)] = spaceObject;
             spaceObject.ObjectCoordinates = destination;
         }
 
@@ -233,10 +233,10 @@ namespace qwerty
                     throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null);
             }
 
-            int minColumnIndex = owner == Player.FirstPlayer ? 0 : MapWidth - 2;
-            int maxColumnIndex = owner == Player.FirstPlayer ? 1 : MapWidth - 1;
-            newShip.ObjectCoordinates = GetRandomVacantHexagon(minColumnIndex, maxColumnIndex, 0, MapHeight - 1);
-            SetObjectAtOffsetCoordinates(newShip, newShip.ObjectCoordinates.Column, newShip.ObjectCoordinates.Row);
+            int minColumnIndex = owner == Player.FirstPlayer ? 0 : this.MapWidth - 2;
+            int maxColumnIndex = owner == Player.FirstPlayer ? 1 : this.MapWidth - 1;
+            newShip.ObjectCoordinates = this.GetRandomVacantHexagon(minColumnIndex, maxColumnIndex, 0, this.MapHeight - 1);
+            this.SetObjectAtOffsetCoordinates(newShip, newShip.ObjectCoordinates.Column, newShip.ObjectCoordinates.Row);
         }
 
         private Hex.OffsetCoordinates GetRandomVacantHexagon(int minColumnIndex, int maxColumnIndex, int minRowIndex, int maxRowIndex)
@@ -248,13 +248,13 @@ namespace qwerty
             {
                 randomColumn = rand.Next(minColumnIndex, maxColumnIndex+ 1);
                 randomRow = rand.Next(minRowIndex, maxRowIndex + 1);
-            } while (GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
+            } while (this.GetObjectByOffsetCoordinates(randomColumn, randomRow) != null);
             return new Hex.OffsetCoordinates(randomColumn, randomRow);
         }
 
         public void EndTurn()
         {
-            foreach (var ship in Ships)
+            foreach (var ship in this.Ships)
             {
                 ship.RefillEnergy();
             }

@@ -12,7 +12,7 @@ namespace qwerty.Objects
     public abstract class SpaceObject
     {
         public ObjectType objectType; // подробности смотри в константах
-        public Player player; // 0,1,2 ..0 - нейтральные объекты 
+        public Player Owner; // 0,1,2 ..0 - нейтральные объекты 
         public OffsetCoordinates ObjectCoordinates;
         public int maxHealth; // hit points
         public int currentHealth;

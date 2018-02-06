@@ -12,16 +12,16 @@ namespace qwerty.Objects
         {
 			this.MovementDirection = movementDirection;
 			this.ObjectCoordinates = meteorCoordinates;
-			objectType = ObjectType.Meteor;
-            player = 0;
-            maxHealth = health;
-            currentHealth = maxHealth;
-            explodeDmg = dmg;
+            this.objectType = ObjectType.Meteor;
+            this.Owner = 0;
+            this.maxHealth = health;
+            this.currentHealth = this.maxHealth;
+            this.explodeDmg = dmg;
         }
 
-        public override string Description => staticDescription + "\nУрон при попадании\n в корабль: " + explodeDmg
-                                              + "\nhp - " + currentHealth
-                                              + "\nНаправление: \n" + MovementDirection;
+        public override string Description => this.staticDescription + "\nУрон при попадании\n в корабль: " + this.explodeDmg
+                                              + "\nhp - " + this.currentHealth
+                                              + "\nНаправление: \n" + this.MovementDirection;
 
 	    public override void Rotate(double angle)
 	    {

@@ -23,7 +23,7 @@ namespace qwerty
         public FieldPainter(int fieldWidth, int fieldHeight, ObjectManager objectManager)
         {
             this.objectManager = objectManager;
-            CurrentBitmap = new Bitmap(fieldWidth, fieldHeight, PixelFormat.Format32bppArgb);
+            this.CurrentBitmap = new Bitmap(fieldWidth, fieldHeight, PixelFormat.Format32bppArgb);
         }
 
         public void UpdateBitmap(AnimationEventArgs animationToPerform = null)  
@@ -53,10 +53,10 @@ namespace qwerty
 
         public void DrawField()
         {
-            Graphics g = Graphics.FromImage(CurrentBitmap);
-            g.FillRectangle(Brushes.Black, 0, 0, CurrentBitmap.Width, CurrentBitmap.Height);
+            Graphics g = Graphics.FromImage(this.CurrentBitmap);
+            g.FillRectangle(Brushes.Black, 0, 0, this.CurrentBitmap.Width, this.CurrentBitmap.Height);
 
-            foreach (var hexagonCorners in combatMap.AllHexagonCorners)
+            foreach (var hexagonCorners in this.combatMap.AllHexagonCorners)
             {
                 g.DrawPolygon(Pens.Purple, hexagonCorners);
             }
@@ -65,15 +65,14 @@ namespace qwerty
             {
                 // highlight active ship attack range
                 Pen redPen = new Pen(Color.Red, 1);
-                foreach (var hexagonCorners in combatMap.GetAllHexagonCornersInRange(this.objectManager.ActiveShip.ObjectCoordinates, this.objectManager.ActiveShip.EquippedWeapon.attackRange))
+                foreach (var hexagonCorners in this.combatMap.GetAllHexagonCornersInRange(this.objectManager.ActiveShip.ObjectCoordinates, this.objectManager.ActiveShip.EquippedWeapon.attackRange))
                 {
                     g.DrawPolygon(redPen, hexagonCorners);
                 }
 
                 // highlight active ship
                 Pen activeShipAriaPen = new Pen(Color.Purple, 5);
-                g.DrawPolygon(activeShipAriaPen,
-                              combatMap.GetHexagonCorners(this.objectManager.ActiveShip.ObjectCoordinates.Column,
+                g.DrawPolygon(activeShipAriaPen, this.combatMap.GetHexagonCorners(this.objectManager.ActiveShip.ObjectCoordinates.Column,
                                                           this.objectManager.ActiveShip.ObjectCoordinates.Row));
             }
             
@@ -82,7 +81,7 @@ namespace qwerty
             {
                 if (!ship.IsMoving)
                 {
-                    DrawShip(ship);
+                    this.DrawShip(ship);
                 }
             }
 
@@ -90,21 +89,21 @@ namespace qwerty
             {
                 if (!meteor.IsMoving)
                 {
-                    DrawMeteor(meteor);
+                    this.DrawMeteor(meteor);
                 }
             }
             
 #if DEBUG
             // draw hexagon coordinates
-            for (int x = 0; x < combatMap.FieldWidth; x++)
+            for (int x = 0; x < this.combatMap.FieldWidth; x++)
             {
-                for (int y = 0; y < combatMap.FieldHeight; y++)
+                for (int y = 0; y < this.combatMap.FieldHeight; y++)
                 {
-                    g.DrawString($"C{x}R{y}", new Font("Arial", 7), Brushes.DeepSkyBlue, combatMap.GetHexagonCorners(x,y)[2]);
+                    g.DrawString($"C{x}R{y}", new Font("Arial", 7), Brushes.DeepSkyBlue, this.combatMap.GetHexagonCorners(x,y)[2]);
                     
-                    var cubeCoordinates = combatMap.HexGrid.ToCubeCoordinates(new OffsetCoordinates(x, y));
+                    var cubeCoordinates = this.combatMap.HexGrid.ToCubeCoordinates(new OffsetCoordinates(x, y));
                     g.DrawString($"Q{cubeCoordinates.Q}R{cubeCoordinates.R}S{cubeCoordinates.S}", new Font("Arial", 7),
-                        Brushes.DeepSkyBlue, PointF.Add(combatMap.GetHexagonCorners(x, y)[4], new Size(0, -12)));
+                        Brushes.DeepSkyBlue, PointF.Add(this.combatMap.GetHexagonCorners(x, y)[4], new Size(0, -12)));
                 }
             }
 #endif
@@ -112,7 +111,7 @@ namespace qwerty
 
         private void DrawSpaceObject(SpaceObject spaceObject)
         {
-            this.DrawSpaceObject(spaceObject, combatMap.HexToPixel(spaceObject.ObjectCoordinates));
+            this.DrawSpaceObject(spaceObject, this.combatMap.HexToPixel(spaceObject.ObjectCoordinates));
         }
 
         private void DrawSpaceObject(SpaceObject spaceObject, Point spaceObjectCoordinates)
@@ -133,12 +132,12 @@ namespace qwerty
 
         private void DrawMeteor(Meteor meteor)
         {
-            DrawMeteor(meteor, combatMap.HexToPixel(meteor.ObjectCoordinates));
+            this.DrawMeteor(meteor, this.combatMap.HexToPixel(meteor.ObjectCoordinates));
         }
 
         private void DrawMeteor(Meteor meteor, Point meteorCoordinates)
         {
-            Graphics g = Graphics.FromImage(CurrentBitmap);
+            Graphics g = Graphics.FromImage(this.CurrentBitmap);
             g.FillEllipse(Brushes.Gray,
                 new Rectangle(Point.Subtract(meteorCoordinates, new Size(15, 15)), new Size(30, 30)));
             g.DrawString(meteor.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
@@ -151,18 +150,18 @@ namespace qwerty
 
         private void DrawShip(Ship ship)
         {
-            DrawShip(ship, combatMap.HexToPixel(ship.ObjectCoordinates));
+            this.DrawShip(ship, this.combatMap.HexToPixel(ship.ObjectCoordinates));
         }
 
         private void DrawShip(Ship ship, Point shipCoordinates)
         {
-            Graphics g = Graphics.FromImage(CurrentBitmap);
+            Graphics g = Graphics.FromImage(this.CurrentBitmap);
 
             SolidBrush generalBrush;
 
-            if (ship.player == Player.FirstPlayer)
+            if (ship.Owner == Player.FirstPlayer)
                 generalBrush = new SolidBrush(Color.Blue);
-            else if (ship.player == Player.SecondPlayer)
+            else if (ship.Owner == Player.SecondPlayer)
                 generalBrush = new SolidBrush(Color.Red);
             else
                 generalBrush = new SolidBrush(Color.Gray);

@@ -14,9 +14,9 @@ namespace qwerty.Objects.Weapons
 
         public LightLaser()
         {
-            attackPower = 25;
-            attackRange = 3;
-            energyСonsumption = 1;
+            this.attackPower = 25;
+            this.attackRange = 3;
+            this.energyСonsumption = 1;
         }
         public override string Description => "";
 

@@ -33,17 +33,16 @@ namespace qwerty
 
         public CombatMap(int w, int h) 
         {
-            FieldWidth = w;
-            FieldHeight = h;
+            this.FieldWidth = w;
+            this.FieldHeight = h;
         }
 
         public int BitmapWidth
         {
             get
             {
-                var hexagonOffset =
-                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
-                var cornerOffset = HexGrid.HexCornerOffset(0);
+                var hexagonOffset = this.HexGrid.HexToPixel(this.HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(this.FieldWidth - 1, this.FieldHeight - 1)));
+                var cornerOffset = this.HexGrid.HexCornerOffset(0);
                 return (int)(hexagonOffset.X + cornerOffset.X + FieldBorderPixels);
             }
         }
@@ -52,27 +51,26 @@ namespace qwerty
         {
             get
             {
-                var hexagonOffset =
-                    HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(FieldWidth - 1, FieldHeight - 1)));
-                var cornerOffset = HexGrid.HexCornerOffset(5);
+                var hexagonOffset = this.HexGrid.HexToPixel(this.HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(this.FieldWidth - 1, this.FieldHeight - 1)));
+                var cornerOffset = this.HexGrid.HexCornerOffset(5);
                 return (int)(hexagonOffset.Y + cornerOffset.Y + FieldBorderPixels);
             }
         }
 
         public Point HexToPixel(int x, int y)
         {
-            var cubeCoordinates = HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x,y));
-            return HexGrid.HexToPixel(cubeCoordinates).ConvertToDrawingPoint();
+            var cubeCoordinates = this.HexGrid.ToCubeCoordinates(new Hex.OffsetCoordinates(x,y));
+            return this.HexGrid.HexToPixel(cubeCoordinates).ConvertToDrawingPoint();
         }
         
         public Point GetHexagonCornerOffset(int cornerIndex)
         {
-            return HexGrid.HexCornerOffset(cornerIndex).ConvertToDrawingPoint();
+            return this.HexGrid.HexCornerOffset(cornerIndex).ConvertToDrawingPoint();
         }
 
         public bool AreNeighbors(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
         {
-            return AreNeighbors(HexGrid.ToCubeCoordinates(firstHexagon), HexGrid.ToCubeCoordinates(secondHexagon));
+            return this.AreNeighbors(this.HexGrid.ToCubeCoordinates(firstHexagon), this.HexGrid.ToCubeCoordinates(secondHexagon));
         }
         
         public bool AreNeighbors(Hex.CubeCoordinates firstHexagon, Hex.CubeCoordinates secondHexagon)
@@ -89,13 +87,13 @@ namespace qwerty
 
         public PointF[] GetHexagonCorners(int x, int y)
         {
-            return GetHexagonCorners(new Hex.OffsetCoordinates(x, y));
+            return this.GetHexagonCorners(new Hex.OffsetCoordinates(x, y));
         }
 
         public PointF[] GetHexagonCorners(Hex.OffsetCoordinates offsetCoordinates)
         {
-            var coordinates = HexGrid.ToCubeCoordinates(offsetCoordinates);
-            return HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
+            var coordinates = this.HexGrid.ToCubeCoordinates(offsetCoordinates);
+            return this.HexGrid.PolygonCorners(coordinates).Select(c => c.ConvertToDrawingPointF()).ToArray();
         }
 
         public List<PointF[]> AllHexagonCorners
@@ -103,11 +101,11 @@ namespace qwerty
             get
             {
                 var cornerPointList = new List<PointF[]>();
-                for (int x = 0; x < FieldWidth; x++)
+                for (int x = 0; x < this.FieldWidth; x++)
                 {
-                    for (int y = 0; y < FieldHeight; y++)
+                    for (int y = 0; y < this.FieldHeight; y++)
                     {
-                        cornerPointList.Add(GetHexagonCorners(x, y));
+                        cornerPointList.Add(this.GetHexagonCorners(x, y));
                     }
                 }
                 return cornerPointList;
@@ -116,22 +114,22 @@ namespace qwerty
 
         public double GetAngle(Hex.CubeCoordinates sourceCoordinates, Hex.CubeCoordinates targetCoordinates)
         {
-            double dx = HexGrid.HexToPixel(targetCoordinates).X - HexGrid.HexToPixel(sourceCoordinates).X;
-            double dy = HexGrid.HexToPixel(targetCoordinates).Y - HexGrid.HexToPixel(sourceCoordinates).Y;
+            double dx = this.HexGrid.HexToPixel(targetCoordinates).X - this.HexGrid.HexToPixel(sourceCoordinates).X;
+            double dy = this.HexGrid.HexToPixel(targetCoordinates).Y - this.HexGrid.HexToPixel(sourceCoordinates).Y;
             return Math.Atan2(dy, dx) * 180 / Math.PI;
         }
 
         public double GetAngle(Hex.OffsetCoordinates sourceOffsetCoordinates, Hex.OffsetCoordinates targetOffsetCoordinates)
         {
-            return GetAngle(HexGrid.ToCubeCoordinates(sourceOffsetCoordinates), HexGrid.ToCubeCoordinates(targetOffsetCoordinates));
+            return this.GetAngle(this.HexGrid.ToCubeCoordinates(sourceOffsetCoordinates), this.HexGrid.ToCubeCoordinates(targetOffsetCoordinates));
         }
 
         public Hex.OffsetCoordinates PixelToOffsetCoordinates(Point pixelCoordinates)
         {
-            var cubeCoordinates = HexGrid.PixelToHex(pixelCoordinates.ConvertToHexPoint()).Round();
-            var offsetCoordinates = HexGrid.ToOffsetCoordinates(cubeCoordinates);
-            if (offsetCoordinates.Column < 0 || offsetCoordinates.Column > FieldWidth ||
-                offsetCoordinates.Row < 0 || offsetCoordinates.Row > FieldHeight)
+            var cubeCoordinates = this.HexGrid.PixelToHex(pixelCoordinates.ConvertToHexPoint()).Round();
+            var offsetCoordinates = this.HexGrid.ToOffsetCoordinates(cubeCoordinates);
+            if (offsetCoordinates.Column < 0 || offsetCoordinates.Column > this.FieldWidth ||
+                offsetCoordinates.Row < 0 || offsetCoordinates.Row > this.FieldHeight)
             {
                 throw new ArgumentOutOfRangeException($"Pixel ({pixelCoordinates.X},{pixelCoordinates.Y}) is outside game field.");
             }
@@ -145,19 +143,19 @@ namespace qwerty
         
         public int GetDistance(Hex.OffsetCoordinates firstHexagon, Hex.OffsetCoordinates secondHexagon)
         {
-            return Hex.CubeCoordinates.Distance(HexGrid.ToCubeCoordinates(firstHexagon),HexGrid.ToCubeCoordinates(secondHexagon));
+            return Hex.CubeCoordinates.Distance(this.HexGrid.ToCubeCoordinates(firstHexagon), this.HexGrid.ToCubeCoordinates(secondHexagon));
         }
 
         public List<Hex.OffsetCoordinates> GetAllHexagonsInRange(Hex.OffsetCoordinates centerHexagon, int range)
         {
             var allHexagons = new List<Hex.OffsetCoordinates>();
             //  TODO: implement spiral ring algorithm from redblobgames
-            for (int x = 0; x<FieldWidth; x++)
+            for (int x = 0; x< this.FieldWidth; x++)
             {
-                for (int y = 0; y<FieldHeight; y++)
+                for (int y = 0; y< this.FieldHeight; y++)
                 {
                     var coordinates = new Hex.OffsetCoordinates(x, y);
-                    var distance = GetDistance(centerHexagon, coordinates);
+                    var distance = this.GetDistance(centerHexagon, coordinates);
                     if (distance <= range && distance > 0)
                     {
                         allHexagons.Add(coordinates);
@@ -170,22 +168,22 @@ namespace qwerty
         public List<PointF[]> GetAllHexagonCornersInRange(Hex.OffsetCoordinates centerHexagon, int range)
         {
             var allHexagonCorners = new List<PointF[]>();
-            foreach (var hexagonCoordinates in GetAllHexagonsInRange(centerHexagon, range))
+            foreach (var hexagonCoordinates in this.GetAllHexagonsInRange(centerHexagon, range))
             {
-                allHexagonCorners.Add(GetHexagonCorners(hexagonCoordinates));
+                allHexagonCorners.Add(this.GetHexagonCorners(hexagonCoordinates));
             }
             return allHexagonCorners;
         }
 
         public Point HexToPixel(Hex.OffsetCoordinates objectCoordinates)
         {
-            return HexGrid.HexToPixel(HexGrid.ToCubeCoordinates(objectCoordinates)).ConvertToDrawingPoint();
+            return this.HexGrid.HexToPixel(this.HexGrid.ToCubeCoordinates(objectCoordinates)).ConvertToDrawingPoint();
         }
 
         public Hex.OffsetCoordinates GetNeighborCoordinates(Hex.OffsetCoordinates hexagonOffsetCoordinates, int neighborDirection)
         {
-            return HexGrid.ToOffsetCoordinates(
-                Hex.CubeCoordinates.Neighbor(HexGrid.ToCubeCoordinates(hexagonOffsetCoordinates), neighborDirection));
+            return this.HexGrid.ToOffsetCoordinates(
+                Hex.CubeCoordinates.Neighbor(this.HexGrid.ToCubeCoordinates(hexagonOffsetCoordinates), neighborDirection));
         }
     } 
 }

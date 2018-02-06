@@ -14,9 +14,9 @@ namespace qwerty.Objects.Weapons
 
         public LightIon()
         {
-            attackPower = 18;
-            attackRange = 4;
-            energyСonsumption = 1;
+            this.attackPower = 18;
+            this.attackRange = 4;
+            this.energyСonsumption = 1;
         }
 
         public override string Description => "";

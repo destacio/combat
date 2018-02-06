@@ -16,20 +16,20 @@ namespace qwerty.Objects
 
         public Ship(Player playerId, WeaponType wpnType)
         {
-            objectType = ObjectType.Ship;
+            this.objectType = ObjectType.Ship;
 
-            player = playerId;
+            this.Owner = playerId;
 
             switch (wpnType)
             {
                 case WeaponType.HeavyLaser:
-                    EquippedWeapon = new HeavyLaser();
+                    this.EquippedWeapon = new HeavyLaser();
                     break;
                 case WeaponType.LightIon:
-                    EquippedWeapon = new LightIon();
+                    this.EquippedWeapon = new LightIon();
                     break;
                 case WeaponType.LightLaser:
-                    EquippedWeapon = new LightLaser();
+                    this.EquippedWeapon = new LightLaser();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(wpnType), wpnType, null);
@@ -43,7 +43,7 @@ namespace qwerty.Objects
             get 
             {
                 Random rand = new Random();
-                return rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
+                return rand.Next(-this.EquippedWeapon.attackPower / 10, this.EquippedWeapon.attackPower / 10) + this.EquippedWeapon.attackPower;
             }
         }
 
@@ -51,19 +51,19 @@ namespace qwerty.Objects
         public override void Rotate(double angle)
         {
             angle = angle * Math.PI / 180;
-            for (int i = 0; i < PolygonPoints.Count; i++)
+            for (int i = 0; i < this.PolygonPoints.Count; i++)
             {
-                PolygonPoints[i] =
-                    new PointF((float) (PolygonPoints[i].X * Math.Cos(angle) - PolygonPoints[i].Y * Math.Sin(angle)),
-                        (float) (PolygonPoints[i].X * Math.Sin(angle) + PolygonPoints[i].Y * Math.Cos(angle)));
+                this.PolygonPoints[i] =
+                    new PointF((float) (this.PolygonPoints[i].X * Math.Cos(angle) - this.PolygonPoints[i].Y * Math.Sin(angle)),
+                        (float) (this.PolygonPoints[i].X * Math.Sin(angle) + this.PolygonPoints[i].Y * Math.Cos(angle)));
             }
-            WeaponPoint = new PointF((float) (WeaponPoint.X * Math.Cos(angle) - WeaponPoint.Y * Math.Sin(angle)),
-                (float) (WeaponPoint.X * Math.Sin(angle) + WeaponPoint.Y * Math.Cos(angle)));
+            this.WeaponPoint = new PointF((float) (this.WeaponPoint.X * Math.Cos(angle) - this.WeaponPoint.Y * Math.Sin(angle)),
+                (float) (this.WeaponPoint.X * Math.Sin(angle) + this.WeaponPoint.Y * Math.Cos(angle)));
         }
 
         public void RefillEnergy()
         {
-            actionsLeft = maxActions;
+            this.actionsLeft = this.maxActions;
         }
     }
 }
