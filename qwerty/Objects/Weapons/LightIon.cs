@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -17,17 +20,12 @@ namespace qwerty.Objects.Weapons
         }
 
         public override string Description => "";
-    
-        public override void drawAttack(PointF sourcePoint, PointF targetPoint, ref Bitmap bitmap, SoundPlayer soundPlayer, ref PictureBox pictureBox)
+
+        public override Stream attackSound => Properties.Resources.laser2;
+
+        public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {
-            System.Threading.Thread.Sleep(150);
-            soundPlayer.SoundLocation = @"../../Sounds/laser1.wav";
-
-            Graphics g = Graphics.FromImage(bitmap);
-            Rectangle rect;  //  --- размер изображения
-            Bitmap oldImage;  //  --- переменная, в которую его засунем
-            soundPlayer.Play();
-
+            List<Bitmap> sprites = new List<Bitmap>();
             SolidBrush brush1 = new SolidBrush(Color.CadetBlue);
             SolidBrush brush = new SolidBrush(Color.CornflowerBlue);
 
@@ -37,22 +35,16 @@ namespace qwerty.Objects.Weapons
 
             for (int i = 0; i < 10; i++)
             {
-                // --- 1) находим размер изображения
-                rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height); 
-                // --- 2) клонируем наш битмап
-                oldImage = bitmap.Clone(rect, bitmap.PixelFormat);
+                var sprite = new Bitmap((int) Math.Max(sourcePoint.X, targetPoint.X) + 10, (int) Math.Max(sourcePoint.Y, targetPoint.Y) + 10);
+                var g = Graphics.FromImage(sprite);
 
                 g.FillEllipse(brush, sourcePoint.X - 5 + dx * i, sourcePoint.Y - 5 + dy * i, 10, 10);
                 g.FillEllipse(brush1, sourcePoint.X - 3 + dx * i, sourcePoint.Y - 3 + dy * i, 6, 6);
 
-                pictureBox.Image = bitmap;
-                pictureBox.Refresh();
-
-                // --- 3) отрисовываем тот битмам, который сохранили выше
-                g.DrawImage(oldImage, 0, 0);
-
-                //System.Threading.Thread.Sleep(15);
-            } 
+                sprites.Add(sprite);
+            }
+            
+            return sprites;
         }
     }
 }

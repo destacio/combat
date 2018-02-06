@@ -36,6 +36,7 @@
             this.txtBlueShips = new System.Windows.Forms.Label();
             this.txtRedShips = new System.Windows.Forms.Label();
             this.buttonDebug = new System.Windows.Forms.Button();
+            this.checkBoxAudio = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureMap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -83,9 +84,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 272);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(122, 13);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Кораблей на поле боя:";
+            this.label1.Text = "Ships alive:";
             // 
             // txtBlueShips
             // 
@@ -115,12 +116,25 @@
             this.buttonDebug.UseVisualStyleBackColor = true;
             this.buttonDebug.Click += new System.EventHandler(this.buttonDebug_Click);
             // 
+            // checkBoxAudio
+            // 
+            this.checkBoxAudio.AutoSize = true;
+            this.checkBoxAudio.Checked = true;
+            this.checkBoxAudio.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAudio.Location = new System.Drawing.Point(15, 354);
+            this.checkBoxAudio.Name = "checkBoxAudio";
+            this.checkBoxAudio.Size = new System.Drawing.Size(53, 17);
+            this.checkBoxAudio.TabIndex = 9;
+            this.checkBoxAudio.Text = "Audio";
+            this.checkBoxAudio.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(905, 468);
+            this.Controls.Add(this.checkBoxAudio);
             this.Controls.Add(this.buttonDebug);
             this.Controls.Add(this.txtRedShips);
             this.Controls.Add(this.txtBlueShips);
@@ -148,6 +162,7 @@
         private System.Windows.Forms.Label txtRedShips;
         public System.Windows.Forms.PictureBox pictureMap;
         private System.Windows.Forms.Button buttonDebug;
+        private System.Windows.Forms.CheckBox checkBoxAudio;
     }
 }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using qwerty.Objects.Weapons;
 
 namespace qwerty.Objects
@@ -40,29 +39,16 @@ namespace qwerty.Objects
         public override string Description => "";
 
         public int AttackDamage 
-		{
-			get 
-			{
-				Random rand = new Random();
-				return rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
-			}
-		}
-
-        public bool Attack(CombatMap cMap, int pointB, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap)
         {
-            if (actionsLeft < EquippedWeapon.energyСonsumption)
+            get 
             {
-                return false;
+                Random rand = new Random();
+                return rand.Next(-EquippedWeapon.attackPower / 10, EquippedWeapon.attackPower / 10) + EquippedWeapon.attackPower;
             }
-
-            EquippedWeapon.drawAttack(PointF.Add(cMap.HexToPixel(ObjectCoordinates), new SizeF(WeaponPoint)),
-                cMap.HexToPixel(ObjectCoordinates), ref bmap, player, ref pictureMap);
-			
-            return false;
         }
-        
 
-        public void Rotate(double angle)
+
+        public override void Rotate(double angle)
         {
             angle = angle * Math.PI / 180;
             for (int i = 0; i < PolygonPoints.Count; i++)

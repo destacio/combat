@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimationEventArgs.cs" />
     <Compile Include="CombatMap.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FieldPainter.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Objects\Weapons\HeavyLaser.cs" />
     <Compile Include="Objects\Weapons\LightIon.cs" />
     <Compile Include="Objects\Weapons\LightLaser.cs" />
+    <Compile Include="SoundEventArgs.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +104,14 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Sounds\laser1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sounds\151022__bubaproducer__laser-shot-silenced.wav" />
+    <Content Include="Sounds\196914__dpoggioli__laser-gun.wav" />
+    <Content Include="Sounds\344512__sharesynth__laser05.wav" />
+    <Content Include="Sounds\55849__sergenious__ship.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

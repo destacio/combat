@@ -1,4 +1,7 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Media;
 using System.Windows.Forms;
 
 namespace qwerty.Objects.Weapons
@@ -11,7 +14,7 @@ namespace qwerty.Objects.Weapons
     abstract class Weapon
     {
         public abstract string Description { get; }
-        public abstract void drawAttack(PointF sourcePoint, PointF targetPoint, ref System.Drawing.Bitmap bmap, System.Media.SoundPlayer player, ref PictureBox pictureMap);
+        public abstract List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint);
 
         public abstract Color AttackColorPrimary { get; }
         public abstract Color AttackColorSecondary { get; }
@@ -19,6 +22,8 @@ namespace qwerty.Objects.Weapons
         public int attackRange;
         public int attackPower;
         public int energyСonsumption;
+
+        public abstract Stream attackSound { get; }
     }
     
 }
