@@ -14,12 +14,8 @@ namespace qwerty.Objects
         public readonly Weapon EquippedWeapon;
         public PointF WeaponPoint;
 
-        public Ship(Player playerId, WeaponType wpnType)
+        public Ship(Player playerId, WeaponType wpnType, int maxHealth, int maxActions): base(playerId, maxHealth, ObjectType.Ship, maxActions)
         {
-            this.objectType = ObjectType.Ship;
-
-            this.Owner = playerId;
-
             switch (wpnType)
             {
                 case WeaponType.HeavyLaser:
@@ -63,7 +59,7 @@ namespace qwerty.Objects
 
         public void RefillEnergy()
         {
-            this.actionsLeft = this.maxActions;
+            this.actionsLeft = this.MaxActions;
         }
     }
 }

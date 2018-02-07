@@ -6,16 +6,13 @@ namespace qwerty.Objects
     {
         public int explodeDmg;
         public string staticDescription = "Moving meteor";
-	    public readonly HexagonNeighborDirection MovementDirection;
+        public readonly HexagonNeighborDirection MovementDirection;
 
-		public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, HexagonNeighborDirection movementDirection)
+        public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, HexagonNeighborDirection movementDirection): base(Player.None, health, ObjectType.Meteor, 1)
         {
-			this.MovementDirection = movementDirection;
-			this.ObjectCoordinates = meteorCoordinates;
-            this.objectType = ObjectType.Meteor;
-            this.Owner = 0;
-            this.maxHealth = health;
-            this.currentHealth = this.maxHealth;
+            this.MovementDirection = movementDirection;
+            this.ObjectCoordinates = meteorCoordinates;
+            this.currentHealth = this.MaxHealth;
             this.explodeDmg = dmg;
         }
 
@@ -23,9 +20,9 @@ namespace qwerty.Objects
                                               + "\nhp - " + this.currentHealth
                                               + "\nНаправление: \n" + this.MovementDirection;
 
-	    public override void Rotate(double angle)
-	    {
-		    throw new System.NotImplementedException();
-	    }
+        public override void Rotate(double angle)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

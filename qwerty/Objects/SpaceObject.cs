@@ -11,19 +11,29 @@ namespace qwerty.Objects
 
     public abstract class SpaceObject
     {
-        public ObjectType objectType; // подробности смотри в константах
-        public Player Owner; // 0,1,2 ..0 - нейтральные объекты 
+        // TODO: is this field really needed?
+        public readonly ObjectType objectType;
+
+        public readonly Player Owner;
         public OffsetCoordinates ObjectCoordinates;
-        public int maxHealth; // hit points
+        public readonly int MaxHealth;
         public int currentHealth;
 
         public abstract string Description { get; }
         public bool IsMoving { get; set; }
 
-        public List<PointF> PolygonPoints;                                            
+        public List<PointF> PolygonPoints;
 
-        public int maxActions; // максимальное количество действий на одном ходу
-        public int actionsLeft; // оставшееся количество действий
+        public readonly int MaxActions;
+        public int actionsLeft;
+
+        protected SpaceObject(Player owner, int maxHealth, ObjectType objectType, int maxActions)
+        {
+            this.Owner = owner;
+            this.MaxHealth = maxHealth;
+            this.objectType = objectType;
+            this.MaxActions = maxActions;
+        }
 
         public abstract void Rotate(double angle);
     }
