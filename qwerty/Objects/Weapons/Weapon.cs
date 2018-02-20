@@ -11,7 +11,7 @@ namespace qwerty.Objects.Weapons
         LightLaser, HeavyLaser, LightIon
     }
 
-    abstract class Weapon
+    public abstract class Weapon
     {
         public abstract string Description { get; }
         public abstract List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint);
@@ -19,11 +19,18 @@ namespace qwerty.Objects.Weapons
         public abstract Color AttackColorPrimary { get; }
         public abstract Color AttackColorSecondary { get; }
 
-        public int attackRange;
-        public int attackPower;
-        public int energyСonsumption;
+        public readonly int AttackRange;
+        public readonly int AttackPower;
+        public readonly int EnergyСonsumption;
 
-        public abstract Stream attackSound { get; }
+        protected Weapon(int attackRange, int attackPower, int energyConsumption)
+        {
+            this.AttackRange = attackRange;
+            this.AttackPower = attackPower;
+            this.EnergyСonsumption = energyConsumption;
+        }
+
+        public abstract Stream AttackSound { get; }
     }
     
 }

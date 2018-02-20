@@ -4,21 +4,20 @@ namespace qwerty.Objects
 {
     class Meteor : SpaceObject
     {
-        public int explodeDmg;
-        public string staticDescription = "Moving meteor";
+        private const string ObjectDescription = "Moving meteor";
+        public readonly int CollisionDamage;
         public readonly HexagonNeighborDirection MovementDirection;
 
-        public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int dmg, HexagonNeighborDirection movementDirection): base(Player.None, health, ObjectType.Meteor, 1)
+        public Meteor(Hex.OffsetCoordinates meteorCoordinates, int health, int damage, HexagonNeighborDirection movementDirection): base(Player.None, health, ObjectType.Meteor, 1)
         {
             this.MovementDirection = movementDirection;
             this.ObjectCoordinates = meteorCoordinates;
-            this.currentHealth = this.MaxHealth;
-            this.explodeDmg = dmg;
+            this.CollisionDamage = damage;
         }
 
-        public override string Description => this.staticDescription + "\nУрон при попадании\n в корабль: " + this.explodeDmg
-                                              + "\nhp - " + this.currentHealth
-                                              + "\nНаправление: \n" + this.MovementDirection;
+        public override string Description => ObjectDescription + "\nCollision damage: " + this.CollisionDamage
+                                              + "\nHP - " + this.CurrentHealth
+                                              + "\nMovement direction: \n" + this.MovementDirection;
 
         public override void Rotate(double angle)
         {

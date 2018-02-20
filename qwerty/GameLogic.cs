@@ -92,7 +92,7 @@ namespace qwerty
 
         private void ActiveShipAttack(SpaceObject enemyObject)
         {
-            if (this.activeShip.EquippedWeapon.attackRange < this.objectManager.GetDistance(this.activeShip, enemyObject) || this.activeShip.actionsLeft < this.activeShip.EquippedWeapon.energyСonsumption)
+            if (this.activeShip.EquippedWeapon.AttackRange < this.objectManager.GetDistance(this.activeShip, enemyObject) || this.activeShip.ActionsLeft < this.activeShip.EquippedWeapon.EnergyСonsumption)
             {
                 // another object is out of range or requires more energy than is left
                 return;
@@ -105,11 +105,11 @@ namespace qwerty
 
             // TODO: move methods to object manager
             this.DealDamage(enemyObject, this.activeShip.AttackDamage);
-            this.activeShip.actionsLeft--;
+            this.activeShip.ActionsLeft--;
 
             this.objectManager.RotateObject(this.activeShip, -rotateAngle);
 
-            if (this.activeShip.actionsLeft == 0)
+            if (this.activeShip.ActionsLeft == 0)
             {
                 this.activeShip = null;
             }
@@ -117,8 +117,8 @@ namespace qwerty
 
         private void DealDamage(SpaceObject victim, int damageAmount)
         {
-            victim.currentHealth -= damageAmount;
-            if (victim.currentHealth <= 0)
+            victim.CurrentHealth -= damageAmount;
+            if (victim.CurrentHealth <= 0)
             {
                 this.objectManager.DeleteObject(victim);
             }
@@ -126,17 +126,17 @@ namespace qwerty
         
         private void MoveActiveShip(OffsetCoordinates clickedHexagon)
         {
-            if (this.activeShip.actionsLeft <= 0 || !this.objectManager.CanMoveObjectTo(this.activeShip, clickedHexagon)) return;
+            if (this.activeShip.ActionsLeft <= 0 || !this.objectManager.CanMoveObjectTo(this.activeShip, clickedHexagon)) return;
 
             var rotateAngle = this.objectManager.GetRelativeHexagonAngle(this.activeShip, clickedHexagon);
             this.objectManager.RotateObject(this.activeShip, rotateAngle);
 
             this.objectManager.MoveObjectTo(this.activeShip, clickedHexagon);
-            this.activeShip.actionsLeft--;
+            this.activeShip.ActionsLeft--;
 
             this.objectManager.RotateObject(this.activeShip, -rotateAngle);
 
-            if (this.activeShip.actionsLeft == 0)
+            if (this.activeShip.ActionsLeft == 0)
             {
                 this.activeShip = null;
             }
@@ -156,7 +156,7 @@ namespace qwerty
                 }
 
                 this.objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates, true);
-                this.DealDamage(objectOnTheWay, meteor.explodeDmg);
+                this.DealDamage(objectOnTheWay, meteor.CollisionDamage);
                 this.objectManager.DeleteObject(meteor);
             }
 

@@ -207,7 +207,7 @@ namespace qwerty
                 var attackSprites = attackerShip.EquippedWeapon.GetAttackSprites(
                     this.CombatMap.HexToPixel(attackerShip.ObjectCoordinates),
                     this.CombatMap.HexToPixel(victim.ObjectCoordinates));
-                SoundPlayed?.Invoke(this, new SoundEventArgs(attackerShip.EquippedWeapon.attackSound));
+                SoundPlayed?.Invoke(this, new SoundEventArgs(attackerShip.EquippedWeapon.AttackSound));
                 ObjectAnimated?.Invoke(this, new AnimationEventArgs(attacker, attackSprites));
             }
         }

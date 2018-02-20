@@ -9,11 +9,9 @@ namespace qwerty.Objects.Weapons
 {
     class HeavyLaser : Weapon
     {
-        public HeavyLaser()
+        public HeavyLaser() : base(5, 50, 1)
         {
-            this.attackPower = 50;
-            this.attackRange = 5;
-            this.energyСonsumption = 1;
+
         }
 
         public override string Description=> "";
@@ -21,7 +19,7 @@ namespace qwerty.Objects.Weapons
         public override Color AttackColorPrimary => Color.Orange;
         public override Color AttackColorSecondary => Color.Orange;
 
-        public override Stream attackSound => Properties.Resources.laser1;
+        public override Stream AttackSound => Properties.Resources.laser1;
 
         public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {

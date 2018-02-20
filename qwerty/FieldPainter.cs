@@ -65,7 +65,7 @@ namespace qwerty
             {
                 // highlight active ship attack range
                 Pen redPen = new Pen(Color.Red, 1);
-                foreach (var hexagonCorners in this.combatMap.GetAllHexagonCornersInRange(this.objectManager.ActiveShip.ObjectCoordinates, this.objectManager.ActiveShip.EquippedWeapon.attackRange))
+                foreach (var hexagonCorners in this.combatMap.GetAllHexagonCornersInRange(this.objectManager.ActiveShip.ObjectCoordinates, this.objectManager.ActiveShip.EquippedWeapon.AttackRange))
                 {
                     g.DrawPolygon(redPen, hexagonCorners);
                 }
@@ -140,7 +140,7 @@ namespace qwerty
             Graphics g = Graphics.FromImage(this.CurrentBitmap);
             g.FillEllipse(Brushes.Gray,
                 new Rectangle(Point.Subtract(meteorCoordinates, new Size(15, 15)), new Size(30, 30)));
-            g.DrawString(meteor.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
+            g.DrawString(meteor.CurrentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
                 Point.Add(meteorCoordinates, new Size(5, -25)));
             // TODO: better indicate meteor's way
             var directionAngle = 390 - 60 * (int) meteor.MovementDirection;
@@ -168,8 +168,8 @@ namespace qwerty
 
             var myPointArray = ship.PolygonPoints.Select(p => PointF.Add(p, new Size(shipCoordinates))).ToArray();
             g.FillPolygon(generalBrush, myPointArray);
-            g.DrawString(ship.actionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, Point.Add(shipCoordinates, new Size(0, 15)));
-            g.DrawString(ship.currentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(shipCoordinates, new Size(0, -25)));
+            g.DrawString(ship.ActionsLeft.ToString(), new Font("Arial", 8.0F), Brushes.Blue, Point.Add(shipCoordinates, new Size(0, 15)));
+            g.DrawString(ship.CurrentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red, PointF.Add(shipCoordinates, new Size(0, -25)));
         }
 
         public void OnAnimationPending(object sender, AnimationEventArgs eventArgs)

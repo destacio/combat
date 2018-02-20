@@ -39,7 +39,7 @@ namespace qwerty.Objects
             get 
             {
                 Random rand = new Random();
-                return rand.Next(-this.EquippedWeapon.attackPower / 10, this.EquippedWeapon.attackPower / 10) + this.EquippedWeapon.attackPower;
+                return rand.Next(-this.EquippedWeapon.AttackPower / 10, this.EquippedWeapon.AttackPower / 10) + this.EquippedWeapon.AttackPower;
             }
         }
 
@@ -59,7 +59,7 @@ namespace qwerty.Objects
 
         public void RefillEnergy()
         {
-            this.actionsLeft = this.MaxActions;
+            this.ActionsLeft = this.MaxActions;
         }
     }
 }

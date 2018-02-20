@@ -12,16 +12,14 @@ namespace qwerty.Objects.Weapons
         public override Color AttackColorPrimary => Color.CadetBlue;
         public override Color AttackColorSecondary => Color.CornflowerBlue;
 
-        public LightIon()
+        public LightIon() : base(4, 18, 1)
         {
-            this.attackPower = 18;
-            this.attackRange = 4;
-            this.energyСonsumption = 1;
+
         }
 
         public override string Description => "";
 
-        public override Stream attackSound => Properties.Resources.laser2;
+        public override Stream AttackSound => Properties.Resources.laser2;
 
         public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {

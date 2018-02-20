@@ -7,20 +7,17 @@ namespace qwerty.Objects
 {
     class ShipScout : Ship
     {
-        private static readonly string StaticDescription = $"Лёгкий корабль{Environment.NewLine}класса Scout";
+        private const string ObjectDescription = "Light Scout ship";
 
         public override string Description =>
-            $"{StaticDescription}{Environment.NewLine}" +
-            $"hp - {this.currentHealth}/{this.MaxHealth}{Environment.NewLine}" +
-            $"actions - {this.actionsLeft}/{this.MaxActions}{Environment.NewLine}" +
-            $"AP - {this.EquippedWeapon.attackPower}{Environment.NewLine}" +
-            $"Range - {this.EquippedWeapon.attackRange}";
+            $"{ObjectDescription}{Environment.NewLine}" +
+            $"HP - {this.CurrentHealth}/{this.MaxHealth}{Environment.NewLine}" +
+            $"Actions in this turn - {this.ActionsLeft}/{this.MaxActions}{Environment.NewLine}" +
+            $"Attack damage - {this.EquippedWeapon.AttackPower}{Environment.NewLine}" +
+            $"Attack range - {this.EquippedWeapon.AttackRange}";
 
         public ShipScout(Player playerId, WeaponType weaponType) : base(playerId, weaponType, 50, 3)
         {
-            this.currentHealth = this.MaxHealth;
-            this.actionsLeft = this.MaxActions;
-
             this.PolygonPoints = new List<PointF>
             {
                 new PointF(-15, -14),

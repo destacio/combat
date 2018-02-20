@@ -12,15 +12,13 @@ namespace qwerty.Objects.Weapons
         public override Color AttackColorPrimary => Color.GreenYellow;
         public override Color AttackColorSecondary => Color.GreenYellow;
 
-        public LightLaser()
+        public LightLaser() : base(3, 25, 1)
         {
-            this.attackPower = 25;
-            this.attackRange = 3;
-            this.energyСonsumption = 1;
+
         }
         public override string Description => "";
 
-        public override Stream attackSound => Properties.Resources.laser3;
+        public override Stream AttackSound => Properties.Resources.laser3;
 
         public override List<Bitmap> GetAttackSprites(PointF sourcePoint, PointF targetPoint)
         {
