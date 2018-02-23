@@ -165,7 +165,6 @@ namespace qwerty
                 angle += 360;
             }
 
-            Console.WriteLine(angle);
             return angle;
         }
         
@@ -209,6 +208,17 @@ namespace qwerty
                     this.CombatMap.HexToPixel(victim.ObjectCoordinates));
                 SoundPlayed?.Invoke(this, new SoundEventArgs(attackerShip.EquippedWeapon.AttackSound));
                 ObjectAnimated?.Invoke(this, new AnimationEventArgs(attacker, attackSprites));
+                this.DealDamage(victim, attackerShip.AttackDamage);
+                attackerShip.ActionsLeft -= attackerShip.EquippedWeapon.EnergyСonsumption;
+            }
+        }
+
+        public void DealDamage(SpaceObject victim, int damageAmount)
+        {
+            victim.CurrentHealth -= damageAmount;
+            if (victim.CurrentHealth <= 0)
+            {
+                this.DeleteObject(victim);
             }
         }
 

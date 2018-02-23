@@ -103,24 +103,11 @@ namespace qwerty
 
             this.objectManager.AttackObject(this.activeShip, enemyObject);
 
-            // TODO: move methods to object manager
-            this.DealDamage(enemyObject, this.activeShip.AttackDamage);
-            this.activeShip.ActionsLeft--;
-
             this.objectManager.RotateObject(this.activeShip, -rotateAngle);
 
             if (this.activeShip.ActionsLeft == 0)
             {
                 this.activeShip = null;
-            }
-        }
-
-        private void DealDamage(SpaceObject victim, int damageAmount)
-        {
-            victim.CurrentHealth -= damageAmount;
-            if (victim.CurrentHealth <= 0)
-            {
-                this.objectManager.DeleteObject(victim);
             }
         }
         
@@ -156,7 +143,7 @@ namespace qwerty
                 }
 
                 this.objectManager.MoveObjectTo(meteor, meteorNextStepCoordinates, true);
-                this.DealDamage(objectOnTheWay, meteor.CollisionDamage);
+                this.objectManager.DealDamage(objectOnTheWay, meteor.CollisionDamage);
                 this.objectManager.DeleteObject(meteor);
             }
 
