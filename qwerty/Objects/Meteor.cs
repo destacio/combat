@@ -2,6 +2,7 @@
 
 namespace qwerty.Objects
 {
+    // TODO: rename to meteoroid? meteor is already in atmosphere!
     class Meteor : SpaceObject
     {
         private const string ObjectDescription = "Moving meteor";
