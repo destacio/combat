@@ -7,6 +7,7 @@ using Barbar.HexGrid;
 using qwerty.Objects;
 using Point = System.Drawing.Point;
 using System.Threading;
+ using qwerty.Objects.Weapons;
 
 namespace qwerty
 {
@@ -137,15 +138,23 @@ namespace qwerty
 
         private void DrawMeteor(Meteor meteor, Point meteorCoordinates)
         {
+            var meteorRadius = 15;
             Graphics g = Graphics.FromImage(this.CurrentBitmap);
             g.FillEllipse(Brushes.Gray,
-                new Rectangle(Point.Subtract(meteorCoordinates, new Size(15, 15)), new Size(30, 30)));
+                new Rectangle(Point.Subtract(meteorCoordinates, new Size(meteorRadius, meteorRadius)), new Size(2 * meteorRadius, 2 * meteorRadius)));
             g.DrawString(meteor.CurrentHealth.ToString(), new Font("Arial", 8.0F), Brushes.Red,
                 Point.Add(meteorCoordinates, new Size(5, -25)));
             // TODO: better indicate meteor's way
-            var directionAngle = 390 - 60 * (int) meteor.MovementDirection;
+            var directionAngle = 60 * (int) meteor.MovementDirection - 30;
+            var directionAngleRadians = (float)directionAngle / 180 * Math.PI;
+            var beamStartPoint = new Point((int)(meteorRadius * Math.Cos(directionAngleRadians + Math.PI / 2)),
+                (int)(-meteorRadius * Math.Sin(directionAngleRadians + Math.PI / 2)));
+            var beamEndPoint = Point.Add(beamStartPoint,
+                new Size((int) (-20 * Math.Cos(directionAngleRadians)), (int) (20 * Math.Sin(directionAngleRadians))));
+            g.DrawLine(new Pen(Color.Yellow, 2), Point.Add(meteorCoordinates, new Size(beamStartPoint)), Point.Add(meteorCoordinates, new Size(beamEndPoint)));
+            
             g.DrawArc(new Pen(Color.Blue, 2), meteorCoordinates.X - 10,
-                meteorCoordinates.Y - 10, 20, 20, directionAngle - 20, 40);
+                meteorCoordinates.Y - 10, 20, 20, -directionAngle + 20, -40); // start and sweep angles counted clockwise
         }
 
         private void DrawShip(Ship ship)
