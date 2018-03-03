@@ -147,11 +147,24 @@ namespace qwerty
             // TODO: better indicate meteor's way
             var directionAngle = 60 * (int) meteor.MovementDirection - 30;
             var directionAngleRadians = (float)directionAngle / 180 * Math.PI;
-            var beamStartPoint = new Point((int)(meteorRadius * Math.Cos(directionAngleRadians + Math.PI / 2)),
-                (int)(-meteorRadius * Math.Sin(directionAngleRadians + Math.PI / 2)));
-            var beamEndPoint = Point.Add(beamStartPoint,
-                new Size((int) (-20 * Math.Cos(directionAngleRadians)), (int) (20 * Math.Sin(directionAngleRadians))));
-            g.DrawLine(new Pen(Color.Yellow, 2), Point.Add(meteorCoordinates, new Size(beamStartPoint)), Point.Add(meteorCoordinates, new Size(beamEndPoint)));
+            var beamStartAngles = new List<double>
+            {
+                directionAngleRadians + Math.PI / 2,
+                directionAngleRadians + 5 * Math.PI / 6,
+                //directionAngleRadians + 7 * Math.PI / 8,
+                directionAngleRadians + Math.PI,
+                //directionAngleRadians + 9 * Math.PI / 8,
+                directionAngleRadians + 7 * Math.PI / 6,
+                directionAngleRadians + 3 * Math.PI / 2
+            };
+            foreach (var beamStartAngle in beamStartAngles)
+            {
+                var beamStartPoint = new Point((int)(meteorRadius * Math.Cos(beamStartAngle)),
+                    (int)(-meteorRadius * Math.Sin(beamStartAngle)));
+                var beamEndPoint = Point.Add(beamStartPoint,
+                    new Size((int) (-20 * Math.Cos(directionAngleRadians)), (int) (20 * Math.Sin(directionAngleRadians))));
+                g.DrawLine(new Pen(Color.Yellow, 2), Point.Add(meteorCoordinates, new Size(beamStartPoint)), Point.Add(meteorCoordinates, new Size(beamEndPoint)));
+            }
             
             g.DrawArc(new Pen(Color.Blue, 2), meteorCoordinates.X - 10,
                 meteorCoordinates.Y - 10, 20, 20, -directionAngle + 20, -40); // start and sweep angles counted clockwise
